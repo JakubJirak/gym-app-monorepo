@@ -9,9 +9,6 @@ import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
 
 export const Route = createFileRoute('/')({
-  beforeLoad: ({ context }) => {
-    console.log(context.userId)
-  },
   component: App,
 })
 

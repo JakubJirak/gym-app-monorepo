@@ -1,4 +1,4 @@
-import { createRouter, createRouter as createTanStackRouter } from '@tanstack/react-router'
+import { createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { routerWithQueryClient } from '@tanstack/react-router-with-query'
 import { ConvexProvider, ConvexReactClient } from 'convex/react'
@@ -14,6 +14,7 @@ export function getRouter() {
     expectAuth: true,
       unsavedChangesWarning: false,
   })
+  //@ts-ignore // convex splnuje typ
   const convexQueryClient = new ConvexQueryClient(convex)
 
   const queryClient: QueryClient = new QueryClient({
@@ -33,6 +34,7 @@ export function getRouter() {
       context: { queryClient, convexClient: convex, convexQueryClient },
       scrollRestoration: true,
       Wrap: ({ children }) => (
+        //@ts-ignore // nejaky problemy s verzema, ale vse funguje
         <ConvexProvider client={convexQueryClient.convexClient}>
           {children}
         </ConvexProvider>

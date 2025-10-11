@@ -6,16 +6,16 @@ export default defineSchema({
     userId: v.string(),
     name: v.string(),
     workoutDate: v.string(),
-    filterId: v.string(),
+    filterId: v.id("filters"),
   }),
   workoutExercises: defineTable({
     workoutId: v.id("workouts"),
-    exerciseId: v.string(),
+    exerciseId: v.id("exercises"),
     note: v.optional(v.string()),
     order: v.number()
   }),
   sets: defineTable({
-    workoutExerciseId: v.string(),
+    workoutExerciseId: v.id("workoutExercises"),
     reps: v.number(),
     weight: v.number(),
     order: v.number(),
@@ -23,7 +23,7 @@ export default defineSchema({
   exercises: defineTable({
     userId: v.string(),
     name: v.string(),
-    muscleGroupId: v.string()
+    muscleGroupId: v.id("muscleGroups")
   }),
   muscleGroups: defineTable({
     name: v.string(),
