@@ -1,13 +1,11 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { api } from "../../../packages/convex/convex/_generated/api";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { authClient } from "../src/lib/auth-client";
 
 export default function Index() {
   const tasks = useQuery(api.test.get);
-  const { isAuthenticated } = useConvexAuth();
-  //console.log(tasks);
-  //const session = useQuery(api.users.getCurrentUser);
+  const { data: session } = authClient.useSession();
 
   const handleSignIn = async () => {
       const { data, error } = await authClient.signIn.email(
@@ -28,7 +26,7 @@ export default function Index() {
         },
       )
 
-      console.log({ data, error })
+    console.log({ data, error });
     }
 
   const handleSignUp = async () => {
@@ -54,8 +52,6 @@ export default function Index() {
       console.log({ data, error })
     }
 
-  //console.log(session);
-
   return (
     <View
       style={{
@@ -64,9 +60,8 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>{tasks?.length} tohle je test</Text>
-      <Text>Welcome</Text>
-      <Text>{isAuthenticated ? "Authenticated" : "Not Authenticated"}</Text>
+      <Text>Test {tasks?.length}</Text>
+      <Text>Welcome, {session?.user.name}</Text>
       <TouchableOpacity onPress={() => handleSignIn()}>
         <Text>Sign In</Text>
       </TouchableOpacity>

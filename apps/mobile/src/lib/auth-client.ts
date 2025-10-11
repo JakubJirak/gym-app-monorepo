@@ -16,7 +16,7 @@ export const authClient = createAuthClient({
       ? [crossDomainClient()]
       : [
           expoClient({
-            scheme: Constants.expoConfig?.scheme as string,
+            scheme: "gymappmobile",
             storagePrefix: Constants.expoConfig?.scheme as string,
             storage: SecureStore,
           }),
