@@ -1,0 +1,17 @@
+{
+  "name": "@packages/convex",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+      "dev": "convex dev",
+      "setup": "convex dev --until-success"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "convex": "^1.27.3"
+    },
+     "devDependencies": {
+      "typescript": "5.9.3"
+    }
+}
