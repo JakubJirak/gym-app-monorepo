@@ -3,23 +3,14 @@ import ExerciseSet from "./set";
 
 interface ExerciseProps {
 	name: string;
-	muscleGroup: string;
-	note: string | null;
-	sets:
-		| {
-				id: string;
-				workoutExerciseId: string;
-				weight: string;
-				reps: number;
-				order: number;
-		  }[]
-		| {
-				id: string;
-				workoutExerciseId: string;
-				weight: string;
-				reps: number;
-				order: number;
-		  }[];
+	muscleGroup: string | null;
+	note: string | undefined;
+	sets: {
+	  _id: string;
+	  reps: number;
+    weight: number;
+    order: number;
+    }[] | null
 }
 
 export default function Exercise({
@@ -45,7 +36,7 @@ export default function Exercise({
 						reps={item.reps}
 					/>
 				)}
-				keyExtractor={(item) => item.id}
+				keyExtractor={(item) => item._id}
 			/>
 			{note && <Text className="text-muted mt-2">{note}</Text>}
 		</View>

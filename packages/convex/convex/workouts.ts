@@ -88,6 +88,88 @@ export const getUserWorkouts = query({
   },
 });
 
+export const getWorkoutById = query({
+  args: {
+    workoutId: v.id("workouts"),
+  },
+  async handler(ctx, args) {
+    // Získej přihlášeného uživatele přes tvůj helper
+    const user = await authComponent.getAuthUser(ctx);
+    if (!user) {
+      return null; // Uživatel není přihlášen
+    }
+
+    const userId = user._id; // Interní databázové ID uživatele
+
+    // Načti trénink podle ID
+    const workout = await ctx.db.get(args.workoutId);
+    if (!workout) {
+      return null; // Trénink nenalezen
+    }
+
+    // Zkontroluj, že trénink patří přihlášenému uživateli
+    if (workout.userId !== userId) {
+      throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
+    }
+
+    // Načti filtr a cviky se sériemi, stejně jako v předchozím kódu
+    const filter = workout.filterId ? await ctx.db.get(workout.filterId) : null;
+
+    const workoutExercises = await ctx.db
+      .query("workoutExercises")
+      .withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
+      .collect();
+
+    const sortedExercises = workoutExercises.sort((a, b) => a.order - b.order);
+
+    const exercisesWithSets = await Promise.all(
+      sortedExercises.map(async (we) => {
+        const exercise = await ctx.db.get(we.exerciseId);
+        const muscleGroup = exercise ? await ctx.db.get(exercise.muscleGroupId) : null;
+
+        const sets = await ctx.db
+          .query("sets")
+          .withIndex("by_workoutExerciseId", (q) => q.eq("workoutExerciseId", we._id))
+          .collect();
+
+        const sortedSets = sets.sort((a, b) => a.order - b.order);
+
+        return {
+          _id: we._id,
+          exercise: exercise
+            ? {
+                ...exercise,
+                muscleGroup: muscleGroup ? muscleGroup.name : null,
+              }
+            : null,
+          note: we.note,
+          order: we.order,
+          sets: sortedSets.map((set) => ({
+            _id: set._id,
+            reps: set.reps,
+            weight: set.weight,
+            order: set.order,
+          })),
+        };
+      }),
+    );
+
+    return {
+      _id: workout._id,
+      name: workout.name,
+      workoutDate: workout.workoutDate,
+      filter: filter
+        ? {
+            _id: filter._id,
+            name: filter.name,
+            color: filter.color,
+          }
+        : null,
+      exercises: exercisesWithSets,
+    };
+  },
+});
+
 export const addWorkout = mutation(
   async ({ db }, {
     userId,

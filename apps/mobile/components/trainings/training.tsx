@@ -13,7 +13,7 @@ interface TrainingProps {
 	filter: {
 		name: string;
 		color: string;
-	};
+	} | null;
 }
 
 export default function Training({ id, name, date, filter }: TrainingProps) {
@@ -28,7 +28,7 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 				<View
 					// className={`w-[3px] h-full rounded-lg mr-6 bg-[${filter.color}]/60`}
 					style={{
-						backgroundColor: `${filter.color}`,
+						backgroundColor: `${filter ? filter.color : "gray"}`,
 						width: 3,
 						height: "100%",
 						borderRadius: 8,
@@ -48,9 +48,9 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 				<View className="flex-col justify-between">
 					<Text
 						className={`text-white text-sm border px-2.5 py-1.5 rounded-xl text-center`}
-						style={{ borderColor: `${filter.color}99` }}
+						style={{ borderColor: `${ filter ? `${filter.color}99` : "gray" }` }}
 					>
-						{filter.name}
+						{filter ? filter.name : "Žádný"}
 					</Text>
 				</View>
 			</View>

@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 
 interface ExerciseSetProps {
 	order: number;
-	weight: string;
+	weight: number;
 	reps: number;
 }
 

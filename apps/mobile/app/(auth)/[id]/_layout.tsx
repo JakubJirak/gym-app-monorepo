@@ -12,7 +12,9 @@ import { createContext } from "react";
 import { View } from "react-native";
 import TrainingHeader from "@/components/trainings/training-header";
 import { COLORS } from "@/constants/COLORS";
-import { trainings } from "@/constants/trainings";
+import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import { api } from "../../../../../packages/convex/convex/_generated/api";
+import { useQuery } from "convex/react";
 
 const { Navigator } = createMaterialTopTabNavigator();
 
@@ -27,17 +29,16 @@ export const TrainingIdContext = createContext<string | string[] | undefined>(un
 
 export default function TrainingIdLayout() {
   const { id } = useLocalSearchParams();
+  const workout = useQuery(api.workouts.getWorkoutById, {workoutId: id as Id<"workouts">})
 
-  const training = trainings.find((t) => t.id === id);
-
-  if (training === undefined) return null;
+  if (!workout) return null;
 
   return (
     // @ts-ignore - not an valid error, context provider works fine
     <TrainingIdContext.Provider value={id}>
       <View className="flex-1">
         <View className="px-4">
-          <TrainingHeader text={training.name} />
+          <TrainingHeader text={workout.name} />
         </View>
 
         <MaterialTopTabs

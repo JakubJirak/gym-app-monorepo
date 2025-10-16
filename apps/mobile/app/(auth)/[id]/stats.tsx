@@ -7,17 +7,19 @@ import {
 } from "lucide-react-native";
 import { useContext, useMemo } from "react";
 import { Text, View } from "react-native";
-import { trainings } from "@/constants/trainings";
 import { TrainingIdContext } from "./_layout";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
 export default function Stats() {
 	const id = useContext(TrainingIdContext);
 
-	const training = trainings.find((t) => t.id === id);
+	const workout = useQuery(api.workouts.getWorkoutById, {workoutId: id as Id<"workouts">})
 
 	const totalWeight = useMemo(
 		() =>
-			training?.workoutExercises?.reduce(
+			workout?.exercises?.reduce(
 				(exAcc, exercise) =>
 					exAcc +
 					exercise.sets.reduce(
@@ -26,12 +28,12 @@ export default function Stats() {
 					),
 				0,
 			) ?? 0,
-		[training?.workoutExercises],
+		[workout?.exercises],
 	);
 
 	const allReps = useMemo(
 		() =>
-			training?.workoutExercises?.reduce(
+		workout?.exercises?.reduce(
 				(exAcc, exercise) =>
 					exAcc +
 					exercise.sets.reduce(
@@ -40,21 +42,21 @@ export default function Stats() {
 					),
 				0,
 			) ?? 0,
-		[training?.workoutExercises],
+		[workout?.exercises],
 	);
 
 	const allSets = useMemo(
 		() =>
-			training?.workoutExercises?.reduce(
+		workout?.exercises?.reduce(
 				(exAcc, exercise) => exAcc + exercise.sets.length,
 				0,
 			) ?? 0,
-		[training?.workoutExercises],
+		[workout?.exercises],
 	);
 
-	const allExercises = training?.workoutExercises?.length ?? 0;
+	const allExercises = workout?.exercises?.length ?? 0;
 
-	if (training === undefined) return null;
+	if (!workout) return null;
 
 	return (
 		<View className="bg-primary flex-1 pt-6 px-4">
@@ -84,7 +86,7 @@ export default function Stats() {
 				<View className="bg-secondary w-[47%] items-center py-4 justify-between gap-2 rounded-2xl text-center">
 					<Weight color="white" />
 					<Text className="text-white text-2xl font-bold mt-1">
-						{totalWeight}kg
+						{totalWeight.toFixed(0)}kg
 					</Text>
 					<Text className="text-muted">Váha</Text>
 				</View>

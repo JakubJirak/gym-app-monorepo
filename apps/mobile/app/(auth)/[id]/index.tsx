@@ -6,14 +6,16 @@ import { FlatList, Text, View } from "react-native";
 import Exercise from "@/components/trainings/exercise";
 import TrainingFooter from "@/components/trainings/training-footer";
 import { COLORS } from "@/constants/COLORS";
-import { trainings } from "@/constants/trainings";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+//import {api} from "@packages/convex"
 
 export default function TrainingById() {
 	const { id } = useLocalSearchParams();
+	const workout = useQuery(api.workouts.getWorkoutById, {workoutId: id as Id<"workouts">})
 
-	const training = trainings.find((t) => t.id === id);
-
-	if (training === undefined) return null;
+  if (!workout) return null;
 
 	return (
 		<>
@@ -28,14 +30,14 @@ export default function TrainingById() {
 									color={COLORS.muted}
 								/>
 								<Text className="text-muted">
-									{format(new Date(training.workoutDate), "PPPP", {
+									{format(new Date(workout.workoutDate), "PPPP", {
 										locale: cs,
 									})}
 								</Text>
 							</View>
 							<Text
 								style={{
-									borderColor: training.filter.color,
+									// borderColor: workout.filter.color,
 									color: "white",
 									borderRadius: 12,
 									paddingHorizontal: 10,
@@ -43,28 +45,30 @@ export default function TrainingById() {
 									borderWidth: 1,
 									opacity: 0.9,
 								}}
-								className={`text-white border rounded-xl px-2.5 py-1.5 text-base border-[${training.filter.color}] `}
+								className={`text-white border rounded-xl px-2.5 py-1.5 text-base`}
 							>
-								{training.filter.name}
+								{workout.filter?.name}
 							</Text>
 						</View>
 					)}
-					data={training.workoutExercises}
-					renderItem={({ item }) => (
-						<Exercise
+					data={workout.exercises}
+					renderItem={({ item }) =>
+					  item.exercise ? (
+							<Exercise
 							name={item.exercise.name}
-							muscleGroup={item.exercise.muscleGroup.muscleGroup}
+							muscleGroup={item.exercise.muscleGroup}
 							sets={item.sets}
 							note={item.note}
-						/>
-					)}
-					keyExtractor={(item) => item.id}
+							/>
+							) : null
+					}
+					keyExtractor={(item) => item._id}
 					ItemSeparatorComponent={() => (
 						<View className="w-full h-0.5 bg-secondary" />
 					)}
 				/>
 			</View>
-			<TrainingFooter id={training.id} />
+			<TrainingFooter id={workout._id} />
 		</>
 	);
 }
