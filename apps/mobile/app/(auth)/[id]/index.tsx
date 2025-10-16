@@ -3,10 +3,10 @@ import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { useLocalSearchParams } from "expo-router";
 import { FlatList, Text, View } from "react-native";
-import { COLORS } from "@/constants/COLORS";
-import { trainings } from "@/constants/trainings";
 import Exercise from "@/components/trainings/exercise";
 import TrainingFooter from "@/components/trainings/training-footer";
+import { COLORS } from "@/constants/COLORS";
+import { trainings } from "@/constants/trainings";
 
 export default function TrainingById() {
 	const { id } = useLocalSearchParams();
@@ -34,8 +34,16 @@ export default function TrainingById() {
 								</Text>
 							</View>
 							<Text
-							style={{ borderColor: training.filter.color, color: "white", borderRadius: 12, paddingHorizontal: 10, paddingVertical: 6, borderWidth: 1, opacity: 0.9 }}
-                className={`text-white border rounded-xl px-2.5 py-1.5 text-base border-[${training.filter.color}] `}
+								style={{
+									borderColor: training.filter.color,
+									color: "white",
+									borderRadius: 12,
+									paddingHorizontal: 10,
+									paddingVertical: 6,
+									borderWidth: 1,
+									opacity: 0.9,
+								}}
+								className={`text-white border rounded-xl px-2.5 py-1.5 text-base border-[${training.filter.color}] `}
 							>
 								{training.filter.name}
 							</Text>

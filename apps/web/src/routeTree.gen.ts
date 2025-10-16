@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as AuthProfilIndexRouteImport } from './routes/_auth/profil/index'
 import { Route as AuthMenuIndexRouteImport } from './routes/_auth/menu/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -35,6 +36,11 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthProfilIndexRoute = AuthProfilIndexRouteImport.update({
+  id: '/profil/',
+  path: '/profil/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthMenuIndexRoute = AuthMenuIndexRouteImport.update({
   id: '/menu/',
   path: '/menu/',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/menu': typeof AuthMenuIndexRoute
+  '/profil': typeof AuthProfilIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/menu': typeof AuthMenuIndexRoute
+  '/profil': typeof AuthProfilIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +76,13 @@ export interface FileRoutesById {
   '/register/': typeof RegisterIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/menu/': typeof AuthMenuIndexRoute
+  '/_auth/profil/': typeof AuthProfilIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/api/auth/$' | '/menu'
+  fullPaths: '/' | '/login' | '/register' | '/api/auth/$' | '/menu' | '/profil'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/api/auth/$' | '/menu'
+  to: '/' | '/login' | '/register' | '/api/auth/$' | '/menu' | '/profil'
   id:
     | '__root__'
     | '/'
@@ -82,6 +91,7 @@ export interface FileRouteTypes {
     | '/register/'
     | '/api/auth/$'
     | '/_auth/menu/'
+    | '/_auth/profil/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -122,6 +132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/profil/': {
+      id: '/_auth/profil/'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof AuthProfilIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/menu/': {
       id: '/_auth/menu/'
       path: '/menu'
@@ -141,10 +158,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthMenuIndexRoute: typeof AuthMenuIndexRoute
+  AuthProfilIndexRoute: typeof AuthProfilIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthMenuIndexRoute: AuthMenuIndexRoute,
+  AuthProfilIndexRoute: AuthProfilIndexRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

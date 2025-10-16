@@ -1,5 +1,5 @@
 import Header from "@/components/Header.tsx";
-//import Navigation from "@/components/menu/Navigation";
+import Navigation from "@/components/menu/Navigation";
 import { authClient } from "@/lib/auth-client.ts";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -21,7 +21,7 @@ function RouteComponent() {
   return (
     <>
       <Header page="MENU" />
-      {/*<Navigation />*/}
+      <Navigation />
     </>
   );
 }

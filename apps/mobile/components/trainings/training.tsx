@@ -27,7 +27,14 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 			<View className="py-6 px-2 flex-row">
 				<View
 					// className={`w-[3px] h-full rounded-lg mr-6 bg-[${filter.color}]/60`}
-					style={{ backgroundColor: `${filter.color}`, width: 3, height: "100%", borderRadius: 8, marginRight: 24, opacity: 0.8 }}
+					style={{
+						backgroundColor: `${filter.color}`,
+						width: 3,
+						height: "100%",
+						borderRadius: 8,
+						marginRight: 24,
+						opacity: 0.8,
+					}}
 				/>
 				<View className="gap-3 flex-1">
 					<Text className="text-white text-xl font-semibold">{name}</Text>

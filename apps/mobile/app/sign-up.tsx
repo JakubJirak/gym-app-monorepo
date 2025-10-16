@@ -1,32 +1,31 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS } from "@/constants/COLORS";
 import { authClient } from "@/src/lib/auth-client";
+import { COLORS } from "@/constants/COLORS";
 
 export default function SignUp() {
+	const handleSignUp = async () => {
+		const { data, error } = await authClient.signUp.email(
+			{
+				email: "test@test.com",
+				password: "12345678",
+				name: "Test",
+			},
+			{
+				onRequest: () => {
+					console.log("REQUESTING");
+				},
+				onSuccess: async () => {
+					console.log("SIGNED IN");
+				},
+				onError: (ctx) => {
+					console.log(ctx.error.message);
+				},
+			},
+		);
 
-  const handleSignUp = async () => {
-      const { data, error } = await authClient.signUp.email(
-        {
-          email: "test2@test.com",
-          password: "12345678",
-          name: "Test2"
-        },
-        {
-          onRequest: () => {
-            console.log("REQUESTING")
-          },
-          onSuccess: async () => {
-            console.log("SIGNED IN")
-          },
-          onError: (ctx) => {
-            console.log(ctx.error.message);
-          },
-        },
-      )
-
-      console.log({ data, error })
-    }
+		console.log({ data, error });
+	};
 
 	return (
 		<>
@@ -34,9 +33,9 @@ export default function SignUp() {
 				edges={["top"]}
 				style={{ backgroundColor: COLORS.primary }}
 			/>
-			<View className="flex-1 bg-primary">
+			<TouchableOpacity onPress={handleSignUp} className="flex-1 bg-primary">
 				<Text className="text-white">signup</Text>
-			</View>
+			</TouchableOpacity>
 			<SafeAreaView
 				edges={["bottom"]}
 				style={{ backgroundColor: COLORS.primary }}

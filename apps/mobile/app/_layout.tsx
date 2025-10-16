@@ -1,34 +1,33 @@
-import { ConvexProvider, ConvexReactClient } from "convex/react";
-import { Stack } from "expo-router";
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
-import { authClient } from "../src/lib/auth-client";
+import { ConvexReactClient, useConvexAuth } from "convex/react";
+import { Stack } from "expo-router";
+import { PaperProvider } from "react-native-paper";
 import "../global.css";
 import { COLORS } from "@/constants/COLORS";
-import { PaperProvider } from "react-native-paper";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { authClient } from "../src/lib/auth-client";
 
-const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL as string, {
-  // Optionally pause queries until the user is authenticated
-    expectAuth: true,
-    unsavedChangesWarning: false,
-});
+const convex = new ConvexReactClient(
+	process.env.EXPO_PUBLIC_CONVEX_URL as string,
+	{
+		// Optionally pause queries until the user is authenticated
+		expectAuth: true,
+		unsavedChangesWarning: false,
+	},
+);
 
 export default function RootLayout() {
-  return (
-    <ConvexBetterAuthProvider client={convex} authClient={authClient}>
-      <ConvexProvider client={convex}>
-        <PaperProvider>
-          <SafeAreaProvider>
-            <StackLayout />
-          </SafeAreaProvider>
-        </PaperProvider>
-      </ConvexProvider>
-    </ConvexBetterAuthProvider>
-  );
+	return (
+		<ConvexBetterAuthProvider client={convex} authClient={authClient}>
+			<PaperProvider>
+				<StackLayout />
+			</PaperProvider>
+		</ConvexBetterAuthProvider>
+	);
 }
 
 function StackLayout() {
-	const isAuth = true;
+	//const isAuth = false;
+	const { isAuthenticated: isAuth } = useConvexAuth();
 
 	return (
 		<Stack
