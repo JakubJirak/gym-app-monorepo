@@ -1,106 +1,48 @@
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { authClient } from "@/lib/auth-client.ts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 import { Pencil, Target } from "lucide-react";
 import { type FormEvent, useState } from "react";
-
-// const addGoals = createServerFn({ method: "POST" })
-//   .validator(
-//     (data: {
-//       userId: string;
-//       squat: string;
-//       bench: string;
-//       deadlift: string;
-//     }) => data,
-//   )
-//   .handler(async ({ data }) => {
-//     await db.insert(userGoals).values({
-//       userId: data.userId,
-//       squat: data.squat,
-//       bench: data.bench,
-//       deadlift: data.deadlift,
-//     });
-//   });
-
-// const updateGoals = createServerFn({ method: "POST" })
-//   .validator(
-//     (data: {
-//       userId: string;
-//       squat: string;
-//       bench: string;
-//       deadlift: string;
-//     }) => data,
-//   )
-//   .handler(async ({ data }) => {
-//     await db
-//       .update(userGoals)
-//       .set({
-//         squat: data.squat,
-//         bench: data.bench,
-//         deadlift: data.deadlift,
-//       })
-//       .where(eq(userGoals.userId, data.userId));
-//   });
-
-// const getGoals = createServerFn({ method: "GET" })
-//   .validator((data: { userId: string }) => data)
-//   .handler(async ({ data }) => {
-//     return db.select().from(userGoals).where(eq(userGoals.userId, data.userId));
-//   });
+import { api } from "../../../../../packages/convex/convex/_generated/api";
+import { convexQuery } from "@convex-dev/react-query";
 
 const UserSetGoals = () => {
   const [squat, setSquat] = useState("");
   const [bench, setBench] = useState("");
   const [deadlift, setDeadlift] = useState("");
-  const { data: session } = authClient.useSession();
-  const queryClient = useQueryClient();
   const [edit, setEdit] = useState<boolean>(false);
 
-  // const { data: goals } = useQuery({
-  //   queryKey: ["userGoals", session?.user.id ?? ""],
-  //   queryFn: () => getGoals({ data: { userId: session?.user.id ?? "" } }),
-  //   enabled: !!session,
-  // });
+  const { data: goals } = useSuspenseQuery(convexQuery(api.userGoals.getUserGoals, {}));
+  const addGoals = useMutation(api.userGoals.addUserGoals);
+  const updateGoals = useMutation(api.userGoals.updateUserGoals);
 
-  // const addGoalsMutation = useMutation({
-  //   mutationFn: addGoals,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["userGoals"] }),
-  // });
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (edit) {
+      if (goals){
+        updateGoals({
+            goalId: goals._id,
+            squat,
+            bench,
+            deadlift,
+        });
+      }
 
-  // const updateGoalsMutation = useMutation({
-  //   mutationFn: updateGoals,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["userGoals"] }),
-  // });
+    } else {
+      addGoals({
+          squat,
+          bench,
+          deadlift,
+      });
+    }
 
-  // const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   if (edit) {
-  //     updateGoalsMutation.mutate({
-  //       data: {
-  //         userId: session?.user.id ?? "",
-  //         squat,
-  //         bench,
-  //         deadlift,
-  //       },
-  //     });
-  //   } else {
-  //     addGoalsMutation.mutate({
-  //       data: {
-  //         userId: session?.user.id ?? "",
-  //         squat,
-  //         bench,
-  //         deadlift,
-  //       },
-  //     });
-  //   }
-
-  //   setEdit(false);
-  //   setSquat("");
-  //   setBench("");
-  //   setDeadlift("");
-  // };
+    setEdit(false);
+    setSquat("");
+    setBench("");
+    setDeadlift("");
+  };
 
   return (
     <div className="p-2">
@@ -109,14 +51,14 @@ const UserSetGoals = () => {
           <Target />
           Cíle pro Powerlifting (kg)
         </p>
-        {/*{goals === undefined || goals.length === 0 ? null : (
+        {goals && (
           <Button size="icon" onClick={() => setEdit(true)}>
             <Pencil />
           </Button>
-        )}*/}
+        )}
       </div>
       <div className="px-0">
-        {/*{goals === undefined || goals.length === 0 || edit ? (
+        {!goals || edit ? (
           <form
             className="flex flex-col gap-3 mt-[-8px]"
             onSubmit={(e) => handleSubmit(e)}
@@ -168,18 +110,18 @@ const UserSetGoals = () => {
           <div className="flex flex-col gap-3 mt-[-8px]">
             <div className="grid grid-cols-[60px_1fr] gap-2 items-center">
               <p>Squat:</p>
-              <p>{goals[0].squat}kg</p>
+              <p>{goals.squat}kg</p>
             </div>
             <div className="grid grid-cols-[60px_1fr] gap-2 items-center">
               <p>Bench:</p>
-              <p>{goals[0].bench}kg</p>
+              <p>{goals.bench}kg</p>
             </div>
             <div className="grid grid-cols-[60px_1fr] gap-2 items-center">
               <p>Deadlift:</p>
-              <p>{goals[0].deadlift}kg</p>
+              <p>{goals.deadlift}kg</p>
             </div>
           </div>
-        )}*/}
+        )}
       </div>
     </div>
   );

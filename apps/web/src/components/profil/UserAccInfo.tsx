@@ -25,7 +25,6 @@ const UserAccInfo = () => {
           <p className="text-muted-foreground">Založení účtu</p>
           <p>{createdDate}</p>
         </div>
-        <p>{session.user.id}</p>
       </div>
     </div>
   );

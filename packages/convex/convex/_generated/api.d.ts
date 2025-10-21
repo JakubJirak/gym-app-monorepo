@@ -11,8 +11,13 @@
 import type * as auth from "../auth.js";
 import type * as betterAuth_adapter from "../betterAuth/adapter.js";
 import type * as betterAuth_auth from "../betterAuth/auth.js";
+import type * as exercises from "../exercises.js";
+import type * as filters from "../filters.js";
 import type * as http from "../http.js";
+import type * as muscleGroups from "../muscleGroups.js";
 import type * as test from "../test.js";
+import type * as userGoals from "../userGoals.js";
+import type * as userWeights from "../userWeights.js";
 import type * as workouts from "../workouts.js";
 
 import type {
@@ -33,8 +38,13 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   "betterAuth/adapter": typeof betterAuth_adapter;
   "betterAuth/auth": typeof betterAuth_auth;
+  exercises: typeof exercises;
+  filters: typeof filters;
   http: typeof http;
+  muscleGroups: typeof muscleGroups;
   test: typeof test;
+  userGoals: typeof userGoals;
+  userWeights: typeof userWeights;
   workouts: typeof workouts;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

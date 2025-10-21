@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { authClient } from "@/src/lib/auth-client";
 import { COLORS } from "@/constants/COLORS";
+import { authClient } from "@/src/lib/auth-client";
 
 export default function SignIn() {
 	const handleSignIn = async () => {

@@ -6,11 +6,12 @@ import { authComponent } from "./auth";
 export const getUserWorkouts = query({
   args: {},
   async handler(ctx, args) {
+    // @ts-ignore
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
       return null;
     }
-
+    // @ts-ignore
     const userId = user._id;
 
     const workouts = await ctx.db
@@ -94,11 +95,12 @@ export const getWorkoutById = query({
   },
   async handler(ctx, args) {
     // Získej přihlášeného uživatele přes tvůj helper
+    // @ts-ignore
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
       return null; // Uživatel není přihlášen
     }
-
+    // @ts-ignore
     const userId = user._id; // Interní databázové ID uživatele
 
     // Načti trénink podle ID
@@ -191,3 +193,70 @@ export const addWorkout = mutation(
     });
   }
 );
+
+export const createWorkout = mutation({
+  args: {
+    name: v.string(),
+    workoutDate: v.string(),
+    filterId: v.id("filters"),
+    exercises: v.optional(
+      v.array(
+        v.object({
+          exerciseId: v.id("exercises"),
+          note: v.optional(v.string()),
+          order: v.number(),
+          sets: v.optional(
+            v.array(
+              v.object({
+                reps: v.number(),
+                weight: v.number(),
+                order: v.number(),
+              }),
+            ),
+          ),
+        }),
+      ),
+    ),
+  },
+  async handler(ctx, args) {
+    // @ts-ignore
+    const user = await authComponent.getAuthUser(ctx);
+    if (!user) throw new Error("Unauthorized");
+    // @ts-ignore
+    const userId = user._id;
+
+    // 1. Vytvoření tréninku
+    const workoutId = await ctx.db.insert("workouts", {
+      userId,
+      name: args.name,
+      workoutDate: args.workoutDate,
+      filterId: args.filterId,
+    });
+
+    // 2. Pokud existují cviky, vytvoříme je
+    if (args.exercises && args.exercises.length > 0) {
+      for (const exercise of args.exercises) {
+        const workoutExerciseId = await ctx.db.insert("workoutExercises", {
+          workoutId,
+          exerciseId: exercise.exerciseId,
+          note: exercise.note ?? undefined,
+          order: exercise.order,
+        });
+
+        // 3. Pokud existují série, vytvoříme je
+        if (exercise.sets && exercise.sets.length > 0) {
+          for (const set of exercise.sets) {
+            await ctx.db.insert("sets", {
+              workoutExerciseId,
+              reps: set.reps,
+              weight: set.weight,
+              order: set.order,
+            });
+          }
+        }
+      }
+    }
+
+    return { workoutId };
+  },
+});
