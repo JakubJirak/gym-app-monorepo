@@ -5,12 +5,10 @@ import { authComponent } from "./auth";
 export const getAllExercises = query({
   args: {},
   handler: async (ctx) => {
-    // @ts-ignore
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
-      return null; // Uživatel není přihlášen
+      return null;
     }
-    // @ts-ignore
     const userId = user._id;
 
     const userExercises = await ctx.db.query("exercises").withIndex("by_userId", (q) => q.eq("userId", userId)).collect();

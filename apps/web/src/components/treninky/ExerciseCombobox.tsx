@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import { AddExercise } from "@/components/cviky/AddExercise.tsx";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,9 +16,13 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { authClient } from "@/lib/auth-client.ts";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { convexQuery } from "@convex-dev/react-query";
+import { api } from "../../../../../packages/convex/convex/_generated/api";
+import { useMutation } from "convex/react";
+import { ExerciseSelect } from "utils/training-types";
 
 interface ExerciseComboboxProps {
   selectedStatus: ExerciseSelect | null;
@@ -29,7 +32,6 @@ interface ExerciseComboboxProps {
     exerciseId: string | number,
     selected: ExerciseSelect,
   ) => void;
-  exercises: ExerciseSelectWithID[];
 }
 
 export function ExerciseCombobox({
@@ -37,7 +39,6 @@ export function ExerciseCombobox({
   setSelectedStatus,
   exerciseId,
   selectExercise,
-  exercises,
 }: ExerciseComboboxProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -62,7 +63,6 @@ export function ExerciseCombobox({
             <StatusList
               setOpen={setOpen}
               setSelectedStatus={setSelectedStatus}
-              exercises={exercises}
             />
           </div>
         </DrawerContent>
@@ -74,33 +74,22 @@ export function ExerciseCombobox({
 function StatusList({
   setOpen,
   setSelectedStatus,
-  exercises,
 }: {
   setOpen: (open: boolean) => void;
   setSelectedStatus: (status: ExerciseSelect | null) => void;
-  exercises: ExerciseSelectWithID[];
 }) {
-  const queryClient = useQueryClient();
   const [searchVal, setSearchVal] = useState<string>("");
-  const { data: session } = authClient.useSession();
+  const { data: exercises } = useSuspenseQuery(convexQuery(api.exercises.getAllExercises, {}));
+  const addExercise = useMutation(api.exercises.addExercise);
 
-  // const addExMutation = useMutation({
-  //   mutationFn: addCustomEx,
-  //   onSuccess: () => {
-  //     void queryClient.invalidateQueries({ queryKey: ["customExercises"] });
-  //   },
-  // });
+  const handleAddExercise = (exerciseName: string, muscleGroupId: Id<"muscleGroups">) => {
+    addExercise({
+      name: exerciseName,
+      muscleGroupId,
+    })
+  }
 
-  const handleAddExercise = (exN: string, mgId: string) => {
-    addExMutation.mutate({
-      data: {
-        id: nanoid(10),
-        name: exN,
-        userId: session?.user.id ?? "",
-        mgId: mgId,
-      },
-    });
-  };
+  if (!exercises) return null;
 
   return (
     <Command className="w-full">

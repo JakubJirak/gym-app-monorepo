@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { deleteSet, updateSet } from "@/utils/serverFn/trainings";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import type React from "react";
@@ -36,43 +35,42 @@ export function DialogEditSet({
   const [editWeight, setEditWeight] = useState<string>(
     weightBefore ? weightBefore : "",
   );
-  const queryClient = useQueryClient();
 
-  const deleteSetMutation = useMutation({
-    mutationFn: deleteSet,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-    },
-    onError: (error) => console.log(error),
-  });
+  // const deleteSetMutation = useMutation({
+  //   mutationFn: deleteSet,
+  //   onSuccess: () => {
+  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
+  //   },
+  //   onError: (error) => console.log(error),
+  // });
 
-  const updateSetMutation = useMutation({
-    mutationFn: updateSet,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-    },
-    onError: (error) => console.log(error),
-  });
+  // const updateSetMutation = useMutation({
+  //   mutationFn: updateSet,
+  //   onSuccess: () => {
+  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
+  //   },
+  //   onError: (error) => console.log(error),
+  // });
 
-  function handleDeleteSet(id: string) {
-    deleteSetMutation.mutate({
-      data: { setId: id },
-    });
-  }
+  // function handleDeleteSet(id: string) {
+  //   deleteSetMutation.mutate({
+  //     data: { setId: id },
+  //   });
+  // }
 
-  function handleEditSet(
-    id: string,
-    editSetWeight: string,
-    editSetReps: string,
-  ) {
-    updateSetMutation.mutate({
-      data: {
-        setId: id,
-        editSetWeight: editSetWeight,
-        editSetReps: Number(editSetReps),
-      },
-    });
-  }
+  // function handleEditSet(
+  //   id: string,
+  //   editSetWeight: string,
+  //   editSetReps: string,
+  // ) {
+  //   updateSetMutation.mutate({
+  //     data: {
+  //       setId: id,
+  //       editSetWeight: editSetWeight,
+  //       editSetReps: Number(editSetReps),
+  //     },
+  //   });
+  // }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

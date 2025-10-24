@@ -7,21 +7,18 @@ import type {
   ExerciseSelectWithID,
   SetType,
 } from "@/utils/types/trainingsTypes.ts";
+import { formatSetInfo } from "utils/training-format";
 
 interface TrainingLiProps {
   exercise: Exercise;
-  formatSetInfo: (set: SetType) => string;
   toggleEdit: boolean;
-  exercises: ExerciseSelectWithID[];
   index: number;
   len: number;
 }
 
 const TrainingLi = ({
   exercise,
-  formatSetInfo,
   toggleEdit,
-  exercises,
   index,
   len,
 }: TrainingLiProps) => {
@@ -37,7 +34,6 @@ const TrainingLi = ({
           <EditOptionsDialog
             order={exercise.sets.length}
             exId={exercise.id}
-            exercises={exercises}
             exerciseId={exercise.id}
             id={exercise.id}
           />

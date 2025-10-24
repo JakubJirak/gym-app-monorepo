@@ -3,44 +3,20 @@ import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddEx
 import DialogDelete from "@/components/treninky/editDialogs/DialogDeleteTraining.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
-import { authClient } from "@/lib/auth-client.ts";
-import { formatDate } from "@/utils/date-utils.ts";
-import { getExById } from "@/utils/serverFn/trainings.ts";
-import { formatSetInfo } from "@/utils/training-format-utils.ts";
-import type {
-  ExerciseSelectWithID,
-  TrainingsByIdType,
-} from "@/utils/types/trainingsTypes.ts";
-import { useQuery } from "@tanstack/react-query";
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Calendar } from "lucide-react";
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import { formatDate } from "utils/date-utils";
 
-interface TrainingInfoProps {
-  trainingArr: TrainingsByIdType;
-}
-
-const TrainingInfo = ({ trainingArr }: TrainingInfoProps) => {
+const TrainingInfo = ({ trainingId }: {trainingId: string}) => {
   const [toggleEdit, setToggleEdit] = useState(false);
-  const training = trainingArr[0];
-  const { data: session } = authClient.useSession();
+  const { data: training } = useSuspenseQuery(convexQuery(api.workouts.getWorkoutById, { workoutId: trainingId as Id<"workouts"> }));
 
-  const { data: defaultExercises } = useQuery({
-    queryKey: ["defaultExercises"],
-    queryFn: () => getExById({ data: { userId: "default" } }),
-    enabled: !!session,
-  });
-
-  const { data: customExercises } = useQuery({
-    queryKey: ["customExercises", session?.user.id],
-    queryFn: () => getExById({ data: { userId: session?.user.id ?? "" } }),
-    enabled: !!session,
-  });
-
-  const exercises: ExerciseSelectWithID[] = [
-    ...(customExercises ?? []),
-    ...(defaultExercises ?? []),
-  ];
+  if (!training) return null;
 
   return (
     <div>
@@ -50,28 +26,25 @@ const TrainingInfo = ({ trainingArr }: TrainingInfoProps) => {
           {formatDate(new Date(training.workoutDate), "PPPP")}
         </div>
         <Badge variant="secondary">
-          Cviky: {training.workoutExercises.length}
+          Cviky: {training.exercises.length}
         </Badge>
       </div>
 
       <div className="flex flex-col items-stretch relative">
-        {training.workoutExercises.map((exercise, index) => (
+        {training.exercises.map((exercise, index) => (
           <TrainingLi
-            key={exercise.id}
+            key={exercise._id}
             exercise={exercise}
-            formatSetInfo={formatSetInfo}
             toggleEdit={toggleEdit}
-            exercises={exercises}
             index={index}
-            len={training.workoutExercises.length}
+            len={training.exercises.length}
           />
         ))}
         <div className="space-y-2 mt-5">
           <div className={`${toggleEdit ? "" : "hidden"}`}>
             <DialogAddExercise
-              exercises={exercises}
-              trainingId={training.id}
-              order={training.workoutExercises.length}
+              trainingId={training._id}
+              order={training.exercises.length}
             />
           </div>
           <div className="flex justify-between items-center">
@@ -84,7 +57,7 @@ const TrainingInfo = ({ trainingArr }: TrainingInfoProps) => {
               </Toggle>
             </div>
             <div className="inline-flex self-end">
-              <DialogDelete id={training.id} />
+              <DialogDelete id={training._id} />
             </div>
           </div>
         </div>

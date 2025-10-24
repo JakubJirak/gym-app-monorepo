@@ -11,14 +11,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import type { ExerciseSelectWithID } from "@/utils/types/trainingsTypes.ts";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 
 interface EditOptionsDialogProps {
   order: number;
   exId: string;
-  exercises: ExerciseSelectWithID[];
   exerciseId: string;
   id: string;
 }
@@ -26,7 +24,6 @@ interface EditOptionsDialogProps {
 export function EditOptionsDialog({
   order,
   exId,
-  exercises,
   exerciseId,
   id,
 }: EditOptionsDialogProps) {
@@ -54,7 +51,6 @@ export function EditOptionsDialog({
               />
 
               <DialogEditExercise
-                exercises={exercises}
                 exerciseId={exerciseId}
                 setOpenParent={setOpenParent}
               />

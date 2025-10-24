@@ -5,12 +5,10 @@ import { authComponent } from "./auth";
 export const getUserWeight = query({
   args: {},
   handler: async (ctx, args) => {
-    // @ts-ignore
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
-      return null; // Uživatel není přihlášen
+      return null;
     }
-    // @ts-ignore
     const userId = user._id;
 
     return await ctx.db.query("userWeights").withIndex("by_userId", (q) => q.eq("userId", userId)).first();
@@ -22,12 +20,10 @@ export const addUserWeight = mutation({
     weight: v.string(),
   },
   handler: async (ctx, args) => {
-    // @ts-ignore
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
-      return null; // Uživatel není přihlášen
+      return null;
     }
-    // @ts-ignore
     const userId = user._id;
 
     await ctx.db.insert("userWeights", {

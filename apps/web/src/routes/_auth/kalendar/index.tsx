@@ -86,7 +86,6 @@ function RouteComponent() {
             />
           </div>
           <div className="">
-            {/*@ts-ignore */}
             <Accordion type="multiple" className="w-full space-y-2">
               {matchingTrainings?.map((training) => (
                 <AccordionItem
@@ -94,7 +93,6 @@ function RouteComponent() {
                   value={training._id}
                   className="bg-background has-focus-visible:border-ring has-focus-visible:ring-ring/50 rounded-xl border px-4 outline-none last:border-b has-focus-visible:ring-[3px]"
                 >
-                  {/*@ts-ignore */}
                   <AccordionTrigger className="hover:no-underline flex items-center py-3 gap-2">
                     <Link
                       className="w-full grid grid-cols-[5fr_2fr] items-center grid-rows-2"

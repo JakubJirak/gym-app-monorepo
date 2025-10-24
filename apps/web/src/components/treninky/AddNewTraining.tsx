@@ -2,7 +2,6 @@ import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { CalendarIcon, Plus, Trash2, X } from "lucide-react";
 import { useState } from "react";
-
 import { ExerciseCombobox } from "@/components/treninky/ExerciseCombobox.tsx";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -24,21 +23,19 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { authClient } from "@/lib/auth-client.ts";
 import { cn } from "@/lib/utils";
+import { ExerciseSelect } from "utils/training-types";
 
 interface ExerciseOption {
   id: string;
   name: string;
 }
 export interface Set {
-  id: string;
   exerciseId: string;
   reps: string;
   weight: string;
 }
 export interface Exercise {
-  id: string;
   workoutId: string;
   name: string;
   exerciseId: string | null;
@@ -46,7 +43,6 @@ export interface Exercise {
   sets: Set[];
 }
 export interface Training {
-  id: string;
   name: string;
   date: Date;
   exercises: Exercise[];
@@ -55,12 +51,6 @@ interface TrainingDialogProps {
   onSave: (training: Training) => void;
 }
 
-// const getExById = createServerFn({ method: "GET" })
-//   .validator((data: { userId: string }) => data)
-//   .handler(async ({ data }) => {
-//     return db.select().from(exercises).where(eq(exercises.userId, data.userId));
-//   });
-
 const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [training, setTraining] = useState({
@@ -68,7 +58,6 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
     date: undefined as Date | undefined,
     exercises: [] as Exercise[],
   });
-  const { data: session } = authClient.useSession();
 
   // Ukládání vybraného statusu pro každý cvik zvlášť podle jeho id
   const [selectedStatuses, setSelectedStatuses] = useState<
@@ -77,29 +66,13 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
   const [localTrainingId, setLocalTrainingId] = useState<string | null>(null);
   const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
 
-  // const { data: defaultExercises } = useQuery({
-  //   queryKey: ["defaultExercises"],
-  //   queryFn: () => getExById({ data: { userId: "default" } }),
-  // });
-
-  // const { data: customExercises } = useQuery({
-  //   queryKey: ["customExercises", session?.user.id],
-  //   queryFn: () => getExById({ data: { userId: session?.user.id ?? "" } }),
-  //   enabled: !!session,
-  // });
-
-  // const exercises: ExerciseSelectWithID[] = [
-  //   ...(customExercises ?? []),
-  //   ...(defaultExercises ?? []),
-  // ];
-
   const addExercise = () => {
     let workoutId = localTrainingId;
     if (!workoutId) {
-      workoutId = uuidv4();
+      //workoutId = uuidv4();
       setLocalTrainingId(workoutId);
     }
-    const exerciseId = uuidv4();
+    //const exerciseId = uuidv4();
     const newExercise: Exercise = {
       id: exerciseId,
       workoutId: workoutId,
@@ -108,7 +81,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
       notes: "",
       sets: [
         {
-          id: uuidv4(),
+          //id: uuidv4(),
           exerciseId: exerciseId,
           reps: "",
           weight: "",
@@ -246,7 +219,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 
     let workoutId = localTrainingId;
     if (!workoutId) {
-      workoutId = uuidv4();
+      //workoutId = uuidv4();
       setLocalTrainingId(workoutId);
     }
 
@@ -389,7 +362,6 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
                             }
                             exerciseId={exercise.id}
                             selectExercise={selectExercise}
-                            exercises={exercises}
                           />
                         </div>
                       </div>

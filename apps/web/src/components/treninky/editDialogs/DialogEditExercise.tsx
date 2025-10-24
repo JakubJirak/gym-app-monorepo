@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { editExercise } from "@/utils/serverFn/trainings";
 import type {
   ExerciseSelect,
   ExerciseSelectWithID,
@@ -21,37 +20,34 @@ import type React from "react";
 import { useState } from "react";
 
 interface DialogEditSet {
-  exercises: ExerciseSelectWithID[];
   exerciseId: string;
   setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function DialogEditExercise({
-  exercises,
   exerciseId,
   setOpenParent,
 }: DialogEditSet) {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedStatusesEx, setSelectedStatusesEx] =
     useState<ExerciseSelect | null>(null);
-  const queryClient = useQueryClient();
 
-  const editExerciseMutation = useMutation({
-    mutationFn: editExercise,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-    },
-    onError: (error) => console.log(error),
-  });
+  // const editExerciseMutation = useMutation({
+  //   mutationFn: editExercise,
+  //   onSuccess: () => {
+  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
+  //   },
+  //   onError: (error) => console.log(error),
+  // });
 
-  function handleEditExercise(id: string) {
-    editExerciseMutation.mutate({
-      data: {
-        id: id,
-        exerciseId: selectedStatusesEx?.id ?? "dl",
-      },
-    });
-  }
+  // function handleEditExercise(id: string) {
+  //   editExerciseMutation.mutate({
+  //     data: {
+  //       id: id,
+  //       exerciseId: selectedStatusesEx?.id ?? "dl",
+  //     },
+  //   });
+  // }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +81,6 @@ export function DialogEditExercise({
               selectedStatus={selectedStatusesEx}
               setSelectedStatus={setSelectedStatusesEx}
               exerciseId="a"
-              exercises={exercises}
             />
             <DialogFooter className="mt-4">
               <DialogClose asChild>

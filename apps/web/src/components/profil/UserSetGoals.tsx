@@ -60,7 +60,7 @@ const UserSetGoals = () => {
       <div className="px-0">
         {!goals || edit ? (
           <form
-            className="flex flex-col gap-3 mt-[-8px]"
+            className="flex flex-col gap-3 -mt-2"
             onSubmit={(e) => handleSubmit(e)}
           >
             <div className="grid grid-cols-[60px_1fr] gap-2 items-center">
@@ -107,7 +107,7 @@ const UserSetGoals = () => {
             </Button>
           </form>
         ) : (
-          <div className="flex flex-col gap-3 mt-[-8px]">
+          <div className="flex flex-col gap-3 -mt-2">
             <div className="grid grid-cols-[60px_1fr] gap-2 items-center">
               <p>Squat:</p>
               <p>{goals.squat}kg</p>

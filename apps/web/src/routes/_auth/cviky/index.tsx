@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useMutation, useQuery } from 'convex/react'
+import { useMutation } from 'convex/react'
 import { api } from '../../../../../../packages/convex/convex/_generated/api'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Header from '@/components/Header';
@@ -7,6 +7,8 @@ import { Dumbbell } from 'lucide-react';
 import { useMemo } from 'react';
 import { AddExercise } from '@/components/cviky/AddExercise';
 import { Id } from '../../../../../../packages/convex/convex/_generated/dataModel';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { convexQuery } from '@convex-dev/react-query';
 
 type Exercise = {
   _id: string;
@@ -33,7 +35,7 @@ export const Route = createFileRoute('/_auth/cviky/')({
 
 function RouteComponent() {
 
-  const exercises = useQuery(api.exercises.getAllExercises);
+  const { data: exercises } = useSuspenseQuery(convexQuery(api.exercises.getAllExercises, {}));
   const addExercise = useMutation(api.exercises.addExercise);
 
   const sortedExercises = useMemo<SortedExercises>(() => {
@@ -91,18 +93,17 @@ function RouteComponent() {
           <AddExercise handleAddExercise={handleAddExercise} defaultName="" />
         </div>
 
-        {/*@ts-ignore */}
         <Accordion
           type="multiple"
           className="w-full"
         >
           {Object.entries(sortedExercises).map(([muscleGroup, exercises]) => (
             <AccordionItem key={muscleGroup} value={muscleGroup}>
-              {/*@ts-ignore */}
+
               <AccordionTrigger className="text-base font-bold pb-2 pt-3 hover:no-underline">
                 {muscleGroup}
               </AccordionTrigger>
-              {/*@ts-ignore */}
+
               <AccordionContent className="pb-2">
                 <div className="pl-2 mt-2 space-y-2">
                   {exercises.map((exercise) => (

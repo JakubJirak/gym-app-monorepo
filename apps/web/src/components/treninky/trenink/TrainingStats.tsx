@@ -1,4 +1,5 @@
-import type { TrainingsByIdType } from "@/utils/types/trainingsTypes";
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   ChartColumnIncreasing,
   Dumbbell,
@@ -7,17 +8,15 @@ import {
   Weight,
 } from "lucide-react";
 import { useMemo } from "react";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface TrainingStatsProps {
-  trainingArr: TrainingsByIdType;
-}
-
-const TrainingStats = ({ trainingArr }: TrainingStatsProps) => {
-  const training = trainingArr[0];
+const TrainingStats = ({ trainingId }: { trainingId: string}) => {
+  const { data: training } = useSuspenseQuery(convexQuery(api.workouts.getWorkoutById, { workoutId: trainingId as Id<"workouts"> }));
 
   const totalWeight = useMemo(
     () =>
-      training.workoutExercises?.reduce(
+      training?.exercises?.reduce(
         (exAcc, exercise) =>
           exAcc +
           exercise.sets.reduce(
@@ -26,12 +25,12 @@ const TrainingStats = ({ trainingArr }: TrainingStatsProps) => {
           ),
         0,
       ) ?? 0,
-    [training.workoutExercises],
+    [training?.exercises],
   );
 
   const allReps = useMemo(
     () =>
-      training.workoutExercises?.reduce(
+      training?.exercises?.reduce(
         (exAcc, exercise) =>
           exAcc +
           exercise.sets.reduce(
@@ -40,19 +39,19 @@ const TrainingStats = ({ trainingArr }: TrainingStatsProps) => {
           ),
         0,
       ) ?? 0,
-    [training.workoutExercises],
+    [training?.exercises],
   );
 
   const allSets = useMemo(
     () =>
-      training.workoutExercises?.reduce(
+      training?.exercises?.reduce(
         (exAcc, exercise) => exAcc + exercise.sets.length,
         0,
       ) ?? 0,
-    [training.workoutExercises],
+    [training?.exercises],
   );
 
-  const allExercises = training.workoutExercises?.length ?? 0;
+  const allExercises = training?.exercises?.length ?? 0;
 
   return (
     <div>

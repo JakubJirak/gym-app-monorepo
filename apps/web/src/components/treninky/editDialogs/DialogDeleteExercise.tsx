@@ -10,8 +10,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { deleteExercise } from "@/utils/serverFn/trainings";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type React from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
 
@@ -21,21 +19,19 @@ interface DialogDeleteTraining {
 }
 
 const DialogDeleteTraining = ({ id, setOpenParent }: DialogDeleteTraining) => {
-  const queryClient = useQueryClient();
+  // const deleteExerciseMutation = useMutation({
+  //   mutationFn: deleteExercise,
+  //   onSuccess: () => {
+  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
+  //   },
+  //   onError: (error) => console.log(error),
+  // });
 
-  const deleteExerciseMutation = useMutation({
-    mutationFn: deleteExercise,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-    },
-    onError: (error) => console.log(error),
-  });
-
-  function handleDeleteExercise(id: string) {
-    deleteExerciseMutation.mutate({
-      data: { exerciseId: id },
-    });
-  }
+  // function handleDeleteExercise(id: string) {
+  //   deleteExerciseMutation.mutate({
+  //     data: { exerciseId: id },
+  //   });
+  // }
 
   return (
     <AlertDialog>

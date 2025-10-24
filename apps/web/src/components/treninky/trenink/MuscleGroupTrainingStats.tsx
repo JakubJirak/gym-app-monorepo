@@ -4,13 +4,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { TrainingsByIdType } from "@/utils/types/trainingsTypes";
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { BicepsFlexed } from "lucide-react";
 import { Pie, PieChart } from "recharts";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface TrainingStatsProps {
-  trainingArr: TrainingsByIdType;
-}
+
 const chartConfig = {
   visitors: {
     label: "Visitors",
@@ -46,19 +47,19 @@ const COLORS = [
   "var(--chart-10)",
 ];
 
-const MuscleGroupTrainingStats = ({ trainingArr }: TrainingStatsProps) => {
-  const training = trainingArr[0];
+const MuscleGroupTrainingStats = ({ trainingId }: { trainingId: string}) => {
+  const { data: training } = useSuspenseQuery(convexQuery(api.workouts.getWorkoutById, { workoutId: trainingId as Id<"workouts"> }));
 
-  const muscleGroupCounts = training.workoutExercises.reduce(
+  const muscleGroupCounts = training?.exercises?.reduce(
     (acc: Record<string, number>, exercise) => {
-      const muscleGroup = exercise.exercise?.muscleGroup?.muscleGroup ?? "";
+      const muscleGroup = exercise.exercise?.muscleGroup ?? "";
       if (muscleGroup) {
         acc[muscleGroup] = (acc[muscleGroup] || 0) + 1;
       }
       return acc;
     },
     {},
-  );
+  ) ?? {};
 
   const muscleGroupStats = Object.entries(muscleGroupCounts).map(
     ([muscleGroup, number], index) => ({

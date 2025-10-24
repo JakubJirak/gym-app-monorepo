@@ -32,12 +32,12 @@ function RouteComponent() {
           <TabsTrigger value="statistiky">Statistiky</TabsTrigger>
         </TabsList>
         <TabsContent value="cviky">
-          <TrainingInfo trainingArr={training} />
+          <TrainingInfo trainingId={trainingId} />
         </TabsContent>
         <TabsContent value="statistiky">
           <div className="space-y-8">
-            <TrainingStats trainingArr={training} />
-            <MuscleGroupTrainingStats trainingArr={training} />
+            <TrainingStats trainingId={trainingId} />
+            <MuscleGroupTrainingStats trainingId={trainingId} />
           </div>
         </TabsContent>
       </Tabs>

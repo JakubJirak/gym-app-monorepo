@@ -91,7 +91,6 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
             <div className="grid gap-3">
               <Label htmlFor="cvik">Jméno části těla</Label>
               <Popover open={popOpen} onOpenChange={setPopOpen}>
-                {/*@ts-ignore*/}
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
@@ -107,7 +106,6 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
                   </Button>
                 </PopoverTrigger>
 
-                {/*@ts-ignore*/}
                 <PopoverContent className="w-full p-0">
                   <Command>
                     <CommandList>
@@ -117,7 +115,6 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
                           <CommandItem
                             key={muscleGroup._id}
                             value={muscleGroup._id} // Tady je id!
-                            // currentValue je id, proto porovnáváme s value (taky id)
                             onSelect={(currentValue) => {
                               setValue(
                                 currentValue === value ? "" : currentValue,

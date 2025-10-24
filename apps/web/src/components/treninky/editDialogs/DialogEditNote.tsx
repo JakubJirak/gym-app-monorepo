@@ -10,7 +10,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { editNote } from "@/utils/serverFn/trainings";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import type React from "react";
@@ -24,24 +23,22 @@ interface DialogEditSet {
 export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditSet) {
   const [open, setOpen] = useState<boolean>(false);
   const [note, setNote] = useState<string>("");
-  const queryClient = useQueryClient();
+  // const editNoteMutation = useMutation({
+  //   mutationFn: editNote,
+  //   onSuccess: () => {
+  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
+  //   },
+  //   onError: (error) => console.log(error),
+  // });
 
-  const editNoteMutation = useMutation({
-    mutationFn: editNote,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-    },
-    onError: (error) => console.log(error),
-  });
-
-  function handleEditNote(id: string, note: string) {
-    editNoteMutation.mutate({
-      data: {
-        exId: id,
-        note,
-      },
-    });
-  }
+  // function handleEditNote(id: string, note: string) {
+  //   editNoteMutation.mutate({
+  //     data: {
+  //       exId: id,
+  //       note,
+  //     },
+  //   });
+  // }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

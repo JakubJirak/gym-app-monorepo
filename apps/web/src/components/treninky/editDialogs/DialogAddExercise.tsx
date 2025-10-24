@@ -22,13 +22,11 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 interface DialogEditSet {
-  exercises: ExerciseSelectWithID[];
   trainingId: string;
   order: number;
 }
 
 export function DialogAddExercise({
-  exercises,
   trainingId,
   order,
 }: DialogEditSet) {
@@ -87,7 +85,6 @@ export function DialogAddExercise({
               selectedStatus={selectedStatuses}
               setSelectedStatus={setSelectedStatuses}
               exerciseId="a"
-              exercises={exercises}
             />
             <DialogFooter className="mt-4">
               <DialogClose asChild>

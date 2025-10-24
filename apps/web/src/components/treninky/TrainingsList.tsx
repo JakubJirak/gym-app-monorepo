@@ -1,5 +1,4 @@
 import { Calendar, Dumbbell } from "lucide-react";
-
 import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddExercise.tsx";
 import DialogDelete from "@/components/treninky/editDialogs/DialogDeleteTraining.tsx";
 import {
@@ -24,8 +23,6 @@ import { formatDate, toLocalISODateString } from "utils/date-utils.ts";
 
 const TrainingsList = () => {
   const [toggleEdit, setToggleEdit] = useState(false);
-
-  const { data: exercises } = useSuspenseQuery(convexQuery(api.exercises.getAllExercises, {}));
   const { data: trainings, isLoading } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
 
   // const mutationTrainings = useMutation({
@@ -123,9 +120,7 @@ const TrainingsList = () => {
                         <TrainingLi
                           key={exercise._id}
                           exercise={exercise}
-                          formatSetInfo={formatSetInfo}
                           toggleEdit={toggleEdit}
-                          exercises={exercises}
                           index={index}
                           len={training.exercises.length}
                         />
@@ -133,7 +128,6 @@ const TrainingsList = () => {
                       <div className="space-y-2 mt-4">
                         <div className={`${toggleEdit ? "" : "hidden"}`}>
                           <DialogAddExercise
-                            exercises={exercises}
                             trainingId={training._id}
                             order={training.exercises.length}
                           />

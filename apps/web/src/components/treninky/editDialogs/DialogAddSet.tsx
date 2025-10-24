@@ -28,32 +28,30 @@ export function DialogAddSet({ order, exId, setOpenParent }: DialogEditSet) {
   const [open, setOpen] = useState<boolean>(false);
   const [addSetWeight, setAddSetWeight] = useState<string>("");
   const [addSetReps, setAddSetReps] = useState<string>("");
-  const queryClient = useQueryClient();
+  // const addSetMutation = useMutation({
+  //   mutationFn: addSet,
+  //   onSuccess: () => {
+  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
+  //   },
+  //   onError: (error) => console.log(error),
+  // });
 
-  const addSetMutation = useMutation({
-    mutationFn: addSet,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-    },
-    onError: (error) => console.log(error),
-  });
-
-  function handleAddSet(
-    exId: string,
-    order: number,
-    addSetWeight: string,
-    addSetReps: string,
-  ) {
-    addSetMutation.mutate({
-      data: {
-        id: uuidv4(),
-        exId: exId,
-        weight: addSetWeight,
-        reps: Number(addSetReps),
-        order: order,
-      },
-    });
-  }
+  // function handleAddSet(
+  //   exId: string,
+  //   order: number,
+  //   addSetWeight: string,
+  //   addSetReps: string,
+  // ) {
+  //   addSetMutation.mutate({
+  //     data: {
+  //       id: uuidv4(),
+  //       exId: exId,
+  //       weight: addSetWeight,
+  //       reps: Number(addSetReps),
+  //       order: order,
+  //     },
+  //   });
+  // }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
