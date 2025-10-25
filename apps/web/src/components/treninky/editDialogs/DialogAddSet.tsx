@@ -11,52 +11,43 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { addSet } from "@/utils/serverFn/trainings";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useMutation } from "convex/react";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogEditSet {
   order: number;
-  exId: string;
+  exerciseId: string;
   setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function DialogAddSet({ order, exId, setOpenParent }: DialogEditSet) {
+export function DialogAddSet({ order, exerciseId, setOpenParent }: DialogEditSet) {
   const [open, setOpen] = useState<boolean>(false);
   const [addSetWeight, setAddSetWeight] = useState<string>("");
   const [addSetReps, setAddSetReps] = useState<string>("");
-  // const addSetMutation = useMutation({
-  //   mutationFn: addSet,
-  //   onSuccess: () => {
-  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-  //   },
-  //   onError: (error) => console.log(error),
-  // });
+  const addSet = useMutation(api.workoutExercises.addSet);
 
-  // function handleAddSet(
-  //   exId: string,
-  //   order: number,
-  //   addSetWeight: string,
-  //   addSetReps: string,
-  // ) {
-  //   addSetMutation.mutate({
-  //     data: {
-  //       id: uuidv4(),
-  //       exId: exId,
-  //       weight: addSetWeight,
-  //       reps: Number(addSetReps),
-  //       order: order,
-  //     },
-  //   });
-  // }
+  function handleAddSet(
+    exerciseId: string,
+    order: number,
+    addSetWeight: string,
+    addSetReps: string,
+  ) {
+    addSet({
+      workoutExerciseId: exerciseId as Id<"workoutExercises">,
+      weight: Number(addSetWeight),
+      reps: Number(addSetReps),
+      order: order,
+    })
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    handleAddSet(exId, order, addSetWeight, addSetReps);
+    handleAddSet(exerciseId, order, addSetWeight, addSetReps);
     setOpen(false);
     setAddSetWeight("");
     setAddSetReps("");

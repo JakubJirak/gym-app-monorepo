@@ -10,14 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import type {
-  ExerciseSelect,
-  ExerciseSelectWithID,
-} from "@/utils/types/trainingsTypes.ts";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { ExerciseSelect } from "utils/training-types";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogEditSet {
   exerciseId: string;
@@ -31,23 +30,14 @@ export function DialogEditExercise({
   const [open, setOpen] = useState<boolean>(false);
   const [selectedStatusesEx, setSelectedStatusesEx] =
     useState<ExerciseSelect | null>(null);
+  const editExercise = useMutation(api.workoutExercises.editExercise);
 
-  // const editExerciseMutation = useMutation({
-  //   mutationFn: editExercise,
-  //   onSuccess: () => {
-  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-  //   },
-  //   onError: (error) => console.log(error),
-  // });
-
-  // function handleEditExercise(id: string) {
-  //   editExerciseMutation.mutate({
-  //     data: {
-  //       id: id,
-  //       exerciseId: selectedStatusesEx?.id ?? "dl",
-  //     },
-  //   });
-  // }
+  function handleEditExercise(id: string) {
+    editExercise({
+      workoutExerciseId: id as Id<"workoutExercises">,
+      exerciseId: selectedStatusesEx?._id as Id<"exercises">,
+    });
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

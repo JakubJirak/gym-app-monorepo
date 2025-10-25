@@ -11,14 +11,16 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogEditSet {
-  repsBefore: number | null;
+  repsBefore: string | null;
   weightBefore: string | null;
   setId: string;
 }
@@ -36,41 +38,24 @@ export function DialogEditSet({
     weightBefore ? weightBefore : "",
   );
 
-  // const deleteSetMutation = useMutation({
-  //   mutationFn: deleteSet,
-  //   onSuccess: () => {
-  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-  //   },
-  //   onError: (error) => console.log(error),
-  // });
+  const deleteSet = useMutation(api.workoutExercises.deleteSet);
+  const editSet = useMutation(api.workoutExercises.editSet);
 
-  // const updateSetMutation = useMutation({
-  //   mutationFn: updateSet,
-  //   onSuccess: () => {
-  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-  //   },
-  //   onError: (error) => console.log(error),
-  // });
+  function handleDeleteSet(id: string){
+    deleteSet({ setId: id as Id<"sets"> })
+  }
 
-  // function handleDeleteSet(id: string) {
-  //   deleteSetMutation.mutate({
-  //     data: { setId: id },
-  //   });
-  // }
-
-  // function handleEditSet(
-  //   id: string,
-  //   editSetWeight: string,
-  //   editSetReps: string,
-  // ) {
-  //   updateSetMutation.mutate({
-  //     data: {
-  //       setId: id,
-  //       editSetWeight: editSetWeight,
-  //       editSetReps: Number(editSetReps),
-  //     },
-  //   });
-  // }
+  function handleEditSet(
+    id: string,
+    editSetWeight: string,
+    editSetReps: string,
+  ) {
+    editSet({
+      setId: id as Id<"sets">,
+      weight: Number(editSetWeight),
+      reps: Number(editSetReps),
+    });
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

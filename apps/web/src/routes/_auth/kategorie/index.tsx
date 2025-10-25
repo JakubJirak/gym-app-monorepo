@@ -19,7 +19,6 @@ export const Route = createFileRoute('/_auth/kategorie/')({
 })
 
 function RouteComponent() {
-
   const filters = useQuery(api.filters.getAllFilters);
 
   if (!filters) return null;
@@ -38,8 +37,6 @@ function RouteComponent() {
               Zde jsou všechny vaše kategorie.
             </p>
           </div>
-
-
         </div>
 
         <div className="flex flex-col gap-7 mt-8">
@@ -48,8 +45,6 @@ function RouteComponent() {
           ))}
         </div>
       </div>
-
-
     </div>
   )
 }

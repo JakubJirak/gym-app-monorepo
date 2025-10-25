@@ -10,31 +10,29 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { useMutation } from "convex/react";
 import type React from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogDeleteTraining {
-  id: string;
+  exerciseId: string;
   setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DialogDeleteTraining = ({ id, setOpenParent }: DialogDeleteTraining) => {
-  // const deleteExerciseMutation = useMutation({
-  //   mutationFn: deleteExercise,
-  //   onSuccess: () => {
-  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-  //   },
-  //   onError: (error) => console.log(error),
-  // });
+const DialogDeleteTraining = ({ exerciseId, setOpenParent }: DialogDeleteTraining) => {
+  const deleteWorkoutExercise = useMutation(api.workoutExercises.deleteWorkoutExercise);
 
-  // function handleDeleteExercise(id: string) {
-  //   deleteExerciseMutation.mutate({
-  //     data: { exerciseId: id },
-  //   });
-  // }
+  function handleDeleteExercise(id: string) {
+    deleteWorkoutExercise({
+      workoutExerciseId: id as Id<"workoutExercises">,
+    });
+  }
 
   return (
     <AlertDialog>
+      {/*@ts-ignore*/}
       <AlertDialogTrigger asChild>
         <Button variant="destructive" className="mx-auto w-40">
           <FaRegTrashCan className="size-3" />
@@ -51,10 +49,11 @@ const DialogDeleteTraining = ({ id, setOpenParent }: DialogDeleteTraining) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Zrušit</AlertDialogCancel>
+          {/*@ts-ignore*/}
           <AlertDialogAction
             asChild
             onClick={() => {
-              handleDeleteExercise(id);
+              handleDeleteExercise(exerciseId);
               setOpenParent(false);
             }}
           >

@@ -14,7 +14,6 @@ export const Route = createFileRoute('/')({
 
 function App() {
   //const tasks = useQuery(api.test.get)
-  //const { data: session } = authClient.useSession();
 
   const logOut  = async () => {
     await authClient.signOut();
@@ -24,7 +23,6 @@ function App() {
 
   return (
     <div className="text-center relative flex flex-col items-center max-w-[500px] mx-auto">
-      {/*<p>{session?.user.name}</p>*/}
       <Button onClick={logOut}>Log out</Button>
       <HeroSection />
       <Functions />

@@ -16,16 +16,12 @@ import { useState } from "react";
 
 interface EditOptionsDialogProps {
   order: number;
-  exId: string;
   exerciseId: string;
-  id: string;
 }
 
 export function EditOptionsDialog({
   order,
-  exId,
   exerciseId,
-  id,
 }: EditOptionsDialogProps) {
   const [openParent, setOpenParent] = useState(false);
   return (
@@ -46,7 +42,7 @@ export function EditOptionsDialog({
             <div className="flex w-full flex-col items-center gap-2 mt-4">
               <DialogAddSet
                 order={order}
-                exId={exId}
+                exerciseId={exerciseId}
                 setOpenParent={setOpenParent}
               />
 
@@ -60,7 +56,7 @@ export function EditOptionsDialog({
                 exerciseId={exerciseId}
               />
 
-              <DialogDeleteExercise id={id} setOpenParent={setOpenParent} />
+              <DialogDeleteExercise exerciseId={exerciseId} setOpenParent={setOpenParent} />
             </div>
           </DialogHeader>
         </DialogContent>

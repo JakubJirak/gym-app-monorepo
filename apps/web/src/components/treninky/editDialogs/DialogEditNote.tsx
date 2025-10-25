@@ -10,10 +10,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogEditSet {
   exerciseId: string;
@@ -23,22 +25,14 @@ interface DialogEditSet {
 export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditSet) {
   const [open, setOpen] = useState<boolean>(false);
   const [note, setNote] = useState<string>("");
-  // const editNoteMutation = useMutation({
-  //   mutationFn: editNote,
-  //   onSuccess: () => {
-  //     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-  //   },
-  //   onError: (error) => console.log(error),
-  // });
+  const editNote = useMutation(api.workoutExercises.editNote);
 
-  // function handleEditNote(id: string, note: string) {
-  //   editNoteMutation.mutate({
-  //     data: {
-  //       exId: id,
-  //       note,
-  //     },
-  //   });
-  // }
+  function handleEditNote(id: string, note: string){
+    editNote({
+      workoutExerciseId: id as Id<"workoutExercises">,
+      note: note,
+    })
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

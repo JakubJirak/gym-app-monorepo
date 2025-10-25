@@ -18,6 +18,7 @@ import type * as muscleGroups from "../muscleGroups.js";
 import type * as test from "../test.js";
 import type * as userGoals from "../userGoals.js";
 import type * as userWeights from "../userWeights.js";
+import type * as workoutExercises from "../workoutExercises.js";
 import type * as workouts from "../workouts.js";
 
 import type {
@@ -45,6 +46,7 @@ declare const fullApi: ApiFromModules<{
   test: typeof test;
   userGoals: typeof userGoals;
   userWeights: typeof userWeights;
+  workoutExercises: typeof workoutExercises;
   workouts: typeof workouts;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

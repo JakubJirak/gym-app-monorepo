@@ -6,10 +6,12 @@ import { authComponent } from "./auth";
 export const getUserWorkouts = query({
   args: {},
   async handler(ctx, args) {
+    //@ts-ignore
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
       return null;
     }
+    //@ts-ignore
     const userId = user._id;
 
     const workouts = await ctx.db
@@ -217,10 +219,12 @@ export const createWorkout = mutation({
     ),
   },
   async handler(ctx, args) {
+    //@ts-ignore
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
       return null;
     }
+    //@ts-ignore
     const userId = user._id;
 
     // 1. Vytvoření tréninku

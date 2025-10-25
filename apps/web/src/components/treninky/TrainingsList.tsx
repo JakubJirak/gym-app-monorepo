@@ -19,7 +19,7 @@ import TrainingDialog, { type Training } from "./AddNewTraining.tsx";
 import TrainingLi from "./TrainingLi.tsx";
 import { convexQuery } from "@convex-dev/react-query";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
-import { formatDate, toLocalISODateString } from "utils/date-utils.ts";
+import { formatDate } from "utils/date-utils.ts";
 
 const TrainingsList = () => {
   const [toggleEdit, setToggleEdit] = useState(false);

@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card.tsx";
 import { Link } from "@tanstack/react-router";
-import { TableProperties, Trophy } from "lucide-react";
+import { TableProperties } from "lucide-react";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 import { GiWeightLiftingUp } from "react-icons/gi";

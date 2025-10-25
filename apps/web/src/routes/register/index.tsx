@@ -1,7 +1,14 @@
 import { RegisterForm } from "@/components/register/RegisterForm";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/register/")({
+  beforeLoad: ({ context }) => {
+    if (context.userId) {
+      throw redirect({
+        to: "/menu",
+      });
+    }
+  },
   component: RouteComponent,
   head: () => ({
     meta: [

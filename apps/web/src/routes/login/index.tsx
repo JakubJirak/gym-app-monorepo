@@ -1,15 +1,14 @@
 import { LoginForm } from "@/components/login/LoginForm.tsx";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/login/")({
-  // beforeLoad: ({ context }) => {
-  //   if (context.userId) {
-  //     throw redirect({
-  //       to: "/login", // /menu
-  //     });
-  //   }
-  // },
-
+  beforeLoad: ({ context }) => {
+    if (context.userId) {
+      throw redirect({
+        to: "/menu",
+      });
+    }
+  },
   component: RouteComponent,
   head: () => ({
     meta: [

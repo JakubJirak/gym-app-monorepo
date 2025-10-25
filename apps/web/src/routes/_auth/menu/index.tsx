@@ -17,7 +17,6 @@ function RouteComponent() {
   const { data: session } = authClient.useSession();
   if (!session) return null;
 
-
   return (
     <>
       <Header page="MENU" />

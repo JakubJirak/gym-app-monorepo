@@ -2,12 +2,28 @@ import { EditOptionsDialog } from "@/components/treninky/EditOptionsDialog.tsx";
 import { DialogEditSet } from "@/components/treninky/editDialogs/DialogEditSet.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import type {
-  Exercise,
-  ExerciseSelectWithID,
-  SetType,
-} from "@/utils/types/trainingsTypes.ts";
 import { formatSetInfo } from "utils/training-format";
+import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+
+type Exercise = {
+    _id: Id<"workoutExercises">;
+    exercise: {
+        muscleGroup: string | null;
+        _id: Id<"exercises">;
+        _creationTime: number;
+        name: string;
+        userId: string;
+        muscleGroupId: Id<"muscleGroups">;
+    } | null;
+    note: string | undefined;
+    order: number;
+    sets: {
+        _id: Id<"sets">;
+        reps: number;
+        weight: number;
+        order: number;
+    }[];
+}
 
 interface TrainingLiProps {
   exercise: Exercise;
@@ -23,7 +39,7 @@ const TrainingLi = ({
   len,
 }: TrainingLiProps) => {
   return (
-    <div key={exercise.id} className="rounded-lg mt-2 space-y-3">
+    <div key={exercise._id} className="rounded-lg mt-2 space-y-3">
       <div
         className={`${toggleEdit ? "" : "justify-between"} flex items-center`}
       >
@@ -33,13 +49,11 @@ const TrainingLi = ({
         >
           <EditOptionsDialog
             order={exercise.sets.length}
-            exId={exercise.id}
-            exerciseId={exercise.id}
-            id={exercise.id}
+            exerciseId={exercise._id}
           />
         </div>
         <Badge variant="outline">
-          {exercise?.exercise?.muscleGroup?.muscleGroup}
+          {exercise?.exercise?.muscleGroup}
         </Badge>
       </div>
 
@@ -47,7 +61,7 @@ const TrainingLi = ({
         <div className="grid gap-2">
           {exercise.sets.map((set, setIndex) => (
             <div
-              key={set.id}
+              key={set._id}
               className="flex items-center bg-secondary rounded-md py-2 px-3"
             >
               <span className="text-sm flex-1">{setIndex + 1}. série</span>
@@ -56,9 +70,9 @@ const TrainingLi = ({
               </span>
               <div className={`${toggleEdit ? "block" : "hidden"}`}>
                 <DialogEditSet
-                  repsBefore={set.reps}
-                  weightBefore={set.weight}
-                  setId={set.id}
+                  repsBefore={String(set.reps)}
+                  weightBefore={String(set.weight)}
+                  setId={set._id}
                 />
               </div>
             </div>

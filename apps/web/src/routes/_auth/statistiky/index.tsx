@@ -24,12 +24,6 @@ export const Route = createFileRoute('/_auth/statistiky/')({
 })
 
 function RouteComponent() {
-  // const { data: trainings, isLoading } = useQuery({
-  //   queryKey: ["workouts", session?.user.id],
-  //   queryFn: () => fetchTrainings({ data: { userId: session?.user.id ?? "" } }),
-  //   enabled: !!session,
-  // });
-
   const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
 
   if (trainings === undefined || trainings?.length === 0)
