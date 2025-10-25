@@ -13,9 +13,11 @@ import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
 export default function TrainingById() {
 	const { id } = useLocalSearchParams();
-	const workout = useQuery(api.workouts.getWorkoutById, {workoutId: id as Id<"workouts">})
+	const workout = useQuery(api.workouts.getWorkoutById, {
+		workoutId: id as Id<"workouts">,
+	});
 
-  if (!workout) return null;
+	if (!workout) return null;
 
 	return (
 		<>
@@ -53,14 +55,14 @@ export default function TrainingById() {
 					)}
 					data={workout.exercises}
 					renderItem={({ item }) =>
-					  item.exercise ? (
+						item.exercise ? (
 							<Exercise
-							name={item.exercise.name}
-							muscleGroup={item.exercise.muscleGroup}
-							sets={item.sets}
-							note={item.note}
+								name={item.exercise.name}
+								muscleGroup={item.exercise.muscleGroup}
+								sets={item.sets}
+								note={item.note}
 							/>
-							) : null
+						) : null
 					}
 					keyExtractor={(item) => item._id}
 					ItemSeparatorComponent={() => (

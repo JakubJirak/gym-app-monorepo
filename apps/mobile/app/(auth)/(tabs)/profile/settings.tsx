@@ -2,7 +2,6 @@ import { View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import ProfileLink from "@/components/profile/profile-link";
 
-
 export default function Settings() {
 	return (
 		<View className="flex-1 bg-black px-4">

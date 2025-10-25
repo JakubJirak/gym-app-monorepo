@@ -5,6 +5,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "format-and-lint": "biome check .",
+    "format-and-lint:fix": "biome check . --write",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },

@@ -5,12 +5,14 @@ interface ExerciseProps {
 	name: string;
 	muscleGroup: string | null;
 	note: string | undefined;
-	sets: {
-	  _id: string;
-	  reps: number;
-    weight: number;
-    order: number;
-    }[] | null
+	sets:
+		| {
+				_id: string;
+				reps: number;
+				weight: number;
+				order: number;
+		  }[]
+		| null;
 }
 
 export default function Exercise({

@@ -15,7 +15,9 @@ import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 export default function Stats() {
 	const id = useContext(TrainingIdContext);
 
-	const workout = useQuery(api.workouts.getWorkoutById, {workoutId: id as Id<"workouts">})
+	const workout = useQuery(api.workouts.getWorkoutById, {
+		workoutId: id as Id<"workouts">,
+	});
 
 	const totalWeight = useMemo(
 		() =>
@@ -33,7 +35,7 @@ export default function Stats() {
 
 	const allReps = useMemo(
 		() =>
-		workout?.exercises?.reduce(
+			workout?.exercises?.reduce(
 				(exAcc, exercise) =>
 					exAcc +
 					exercise.sets.reduce(
@@ -47,7 +49,7 @@ export default function Stats() {
 
 	const allSets = useMemo(
 		() =>
-		workout?.exercises?.reduce(
+			workout?.exercises?.reduce(
 				(exAcc, exercise) => exAcc + exercise.sets.length,
 				0,
 			) ?? 0,

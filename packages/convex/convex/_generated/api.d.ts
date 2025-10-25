@@ -15,7 +15,6 @@ import type * as exercises from "../exercises.js";
 import type * as filters from "../filters.js";
 import type * as http from "../http.js";
 import type * as muscleGroups from "../muscleGroups.js";
-import type * as test from "../test.js";
 import type * as userGoals from "../userGoals.js";
 import type * as userWeights from "../userWeights.js";
 import type * as workoutExercises from "../workoutExercises.js";
@@ -43,7 +42,6 @@ declare const fullApi: ApiFromModules<{
   filters: typeof filters;
   http: typeof http;
   muscleGroups: typeof muscleGroups;
-  test: typeof test;
   userGoals: typeof userGoals;
   userWeights: typeof userWeights;
   workoutExercises: typeof workoutExercises;

@@ -7,9 +7,9 @@ import { Weight } from "lucide-react-native";
 import { authClient } from "@/src/lib/auth-client";
 
 export default function Profile() {
-  const { data: session } = authClient.useSession();
+	const { data: session } = authClient.useSession();
 
-  if (!session) return null;
+	if (!session) return null;
 
 	return (
 		<View className="flex-1 bg-primary px-4">

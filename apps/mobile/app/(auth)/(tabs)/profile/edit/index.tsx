@@ -6,9 +6,9 @@ import { COLORS } from "@/constants/COLORS";
 import { authClient } from "@/src/lib/auth-client";
 
 export default function Edit() {
-  const { data: session } = authClient.useSession();
+	const { data: session } = authClient.useSession();
 
-  if (!session) return null;
+	if (!session) return null;
 
 	return (
 		<KeyboardAvoidingView
@@ -34,7 +34,7 @@ export default function Edit() {
 
 						<View className="gap-1">
 							<Text className="text-white text-3xl font-bold text-center">
-							  {session.user.name}
+								{session.user.name}
 							</Text>
 							<Text className="text-muted text-lg text-center">
 								Powerlifter

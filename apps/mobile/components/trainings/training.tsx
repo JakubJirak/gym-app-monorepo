@@ -48,7 +48,7 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 				<View className="flex-col justify-between">
 					<Text
 						className={`text-white text-sm border px-2.5 py-1.5 rounded-xl text-center`}
-						style={{ borderColor: `${ filter ? `${filter.color}99` : "gray" }` }}
+						style={{ borderColor: `${filter ? `${filter.color}99` : "gray"}` }}
 					>
 						{filter ? filter.name : "Žádný"}
 					</Text>

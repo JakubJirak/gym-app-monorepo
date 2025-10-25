@@ -4,23 +4,23 @@ import { authClient } from "@/lib/auth-client.ts";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth/treninky/")({
-  component: RouteComponent,
-  head: () => ({
-    meta: [
-      { title: "Tréninky | GYM APPLICATION" },
-      { name: "description", content: "Seznam všech tréninků uživatele" },
-    ],
-  }),
+	component: RouteComponent,
+	head: () => ({
+		meta: [
+			{ title: "Tréninky | GYM APPLICATION" },
+			{ name: "description", content: "Seznam všech tréninků uživatele" },
+		],
+	}),
 });
 
 function RouteComponent() {
-  const { data: session } = authClient.useSession();
-  if (!session) return null;
+	const { data: session } = authClient.useSession();
+	if (!session) return null;
 
-  return (
-    <div className="pb-8">
-      <Header page="TRÉNINKY" />
-      {/*<TrainingsList />*/}
-    </div>
-  );
+	return (
+		<div className="pb-8">
+			<Header page="TRÉNINKY" />
+			<TrainingsList />
+		</div>
+	);
 }

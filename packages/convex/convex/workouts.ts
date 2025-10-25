@@ -172,28 +172,6 @@ export const getWorkoutById = query({
   },
 });
 
-export const addWorkout = mutation(
-  async ({ db }, {
-    userId,
-    name,
-    workoutDate,
-    filterId
-  }: {
-    userId: string,
-    name: string,
-    workoutDate: string,
-    filterId: Id<"filters">
-  }) => {
-    // Přidání workoutu do databáze
-    return await db.insert("workouts", {
-      userId,
-      name,
-      workoutDate,
-      filterId
-    });
-  }
-);
-
 export const createWorkout = mutation({
   args: {
     name: v.string(),

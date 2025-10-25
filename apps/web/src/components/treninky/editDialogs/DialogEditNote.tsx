@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button.tsx";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { useMutation } from "convex/react";
@@ -18,61 +18,61 @@ import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogEditSet {
-  exerciseId: string;
-  setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
+	exerciseId: string;
+	setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditSet) {
-  const [open, setOpen] = useState<boolean>(false);
-  const [note, setNote] = useState<string>("");
-  const editNote = useMutation(api.workoutExercises.editNote);
+	const [open, setOpen] = useState<boolean>(false);
+	const [note, setNote] = useState<string>("");
+	const editNote = useMutation(api.workoutExercises.editNote);
 
-  function handleEditNote(id: string, note: string){
-    editNote({
-      workoutExerciseId: id as Id<"workoutExercises">,
-      note: note,
-    })
-  }
+	function handleEditNote(id: string, note: string) {
+		editNote({
+			workoutExerciseId: id as Id<"workoutExercises">,
+			note: note,
+		});
+	}
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleEditNote(exerciseId, note);
-    setOpenParent(false);
-  };
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		handleEditNote(exerciseId, note);
+		setOpenParent(false);
+	};
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <form>
-        <DialogTrigger asChild>
-          <Button variant="outline" className="w-40">
-            <Pencil className="size-4" />
-            Upravit pozn.
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] h-auto">
-          <DialogHeader>
-            <DialogTitle>Změna poznámky</DialogTitle>
-            <DialogDescription>
-              Zde můžete změnit poznámku ke cviku, odesláním prázdné poznámky se
-              smaže.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleSubmit}>
-            <Input
-              type="text"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-            />
-            <DialogFooter className="mt-4">
-              <DialogClose asChild>
-                <Button variant="outline">Zrušit</Button>
-              </DialogClose>
-              <Button type="submit">Uložit změny</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </form>
-    </Dialog>
-  );
+	return (
+		<Dialog open={open} onOpenChange={setOpen}>
+			<form>
+				<DialogTrigger asChild>
+					<Button variant="outline" className="w-40">
+						<Pencil className="size-4" />
+						Upravit pozn.
+					</Button>
+				</DialogTrigger>
+				<DialogContent className="sm:max-w-[425px] h-auto">
+					<DialogHeader>
+						<DialogTitle>Změna poznámky</DialogTitle>
+						<DialogDescription>
+							Zde můžete změnit poznámku ke cviku, odesláním prázdné poznámky se
+							smaže.
+						</DialogDescription>
+					</DialogHeader>
+					<form onSubmit={handleSubmit}>
+						<Input
+							type="text"
+							value={note}
+							onChange={(e) => setNote(e.target.value)}
+						/>
+						<DialogFooter className="mt-4">
+							<DialogClose asChild>
+								<Button variant="outline">Zrušit</Button>
+							</DialogClose>
+							<Button type="submit">Uložit změny</Button>
+						</DialogFooter>
+					</form>
+				</DialogContent>
+			</form>
+		</Dialog>
+	);
 }

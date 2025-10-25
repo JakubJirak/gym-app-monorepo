@@ -35,9 +35,9 @@ export default defineSchema({
     .index("by_userId", ["userId"])
     .index("by_muscleGroupId", ["muscleGroupId"]),
 
-    muscleGroups: defineTable({
-      name: v.string(),
-    }).index("by_name", ["name"]),
+  muscleGroups: defineTable({
+    name: v.string(),
+  }).index("by_name", ["name"]),
 
   filters: defineTable({
     userId: v.string(),
@@ -62,7 +62,4 @@ export default defineSchema({
     weight: v.string()
   }).index("by_userId", ["userId"]),
 
-  test: defineTable({
-    name: v.string()
-  })
 });

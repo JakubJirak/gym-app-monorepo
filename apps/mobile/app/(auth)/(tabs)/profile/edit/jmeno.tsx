@@ -12,7 +12,9 @@ export default function Jmeno() {
 				/>
 			</View>
 			<Pressable className="bg-accent mt-auto mb-4 py-3 rounded-2xl">
-				<Text className="text-white text-center text-2xl font-medium">Uložit</Text>
+				<Text className="text-white text-center text-2xl font-medium">
+					Uložit
+				</Text>
 			</Pressable>
 		</View>
 	);
