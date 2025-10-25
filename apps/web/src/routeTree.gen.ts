@@ -16,6 +16,7 @@ import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AuthTreninkyIndexRouteImport } from './routes/_auth/treninky/index'
 import { Route as AuthStatistikyIndexRouteImport } from './routes/_auth/statistiky/index'
 import { Route as AuthProfilIndexRouteImport } from './routes/_auth/profil/index'
+import { Route as AuthPowerliftingIndexRouteImport } from './routes/_auth/powerlifting/index'
 import { Route as AuthMenuIndexRouteImport } from './routes/_auth/menu/index'
 import { Route as AuthKategorieIndexRouteImport } from './routes/_auth/kategorie/index'
 import { Route as AuthKalendarIndexRouteImport } from './routes/_auth/kalendar/index'
@@ -55,6 +56,11 @@ const AuthStatistikyIndexRoute = AuthStatistikyIndexRouteImport.update({
 const AuthProfilIndexRoute = AuthProfilIndexRouteImport.update({
   id: '/profil/',
   path: '/profil/',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthPowerliftingIndexRoute = AuthPowerliftingIndexRouteImport.update({
+  id: '/powerlifting/',
+  path: '/powerlifting/',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthMenuIndexRoute = AuthMenuIndexRouteImport.update({
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/kalendar': typeof AuthKalendarIndexRoute
   '/kategorie': typeof AuthKategorieIndexRoute
   '/menu': typeof AuthMenuIndexRoute
+  '/powerlifting': typeof AuthPowerliftingIndexRoute
   '/profil': typeof AuthProfilIndexRoute
   '/statistiky': typeof AuthStatistikyIndexRoute
   '/treninky': typeof AuthTreninkyIndexRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/kalendar': typeof AuthKalendarIndexRoute
   '/kategorie': typeof AuthKategorieIndexRoute
   '/menu': typeof AuthMenuIndexRoute
+  '/powerlifting': typeof AuthPowerliftingIndexRoute
   '/profil': typeof AuthProfilIndexRoute
   '/statistiky': typeof AuthStatistikyIndexRoute
   '/treninky': typeof AuthTreninkyIndexRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/_auth/kalendar/': typeof AuthKalendarIndexRoute
   '/_auth/kategorie/': typeof AuthKategorieIndexRoute
   '/_auth/menu/': typeof AuthMenuIndexRoute
+  '/_auth/powerlifting/': typeof AuthPowerliftingIndexRoute
   '/_auth/profil/': typeof AuthProfilIndexRoute
   '/_auth/statistiky/': typeof AuthStatistikyIndexRoute
   '/_auth/treninky/': typeof AuthTreninkyIndexRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/kalendar'
     | '/kategorie'
     | '/menu'
+    | '/powerlifting'
     | '/profil'
     | '/statistiky'
     | '/treninky'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/kalendar'
     | '/kategorie'
     | '/menu'
+    | '/powerlifting'
     | '/profil'
     | '/statistiky'
     | '/treninky'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/_auth/kalendar/'
     | '/_auth/kategorie/'
     | '/_auth/menu/'
+    | '/_auth/powerlifting/'
     | '/_auth/profil/'
     | '/_auth/statistiky/'
     | '/_auth/treninky/'
@@ -237,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfilIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/powerlifting/': {
+      id: '/_auth/powerlifting/'
+      path: '/powerlifting'
+      fullPath: '/powerlifting'
+      preLoaderRoute: typeof AuthPowerliftingIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/menu/': {
       id: '/_auth/menu/'
       path: '/menu'
@@ -288,6 +307,7 @@ interface AuthRouteChildren {
   AuthKalendarIndexRoute: typeof AuthKalendarIndexRoute
   AuthKategorieIndexRoute: typeof AuthKategorieIndexRoute
   AuthMenuIndexRoute: typeof AuthMenuIndexRoute
+  AuthPowerliftingIndexRoute: typeof AuthPowerliftingIndexRoute
   AuthProfilIndexRoute: typeof AuthProfilIndexRoute
   AuthStatistikyIndexRoute: typeof AuthStatistikyIndexRoute
   AuthTreninkyIndexRoute: typeof AuthTreninkyIndexRoute
@@ -299,6 +319,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthKalendarIndexRoute: AuthKalendarIndexRoute,
   AuthKategorieIndexRoute: AuthKategorieIndexRoute,
   AuthMenuIndexRoute: AuthMenuIndexRoute,
+  AuthPowerliftingIndexRoute: AuthPowerliftingIndexRoute,
   AuthProfilIndexRoute: AuthProfilIndexRoute,
   AuthStatistikyIndexRoute: AuthStatistikyIndexRoute,
   AuthTreninkyIndexRoute: AuthTreninkyIndexRoute,

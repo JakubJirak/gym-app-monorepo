@@ -4,6 +4,7 @@ import { useQuery } from "convex/react";
 import { TableProperties } from "lucide-react";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import Category from "@/components/categories/category";
+import { AddFilter } from "@/components/categories/AddFilter";
 
 export const Route = createFileRoute("/_auth/kategorie/")({
 	component: RouteComponent,
@@ -37,6 +38,7 @@ function RouteComponent() {
 							Zde jsou všechny vaše kategorie.
 						</p>
 					</div>
+					<AddFilter />
 				</div>
 
 				<div className="flex flex-col gap-7 mt-8">

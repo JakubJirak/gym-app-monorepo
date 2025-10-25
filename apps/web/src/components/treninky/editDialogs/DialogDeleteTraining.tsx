@@ -10,22 +10,20 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { useMutation } from "convex/react";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import { useRouter } from "@tanstack/react-router";
 
 const DialogDeleteTraining = ({ id }: { id: string }) => {
-	// const deleteTrainingMutation = useMutation({
-	//   mutationFn: deleteTraining,
-	//   onSuccess: () => {
-	//     void queryClient.invalidateQueries({ queryKey: ["workouts"] });
-	//   },
-	//   onError: (error) => console.log(error),
-	// });
+	const deleteTraining = useMutation(api.workouts.deleteWorkout);
+	const router = useRouter();
 
-	// function handleDeleteTraining(id: string) {
-	//   deleteTrainingMutation.mutate({
-	//     data: { trainingId: id },
-	//   });
-	// }
+	const handleDeleteTraining = (id: string) => {
+		deleteTraining({ workoutId: id as Id<"workouts"> });
+		router.navigate({ to: "/treninky" });
+	};
 
 	return (
 		<AlertDialog>
@@ -46,6 +44,7 @@ const DialogDeleteTraining = ({ id }: { id: string }) => {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Zrušit</AlertDialogCancel>
+					{/*@ts-ignore */}
 					<AlertDialogAction asChild onClick={() => handleDeleteTraining(id)}>
 						<Button className="text-foreground" variant="destructive">
 							Smazat

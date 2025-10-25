@@ -240,3 +240,32 @@ export const createWorkout = mutation({
     return { workoutId };
   },
 });
+
+export const deleteWorkout = mutation({
+  args: {
+    workoutId: v.id("workouts"),
+  },
+  handler: async (ctx, args) => {
+    const workoutExercises = await ctx.db
+      .query("workoutExercises")
+      .withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
+      .collect();
+
+    for (const w of workoutExercises) {
+      const sets = await ctx.db
+        .query("sets")
+        .withIndex("by_workoutExerciseId", (q) =>
+          q.eq("workoutExerciseId", w._id)
+        )
+        .collect();
+
+      for (const set of sets) {
+        await ctx.db.delete(set._id);
+      }
+
+      await ctx.db.delete(w._id);
+    }
+
+    await ctx.db.delete(args.workoutId);
+  },
+});

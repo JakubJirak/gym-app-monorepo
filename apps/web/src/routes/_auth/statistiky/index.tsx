@@ -12,6 +12,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import { Card } from "@/components/ui/card";
 import MuscleGroupStats from "@/components/statistiky/muscleGroup/MuscleGroupStats";
+import HistorySets from "@/components/statistiky/history/HistorySets";
 
 export const Route = createFileRoute("/_auth/statistiky/")({
 	component: RouteComponent,
@@ -59,9 +60,9 @@ function RouteComponent() {
 				<TabsContent value="musclegroup">
 					<MuscleGroupStats />
 				</TabsContent>
-				{/*<TabsContent value="history">
-          <HistorySets trainings={trainings} />
-        </TabsContent>*/}
+				<TabsContent value="history">
+					<HistorySets />
+				</TabsContent>
 			</Tabs>
 		</>
 	);

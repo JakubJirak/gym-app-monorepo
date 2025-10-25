@@ -96,7 +96,7 @@ const TrainingsList = () => {
 										>
 											<div className="font-semibold">{training.name}</div>
 											<Badge variant="secondary">
-												Cviky: {training.exercises.length}
+												{training?.filter?.name}
 											</Badge>
 											<div className="flex col-span-2 items-center gap-2 text-sm text-muted-foreground">
 												<Calendar className="h-4 w-4" />
