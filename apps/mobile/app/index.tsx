@@ -4,8 +4,8 @@ import { authClient } from "../src/lib/auth-client";
 import { Link } from "expo-router";
 
 export default function Index() {
-	const { data: session } = authClient.useSession();
-	const { isAuthenticated, isLoading } = useConvexAuth();
+	// const { data: session } = authClient.useSession();
+	// const { isAuthenticated, isLoading } = useConvexAuth();
 
 	return (
 		<View
@@ -15,9 +15,9 @@ export default function Index() {
 				alignItems: "center",
 			}}
 		>
-			<Text className="text-white">Welcome, {session?.user.name}</Text>
+			{/*<Text className="text-white">Welcome, {session?.user.name}</Text>
 			<Text className="text-white">loaded: {isLoading ? "ne" : "ano"}</Text>
-			<Text className="text-white">auth: {isAuthenticated ? "ano" : "ne"}</Text>
+			<Text className="text-white">auth: {isAuthenticated ? "ano" : "ne"}</Text>*/}
 			<Link href="/sign-in">
 				<Text className="text-white">sign in</Text>
 			</Link>

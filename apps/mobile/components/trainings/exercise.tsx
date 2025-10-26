@@ -25,7 +25,7 @@ export default function Exercise({
 		<View className="py-4">
 			<View className="flex-row items-center mb-2">
 				<Text className="text-white flex-1 text-xl font-semibold">{name}</Text>
-				<Text className="text-white border-2 border-secondary px-2 py-1 rounded-xl">
+				<Text className="text-muted border-2 border-secondary px-2 py-1 rounded-xl">
 					{muscleGroup}
 				</Text>
 			</View>

@@ -39,7 +39,7 @@ export default function TrainingById() {
 							</View>
 							<Text
 								style={{
-									// borderColor: workout.filter.color,
+									borderColor: `${workout?.filter?.color}CC`,
 									color: "white",
 									borderRadius: 12,
 									paddingHorizontal: 10,

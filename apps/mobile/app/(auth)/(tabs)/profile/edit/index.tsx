@@ -4,9 +4,12 @@ import { KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { COLORS } from "@/constants/COLORS";
 import { authClient } from "@/src/lib/auth-client";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Edit() {
 	const { data: session } = authClient.useSession();
+	const userWeight = useQuery(api.userWeights.getUserWeight);
 
 	if (!session) return null;
 
@@ -53,7 +56,7 @@ export default function Edit() {
 								Váha
 							</Text>
 							<View className="bg-secondary h-15 rounded-2xl caret-white p-4">
-								<Text className="text-white text-lg">79.00</Text>
+                <Text className="text-white text-lg">{userWeight?.weight}kg</Text>
 							</View>
 						</View>
 					</Link>

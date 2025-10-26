@@ -1,5 +1,5 @@
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
-import { ConvexReactClient, useConvexAuth } from "convex/react";
+import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { Stack } from "expo-router";
 import { PaperProvider } from "react-native-paper";
 import "../global.css";
@@ -17,17 +17,20 @@ const convex = new ConvexReactClient(
 
 export default function RootLayout() {
 	return (
+	<ConvexProvider client={convex}>
 		<ConvexBetterAuthProvider client={convex} authClient={authClient}>
 			<PaperProvider>
 				<StackLayout />
 			</PaperProvider>
 		</ConvexBetterAuthProvider>
+	</ConvexProvider>
 	);
 }
 
 function StackLayout() {
-	//const isAuth = false;
-	const { isAuthenticated: isAuth } = useConvexAuth();
+	//const isAuth = true;
+	const { data: session } = authClient.useSession();
+  const isAuth = session ? true : false;
 
 	return (
 		<Stack

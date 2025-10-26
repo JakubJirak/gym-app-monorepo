@@ -8,7 +8,8 @@ export default function SearchBar() {
 			<Ionicons name="search" size={24} color={COLORS.muted} />
 			<TextInput
 				placeholder="Vyhledej trénink..."
-				className="flex-1 placeholder:text-muted text-xl text-white caret-white"
+				className="flex-1 text-lg text-white caret-white"
+				placeholderTextColorClassName="accent-muted"
 			/>
 		</View>
 	);

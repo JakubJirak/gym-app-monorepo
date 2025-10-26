@@ -5,9 +5,13 @@ import ProfileHeader from "@/components/profile/profile-header";
 import Links from "@/components/profile/links";
 import { Weight } from "lucide-react-native";
 import { authClient } from "@/src/lib/auth-client";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Profile() {
 	const { data: session } = authClient.useSession();
+  const userWeight = useQuery(api.userWeights.getUserWeight);
+  const workouts = useQuery(api.workouts.getUserWorkouts);
 
 	if (!session) return null;
 
@@ -35,7 +39,7 @@ export default function Profile() {
 							/>
 							<Text className="text-muted text-lg">Tréninky</Text>
 						</View>
-						<Text className="text-white text-lg tracking-wider">35</Text>
+            <Text className="text-white text-lg tracking-wider">{workouts ? workouts.length : 0}</Text>
 					</View>
 
 					<View className="items-center bg-secondary gap-2 w-[47%] p-3 rounded-xl">
@@ -43,7 +47,7 @@ export default function Profile() {
 							<Weight size={20} color={COLORS.muted} />
 							<Text className="text-muted text-lg">Váha</Text>
 						</View>
-						<Text className="text-white text-lg tracking-wider">79.00kg</Text>
+            <Text className="text-white text-lg tracking-wider">{userWeight?.weight}kg</Text>
 					</View>
 				</View>
 

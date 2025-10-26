@@ -7,8 +7,8 @@ export default function SignIn() {
 	const handleSignIn = async () => {
 		const { data, error } = await authClient.signIn.email(
 			{
-				email: "test@test.com",
-				password: "12345678",
+				email: "laky.kuba12@gmail.com",
+				password: "LaKy025146",
 			},
 			{
 				onRequest: () => {

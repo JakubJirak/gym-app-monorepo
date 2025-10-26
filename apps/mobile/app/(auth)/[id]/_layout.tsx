@@ -10,11 +10,11 @@ import type {
 import { useLocalSearchParams, withLayoutContext } from "expo-router";
 import { createContext } from "react";
 import { View } from "react-native";
-import TrainingHeader from "@/components/trainings/training-header";
-import { COLORS } from "@/constants/COLORS";
 import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import { useQuery } from "convex/react";
+import TrainingHeader from "@/components/trainings/training-header";
+import { COLORS } from "@/constants/COLORS";
 
 const { Navigator } = createMaterialTopTabNavigator();
 
