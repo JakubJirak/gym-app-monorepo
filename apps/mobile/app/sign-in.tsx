@@ -14,13 +14,13 @@ export default function SignIn() {
 				onRequest: () => {
 					console.log("REQUESTING");
 				},
-				onSuccess: async () => {
+				onSuccess: () => {
 					console.log("SIGNED IN");
 				},
 				onError: (ctx) => {
 					console.log(ctx.error.message);
 				},
-			},
+			}
 		);
 
 		console.log({ data, error });
@@ -28,17 +28,11 @@ export default function SignIn() {
 
 	return (
 		<>
-			<SafeAreaView
-				edges={["top"]}
-				style={{ backgroundColor: COLORS.primary }}
-			/>
-			<TouchableOpacity onPress={handleSignIn} className="flex-1 bg-primary">
+			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
+			<TouchableOpacity className="flex-1 bg-primary" onPress={handleSignIn}>
 				<Text className="text-white">signin</Text>
 			</TouchableOpacity>
-			<SafeAreaView
-				edges={["bottom"]}
-				style={{ backgroundColor: COLORS.primary }}
-			/>
+			<SafeAreaView edges={["bottom"]} style={{ backgroundColor: COLORS.primary }} />
 		</>
 	);
 }

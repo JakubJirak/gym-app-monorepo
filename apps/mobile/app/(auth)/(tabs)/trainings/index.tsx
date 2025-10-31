@@ -1,8 +1,8 @@
+import { useQuery } from "convex/react";
+import { FlatList, View } from "react-native";
 import Categories from "@/components/trainings/categories";
 import SearchBar from "@/components/trainings/search-bar";
-import { FlatList, View } from "react-native";
 import Training from "@/components/trainings/training";
-import { useQuery } from "convex/react";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Trainings() {
@@ -14,18 +14,16 @@ export default function Trainings() {
 			<Categories />
 			<FlatList
 				data={workouts}
+				ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
+				keyExtractor={(item) => item._id}
 				renderItem={({ item }) => (
 					<Training
-						id={item._id}
-						name={item.name}
 						date={item.workoutDate}
-						//exercises={item.workoutExercises.length}
 						filter={item.filter}
+						id={item._id}
+						//exercises={item.workoutExercises.length}
+						name={item.name}
 					/>
-				)}
-				keyExtractor={(item) => item._id}
-				ItemSeparatorComponent={() => (
-					<View className="w-full h-0.5 bg-secondary" />
 				)}
 			/>
 		</View>

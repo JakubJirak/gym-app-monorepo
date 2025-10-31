@@ -1,18 +1,18 @@
 import { Text, View } from "react-native";
 
-interface ExerciseSetProps {
-	order: number;
-	weight: number;
-	reps: number;
-}
+type ExerciseSetProps = {
+      order: number;
+      weight: number;
+      reps: number;
+};
 
 export default function ExerciseSet({ order, weight, reps }: ExerciseSetProps) {
-	return (
-		<View className="bg-secondary py-2.5 my-1.5 px-4 rounded-xl flex-row">
-			<Text className="text-white flex-1">{order + 1}. série</Text>
-			<Text className="text-white font-semibold">
-				{weight}kg × {reps}
-			</Text>
-		</View>
-	);
+      return (
+            <View className="my-1.5 flex-row rounded-xl bg-secondary px-4 py-2.5">
+                  <Text className="flex-1 text-white">{order + 1}. série</Text>
+                  <Text className="font-semibold text-white">
+                        {weight}kg × {reps}
+                  </Text>
+            </View>
+      );
 }

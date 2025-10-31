@@ -34,20 +34,14 @@ function RouteComponent() {
 							<TableProperties size={20} />
 							Vaše kategorie
 						</h2>
-						<p className="text-muted-foreground text-sm">
-							Zde jsou všechny vaše kategorie.
-						</p>
+						<p className="text-muted-foreground text-sm">Zde jsou všechny vaše kategorie.</p>
 					</div>
 					<AddFilter />
 				</div>
 
 				<div className="flex flex-col gap-7 mt-8">
 					{filters.map((filter) => (
-						<Category
-							key={filter._id}
-							name={filter.name}
-							color={filter.color}
-						/>
+						<Category key={filter._id} name={filter.name} color={filter.color} />
 					))}
 				</div>
 			</div>

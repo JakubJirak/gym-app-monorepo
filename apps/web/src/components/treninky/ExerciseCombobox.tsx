@@ -1,21 +1,8 @@
 import * as React from "react";
 import { AddExercise } from "@/components/cviky/AddExercise.tsx";
 import { Button } from "@/components/ui/button";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from "@/components/ui/command";
-import {
-	Drawer,
-	DrawerContent,
-	DrawerDescription,
-	DrawerTitle,
-	DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
 import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -41,8 +28,7 @@ export function ExerciseCombobox({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		if (selectedStatus && selectExercise)
-			selectExercise(exerciseId, selectedStatus);
+		if (selectedStatus && selectExercise) selectExercise(exerciseId, selectedStatus);
 	}, [selectedStatus]);
 
 	return (
@@ -57,10 +43,7 @@ export function ExerciseCombobox({
 				<DrawerDescription className="hidden">description</DrawerDescription>
 				<DrawerContent className="h-[70vh] max-h-[50vh]">
 					<div className="h-full overflow-auto max-w-[500px] lg:min-w-[500px] lg:mx-auto">
-						<StatusList
-							setOpen={setOpen}
-							setSelectedStatus={setSelectedStatus}
-						/>
+						<StatusList setOpen={setOpen} setSelectedStatus={setSelectedStatus} />
 					</div>
 				</DrawerContent>
 			</Drawer>
@@ -76,15 +59,10 @@ function StatusList({
 	setSelectedStatus: (status: ExerciseSelect | null) => void;
 }) {
 	const [searchVal, setSearchVal] = useState<string>("");
-	const { data: exercises } = useSuspenseQuery(
-		convexQuery(api.exercises.getAllExercises, {}),
-	);
+	const { data: exercises } = useSuspenseQuery(convexQuery(api.exercises.getAllExercises, {}));
 	const addExercise = useMutation(api.exercises.addExercise);
 
-	const handleAddExercise = (
-		exerciseName: string,
-		muscleGroupId: Id<"muscleGroups">,
-	) => {
+	const handleAddExercise = (exerciseName: string, muscleGroupId: Id<"muscleGroups">) => {
 		addExercise({
 			name: exerciseName,
 			muscleGroupId,
@@ -103,10 +81,7 @@ function StatusList({
 			/>
 			<CommandList className="max-h-[55vh]">
 				<CommandEmpty className="p-4 text-muted-foreground text-sm text-center">
-					<AddExercise
-						handleAddExercise={handleAddExercise}
-						defaultName={searchVal}
-					/>
+					<AddExercise handleAddExercise={handleAddExercise} defaultName={searchVal} />
 				</CommandEmpty>
 				<CommandGroup>
 					{exercises.map((status) => (

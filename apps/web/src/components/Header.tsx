@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button.tsx";
-import { authClient } from "@/lib/auth-client.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { GiWeightLiftingUp } from "react-icons/gi";
 import { MdLogout } from "react-icons/md";
+import { Button } from "@/components/ui/button.tsx";
+import { authClient } from "@/lib/auth-client.ts";
 
 interface HeaderProps {
 	page: string;
@@ -14,9 +14,9 @@ const Header = ({ page }: HeaderProps) => {
 
 	if (!session)
 		return (
-			<p className="text-center mt-10 text-lg">
+			<p className="mt-10 text-center text-lg">
 				Pro přístup se musíš{" "}
-				<Link to={"/login"} className="ml-2">
+				<Link className="ml-2" to={"/login"}>
 					<Button>PŘIHLÁSIT</Button>
 				</Link>
 			</p>
@@ -33,13 +33,13 @@ const Header = ({ page }: HeaderProps) => {
 	};
 
 	return (
-		<header className="bg-foreground grid grid-cols-[40px_1fr_40px] justify-items-center items-center mb-6 px-3 h-16 justify-center max-w-[550px] mx-auto rounded-b-2xl">
+		<header className="mx-auto mb-6 grid h-16 max-w-[550px] grid-cols-[40px_1fr_40px] items-center justify-center justify-items-center rounded-b-2xl bg-foreground px-3">
 			<Link to={"/menu"}>
-				<GiWeightLiftingUp size={40} className="text-background" />
+				<GiWeightLiftingUp className="text-background" size={40} />
 			</Link>
-			<p className="text-background text-xl font-bold">{page}</p>
+			<p className="font-bold text-background text-xl">{page}</p>
 			<Link to={"/"}>
-				<Button onClick={handleSignOut} variant="secondary-icon" size="icon-lg">
+				<Button onClick={handleSignOut} size="icon-lg" variant="secondary-icon">
 					<MdLogout />
 				</Button>
 			</Link>

@@ -7,11 +7,11 @@ import { COLORS } from "@/constants/COLORS";
 type LinkHref = React.ComponentProps<typeof Link>["href"];
 type IoniconName = React.ComponentProps<typeof Ionicons>["name"];
 
-interface ProfileLinkProps {
+type ProfileLinkProps = {
 	href: LinkHref;
 	icon: IoniconName;
 	text: string;
-}
+};
 
 export default function ProfileLink({ href, icon, text }: ProfileLinkProps) {
 	return (
@@ -24,10 +24,10 @@ export default function ProfileLink({ href, icon, text }: ProfileLinkProps) {
 			}}
 		>
 			<View className="flex flex-row items-center gap-6">
-				<Ionicons name={icon} size={28} color={COLORS.accent} />
-				<Text className="text-white text-xl tracking-wider flex-1">{text}</Text>
+				<Ionicons color={COLORS.accent} name={icon} size={28} />
+				<Text className="flex-1 text-white text-xl tracking-wider">{text}</Text>
 				<View className="">
-					<Ionicons name="chevron-forward" size={20} color={COLORS.muted} />
+					<Ionicons color={COLORS.muted} name="chevron-forward" size={20} />
 				</View>
 			</View>
 		</Link>

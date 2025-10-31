@@ -6,11 +6,11 @@ export default function ComponentHeader({ text }: { text: string }) {
 	const router = useRouter();
 
 	return (
-		<View className="flex-row items-center mt-2 pb-2 gap-6">
+		<View className="mt-2 flex-row items-center gap-6 pb-2">
 			<TouchableOpacity className="w-8" onPress={() => router.back()}>
-				<Ionicons name="chevron-back" size={28} color="white" />
+				<Ionicons color="white" name="chevron-back" size={28} />
 			</TouchableOpacity>
-			<Text className="text-white text-2xl font-semibold flex-1">{text}</Text>
+			<Text className="flex-1 font-semibold text-2xl text-white">{text}</Text>
 		</View>
 	);
 }

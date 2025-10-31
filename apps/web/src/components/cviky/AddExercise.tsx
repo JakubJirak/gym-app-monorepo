@@ -1,11 +1,10 @@
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandItem,
-	CommandList,
-} from "@/components/ui/command.tsx";
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command.tsx";
 import {
 	Dialog,
 	DialogClose,
@@ -18,25 +17,13 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover.tsx";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { cn } from "@/lib/utils.ts";
-import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
-interface DialogEditSet {
-	handleAddExercise: (
-		exerciseName: string,
-		muscleGroupId: Id<"muscleGroups">,
-	) => void;
+type DialogEditSet = {
+	handleAddExercise: (exerciseName: string, muscleGroupId: Id<"muscleGroups">) => void;
 	defaultName: string;
 }
 
@@ -46,9 +33,7 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
 	const [exName, setExName] = useState(defaultName);
 	const [value, setValue] = useState("");
 
-	const { data: muscleGroups } = useSuspenseQuery(
-		convexQuery(api.muscleGroups.getAllMuscleGroups, {}),
-	);
+	const { data: muscleGroups } = useSuspenseQuery(convexQuery(api.muscleGroups.getAllMuscleGroups, {}));
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -63,48 +48,46 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
 	if (!muscleGroups) return null;
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog onOpenChange={setOpen} open={open}>
 			<form>
 				<DialogTrigger asChild>
 					<Button size="icon">
 						<Plus />
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px] h-auto">
+				<DialogContent className="h-auto sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>Přidat vlastní cvik</DialogTitle>
-						<DialogDescription>
-							Zde si můžete přidat vlastní cvik.
-						</DialogDescription>
+						<DialogDescription>Zde si můžete přidat vlastní cvik.</DialogDescription>
 					</DialogHeader>
-					<form onSubmit={handleSubmit} className="space-y-4">
+					<form className="space-y-4" onSubmit={handleSubmit}>
 						<div className="grid gap-4">
 							<div className="grid gap-3">
 								<Label htmlFor="cvik">Jméno cviku</Label>
 								<Input
-									placeholder="Název cviku"
-									value={exName}
-									onChange={(e) => setExName(e.target.value)}
 									id="cvik"
 									name="cvik"
-									type="text"
+									onChange={(e) => setExName(e.target.value)}
+									placeholder="Název cviku"
 									required
+									type="text"
+									value={exName}
 								/>
 							</div>
 						</div>
 
 						<div className="grid gap-3">
 							<Label htmlFor="cvik">Jméno části těla</Label>
-							<Popover open={popOpen} onOpenChange={setPopOpen}>
+							<Popover onOpenChange={setPopOpen} open={popOpen}>
 								<PopoverTrigger asChild>
 									<Button
-										variant="outline"
 										aria-expanded={popOpen}
 										className="w-full justify-between"
+										variant="outline"
 									>
 										{value
 											? muscleGroups.find(
-													(muscleGroup) => muscleGroup._id === value,
+													(muscleGroup) => muscleGroup._id === value
 												)?.name
 											: "Vyber část těla..."}
 										<ChevronsUpDown className="opacity-50" />
@@ -119,21 +102,24 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
 												{muscleGroups.map((muscleGroup) => (
 													<CommandItem
 														key={muscleGroup._id}
-														value={muscleGroup._id} // Tady je id!
 														onSelect={(currentValue) => {
 															setValue(
-																currentValue === value ? "" : currentValue,
+																currentValue === value
+																	? ""
+																	: currentValue
 															);
 															setPopOpen(false);
-														}}
+														}} // Tady je id!
+														value={muscleGroup._id}
 													>
 														{muscleGroup.name}
 														<Check
 															className={cn(
 																"ml-auto",
-																value === muscleGroup._id
+																value ===
+																	muscleGroup._id
 																	? "opacity-100"
-																	: "opacity-0",
+																	: "opacity-0"
 															)}
 														/>
 													</CommandItem>

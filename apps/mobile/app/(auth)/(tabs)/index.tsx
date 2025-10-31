@@ -1,5 +1,5 @@
-import { authClient } from "@/src/lib/auth-client";
 import { Text, TouchableOpacity, View } from "react-native";
+import { authClient } from "@/src/lib/auth-client";
 
 export default function Index() {
 	const logOut = () => {

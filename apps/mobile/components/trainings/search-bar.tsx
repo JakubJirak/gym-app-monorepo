@@ -4,11 +4,11 @@ import { COLORS } from "@/constants/COLORS";
 
 export default function SearchBar() {
 	return (
-		<View className="bg-secondary flex-row items-center rounded-4xl px-4 py-1 mt-2 mb-4 gap-2">
-			<Ionicons name="search" size={24} color={COLORS.muted} />
+		<View className="mt-2 mb-4 flex-row items-center gap-2 rounded-4xl bg-secondary px-4 py-1">
+			<Ionicons color={COLORS.muted} name="search" size={24} />
 			<TextInput
-				placeholder="Vyhledej trénink..."
 				className="flex-1 text-lg text-white caret-white"
+				placeholder="Vyhledej trénink..."
 				placeholderTextColorClassName="accent-muted"
 			/>
 		</View>

@@ -1,12 +1,7 @@
 import { Calendar, Dumbbell } from "lucide-react";
 import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddExercise.tsx";
 import DialogDelete from "@/components/treninky/editDialogs/DialogDeleteTraining.tsx";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion.tsx";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
@@ -24,9 +19,7 @@ import { useMutation } from "convex/react";
 
 const TrainingsList = () => {
 	const [toggleEdit, setToggleEdit] = useState(false);
-	const { data: trainings, isLoading } = useSuspenseQuery(
-		convexQuery(api.workouts.getUserWorkouts, {}),
-	);
+	const { data: trainings, isLoading } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
 
 	async function handleSaveTraining(training: Training) {
 		handleAddTraining(training);
@@ -100,7 +93,10 @@ const TrainingsList = () => {
 											</Badge>
 											<div className="flex col-span-2 items-center gap-2 text-sm text-muted-foreground">
 												<Calendar className="h-4 w-4" />
-												{formatDate(new Date(training.workoutDate), "PPPP")}
+												{formatDate(
+													new Date(training.workoutDate),
+													"PPPP",
+												)}
 											</div>
 										</Link>
 									</AccordionTrigger>
@@ -116,7 +112,9 @@ const TrainingsList = () => {
 												/>
 											))}
 											<div className="space-y-2 mt-4">
-												<div className={`${toggleEdit ? "" : "hidden"}`}>
+												<div
+													className={`${toggleEdit ? "" : "hidden"}`}
+												>
 													<DialogAddExercise
 														trainingId={training._id}
 														order={training.exercises.length}
@@ -126,7 +124,11 @@ const TrainingsList = () => {
 													<div className="">
 														<Toggle
 															variant="outline"
-															onClick={() => setToggleEdit(!toggleEdit)}
+															onClick={() =>
+																setToggleEdit(
+																	!toggleEdit,
+																)
+															}
 														>
 															<FaPencilAlt /> Upravit
 														</Toggle>
@@ -146,9 +148,7 @@ const TrainingsList = () => {
 					<Card className="max-w-[500px] mx-auto">
 						<CardContent className="flex flex-col items-center justify-center py-6">
 							<GiWeightLiftingUp size={55} />
-							<h3 className="text-lg font-semibold my-3">
-								Zatím žádné tréninky
-							</h3>
+							<h3 className="text-lg font-semibold my-3">Zatím žádné tréninky</h3>
 							<p className="text-muted-foreground text-center mb-5">
 								Začněte sledovat své tréninky přidáním prvního tréninku.
 							</p>

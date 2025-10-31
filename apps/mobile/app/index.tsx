@@ -1,7 +1,5 @@
-import { useConvexAuth } from "convex/react";
-import { Text, View } from "react-native";
-import { authClient } from "../src/lib/auth-client";
 import { Link } from "expo-router";
+import { Text, View } from "react-native";
 
 export default function Index() {
 	// const { data: session } = authClient.useSession();

@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { authClient } from "@/src/lib/auth-client";
 import { COLORS } from "@/constants/COLORS";
+import { authClient } from "@/src/lib/auth-client";
 
 export default function SignUp() {
 	const handleSignUp = async () => {
@@ -15,13 +15,13 @@ export default function SignUp() {
 				onRequest: () => {
 					console.log("REQUESTING");
 				},
-				onSuccess: async () => {
+				onSuccess: () => {
 					console.log("SIGNED IN");
 				},
 				onError: (ctx) => {
 					console.log(ctx.error.message);
 				},
-			},
+			}
 		);
 
 		console.log({ data, error });
@@ -29,17 +29,11 @@ export default function SignUp() {
 
 	return (
 		<>
-			<SafeAreaView
-				edges={["top"]}
-				style={{ backgroundColor: COLORS.primary }}
-			/>
-			<TouchableOpacity onPress={handleSignUp} className="flex-1 bg-primary">
+			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
+			<TouchableOpacity className="flex-1 bg-primary" onPress={handleSignUp}>
 				<Text className="text-white">signup</Text>
 			</TouchableOpacity>
-			<SafeAreaView
-				edges={["bottom"]}
-				style={{ backgroundColor: COLORS.primary }}
-			/>
+			<SafeAreaView edges={["bottom"]} style={{ backgroundColor: COLORS.primary }} />
 		</>
 	);
 }

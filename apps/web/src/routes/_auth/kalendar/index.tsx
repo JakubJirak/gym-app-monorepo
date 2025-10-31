@@ -1,10 +1,5 @@
 import Header from "@/components/Header.tsx";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion.tsx";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Calendar, CalendarDayButton } from "@/components/ui/calendar.tsx";
 import { convexQuery } from "@convex-dev/react-query";
@@ -30,17 +25,13 @@ export const Route = createFileRoute("/_auth/kalendar/")({
 
 function RouteComponent() {
 	const [date, setDate] = useState<Date | undefined>(new Date());
-	const { data: trainings } = useSuspenseQuery(
-		convexQuery(api.workouts.getUserWorkouts, {}),
-	);
+	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
 
 	function allDates() {
 		return trainings?.map((training) => training.workoutDate);
 	}
 
-	const matchingTrainings = trainings?.filter(
-		(training) => training.workoutDate === toLocalISODateString(date),
-	);
+	const matchingTrainings = trainings?.filter((training) => training.workoutDate === toLocalISODateString(date));
 
 	function formatDate(date: Date | null, formatString: string) {
 		if (date) {
@@ -107,7 +98,10 @@ function RouteComponent() {
 											</Badge>
 											<div className="flex col-span-2 items-center gap-2 text-sm text-muted-foreground">
 												<CalendarIcon className="h-4 w-4" />
-												{formatDate(new Date(training.workoutDate), "PPPP")}
+												{formatDate(
+													new Date(training.workoutDate),
+													"PPPP",
+												)}
 											</div>
 										</Link>
 									</AccordionTrigger>

@@ -1,3 +1,7 @@
+import { useMutation } from "convex/react";
+import { Plus } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import {
 	Dialog,
@@ -11,12 +15,8 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { Plus } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { useMutation } from "convex/react";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogEditSet {
 	order: number;
@@ -24,27 +24,18 @@ interface DialogEditSet {
 	setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function DialogAddSet({
-	order,
-	exerciseId,
-	setOpenParent,
-}: DialogEditSet) {
+export function DialogAddSet({ order, exerciseId, setOpenParent }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [addSetWeight, setAddSetWeight] = useState<string>("");
 	const [addSetReps, setAddSetReps] = useState<string>("");
 	const addSet = useMutation(api.workoutExercises.addSet);
 
-	function handleAddSet(
-		exerciseId: string,
-		order: number,
-		addSetWeight: string,
-		addSetReps: string,
-	) {
+	function handleAddSet(exerciseId: string, order: number, addSetWeight: string, addSetReps: string) {
 		addSet({
 			workoutExerciseId: exerciseId as Id<"workoutExercises">,
 			weight: Number(addSetWeight),
 			reps: Number(addSetReps),
-			order: order,
+			order,
 		});
 	}
 
@@ -59,47 +50,45 @@ export function DialogAddSet({
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog onOpenChange={setOpen} open={open}>
 			<form>
 				<DialogTrigger asChild>
-					<Button variant="outline" className="w-40">
+					<Button className="w-40" variant="outline">
 						<Plus className="size-5" />
 						Přidat sérii
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px] h-auto">
+				<DialogContent className="h-auto sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>Přidání série</DialogTitle>
-						<DialogDescription>
-							Zde můžete přidat sérii k vybranému cviku.
-						</DialogDescription>
+						<DialogDescription>Zde můžete přidat sérii k vybranému cviku.</DialogDescription>
 					</DialogHeader>
 					<form onSubmit={handleSubmit}>
-						<div className="grid gap-4 grid-cols-2 lg:grid-cols-1">
+						<div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
 							<div className="grid gap-3">
 								<Label htmlFor="vaha">Váha (kg)</Label>
 								<Input
-									value={addSetWeight}
-									onChange={(e) => setAddSetWeight(e.target.value)}
 									id="vaha"
-									name="vaha"
-									type="number"
 									min={1}
-									step={0.01}
+									name="vaha"
+									onChange={(e) => setAddSetWeight(e.target.value)}
 									required
+									step={0.01}
+									type="number"
+									value={addSetWeight}
 								/>
 							</div>
 							<div className="grid gap-3">
 								<Label htmlFor="opak">Počet opakování</Label>
 								<Input
-									value={addSetReps}
-									onChange={(e) => setAddSetReps(e.target.value)}
 									id="opak"
-									name="opak"
-									type="number"
 									min={1}
-									step={0.01}
+									name="opak"
+									onChange={(e) => setAddSetReps(e.target.value)}
 									required
+									step={0.01}
+									type="number"
+									value={addSetReps}
 								/>
 							</div>
 						</div>

@@ -5,9 +5,7 @@ import { useMemo } from "react";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 const MuscleGroupStats = () => {
-	const { data: trainings } = useSuspenseQuery(
-		convexQuery(api.workouts.getUserWorkouts, {}),
-	);
+	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
 
 	const muscleGroupCount = useMemo(() => {
 		if (!trainings) return {};
@@ -22,22 +20,20 @@ const MuscleGroupStats = () => {
 				return acc;
 			}, {});
 
-		return Object.fromEntries(
-			Object.entries(count).sort(([, a], [, b]) => b - a),
-		);
+		return Object.fromEntries(Object.entries(count).sort(([, a], [, b]) => b - a));
 	}, [trainings]);
 
 	return (
 		<div className="p-1">
-			<p className="flex gap-3 items-center text-lg font-bold mb-4">
+			<p className="mb-4 flex items-center gap-3 font-bold text-lg">
 				<BicepsFlexed />
 				Podle partie těla
 			</p>
 			<div className="grid grid-cols-3 gap-3">
 				{Object.entries(muscleGroupCount).map(([group, count]) => (
 					<div
+						className="flex flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center"
 						key={group}
-						className="flex flex-col items-center py-4 justify-between gap-1 bg-secondary rounded-2xl text-center"
 					>
 						<p className="mt-1 font-bold text-2xl">{count}</p>
 						<p className="text-muted-foreground">{group}</p>

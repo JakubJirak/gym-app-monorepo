@@ -1,4 +1,4 @@
-import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 type sets =
 	| {
@@ -15,20 +15,17 @@ interface HistorySetProps {
 }
 
 const HistorySet = ({ date, sets }: HistorySetProps) => {
-	if (!date || !sets) return <p>Pro tento cvik nemate zadnou serii</p>;
+	if (!(date && sets)) return <p>Pro tento cvik nemate zadnou serii</p>;
 
 	const d = new Date(date);
 
 	return (
 		<div>
-			<h2 className="font-bold mb-2">{d.toLocaleDateString()}</h2>
+			<h2 className="mb-2 font-bold">{d.toLocaleDateString()}</h2>
 			<div>
 				<div className="space-y-2">
 					{sets.map((set) => (
-						<div
-							key={set._id}
-							className="p-2 px-3 bg-secondary rounded-xl flex gap-0.5"
-						>
+						<div className="flex gap-0.5 rounded-xl bg-secondary p-2 px-3" key={set._id}>
 							<p>{set.order ? set.order + 1 : 1}. série</p>
 							<p className="ml-auto font-bold">{set.weight}</p>
 							<p className="font-bold">×</p>

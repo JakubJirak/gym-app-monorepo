@@ -1,5 +1,5 @@
-import ComponentHeader from "@/components/component-header";
 import { View } from "react-native";
+import ComponentHeader from "@/components/component-header";
 
 export default function About() {
 	return (

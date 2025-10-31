@@ -1,24 +1,22 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "convex/react";
 import { Link } from "expo-router";
 import { KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { COLORS } from "@/constants/COLORS";
 import { authClient } from "@/src/lib/auth-client";
-import { useQuery } from "convex/react";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Edit() {
 	const { data: session } = authClient.useSession();
 	const userWeight = useQuery(api.userWeights.getUserWeight);
 
-	if (!session) return null;
+	if (!session) {
+		return null;
+	}
 
 	return (
-		<KeyboardAvoidingView
-			behavior="padding"
-			keyboardVerticalOffset={60}
-			className="flex-1 bg-primary px-4"
-		>
+		<KeyboardAvoidingView behavior="padding" className="flex-1 bg-primary px-4" keyboardVerticalOffset={60}>
 			<ComponentHeader text="Upravit profil" />
 			<ScrollView
 				style={{
@@ -26,65 +24,50 @@ export default function Edit() {
 					backgroundColor: COLORS.primary,
 				}}
 			>
-				<View className="gap-3 mt-8 mb-3">
-					<View className="gap-4 items-center">
+				<View className="mt-8 mb-3 gap-3">
+					<View className="items-center gap-4">
 						<View>
-							<View className="w-[110px] h-[110px] rounded-full bg-gray-700 relative" />
-							<View className="absolute bottom-0 right-0 bg-accent size-10 items-center justify-center rounded-full">
-								<Ionicons name="pencil" size={20} color="white" />
+							<View className="relative h-[110px] w-[110px] rounded-full bg-gray-700" />
+							<View className="absolute right-0 bottom-0 size-10 items-center justify-center rounded-full bg-accent">
+								<Ionicons color="white" name="pencil" size={20} />
 							</View>
 						</View>
 
 						<View className="gap-1">
-							<Text className="text-white text-3xl font-bold text-center">
+							<Text className="text-center font-bold text-3xl text-white">
 								{session.user.name}
 							</Text>
-							<Text className="text-muted text-lg text-center">
-								Powerlifter
-							</Text>
+							<Text className="text-center text-lg text-muted">Powerlifter</Text>
 						</View>
 					</View>
 				</View>
 
 				<View className="gap-4">
-					<Link
-						href="/(auth)/(tabs)/profile/edit/vaha"
-						style={{ width: "100%" }}
-					>
-						<View className="gap-2 my-3 w-full">
-							<Text className="text-white font-semibold tracking-wide text-lg">
-								Váha
-							</Text>
-							<View className="bg-secondary h-15 rounded-2xl caret-white p-4">
-                <Text className="text-white text-lg">{userWeight?.weight}kg</Text>
+					<Link href="/(auth)/(tabs)/profile/edit/vaha" style={{ width: "100%" }}>
+						<View className="my-3 w-full gap-2">
+							<Text className="font-semibold text-lg text-white tracking-wide">Váha</Text>
+							<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
+								<Text className="text-lg text-white">{userWeight?.weight}kg</Text>
 							</View>
 						</View>
 					</Link>
 
-					<Link
-						href="/(auth)/(tabs)/profile/edit/jmeno"
-						style={{ width: "100%" }}
-					>
-						<View className="gap-2 my-3 w-full">
-							<Text className="text-white font-semibold tracking-wide text-lg">
-								Jméno
-							</Text>
-							<View className="bg-secondary h-15 rounded-2xl caret-white p-4">
-								<Text className="text-white text-lg">79.00</Text>
+					<Link href="/(auth)/(tabs)/profile/edit/jmeno" style={{ width: "100%" }}>
+						<View className="my-3 w-full gap-2">
+							<Text className="font-semibold text-lg text-white tracking-wide">Jméno</Text>
+							<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
+								<Text className="text-lg text-white">79.00</Text>
 							</View>
 						</View>
 					</Link>
 
-					<Link
-						href="/(auth)/(tabs)/profile/edit/zamereni"
-						style={{ width: "100%" }}
-					>
-						<View className="gap-2 my-3 w-full">
-							<Text className="text-white font-semibold tracking-wide text-lg">
+					<Link href="/(auth)/(tabs)/profile/edit/zamereni" style={{ width: "100%" }}>
+						<View className="my-3 w-full gap-2">
+							<Text className="font-semibold text-lg text-white tracking-wide">
 								Zaměření
 							</Text>
-							<View className="bg-secondary h-15 rounded-2xl caret-white p-4">
-								<Text className="text-white text-lg">79.00</Text>
+							<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
+								<Text className="text-lg text-white">79.00</Text>
 							</View>
 						</View>
 					</Link>

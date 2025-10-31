@@ -1,10 +1,5 @@
 import { Button } from "@/components/ui/button.tsx";
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { authClient } from "@/lib/auth-client.ts";
@@ -17,18 +12,9 @@ import { z } from "zod";
 
 const registerSchema = z
 	.object({
-		name: z
-			.string()
-			.min(1, "Zadejte svoje jméno")
-			.max(30, "Jméno je příliš dlouhé"),
-		email: z
-			.email("Zadejte platný email")
-			.min(1, "Zadejte email")
-			.max(60, "Email je příliš dlouhý"),
-		password: z
-			.string()
-			.min(8, "Heslo musí mít alespoň 8 znamků")
-			.max(100, "Heslo je příliš dlouhé"),
+		name: z.string().min(1, "Zadejte svoje jméno").max(30, "Jméno je příliš dlouhé"),
+		email: z.email("Zadejte platný email").min(1, "Zadejte email").max(60, "Email je příliš dlouhý"),
+		password: z.string().min(8, "Heslo musí mít alespoň 8 znamků").max(100, "Heslo je příliš dlouhé"),
 		confirmPassword: z.string().min(8, "Potvrďte svoje heslo"),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
@@ -36,10 +22,7 @@ const registerSchema = z
 		path: ["confirmPassword"],
 	});
 
-export function RegisterForm({
-	className,
-	...props
-}: React.ComponentProps<"div">) {
+export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
 	const [error, setError] = useState("");
 	const router = useRouter();
 
@@ -74,15 +57,10 @@ export function RegisterForm({
 	});
 
 	return (
-		<div
-			className={cn("flex flex-col w-[min(480px,90%)] gap-6 m", className)}
-			{...props}
-		>
+		<div className={cn("flex flex-col w-[min(480px,90%)] gap-6 m", className)} {...props}>
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-center text-xl md:text-2xl">
-						Vytvořit účet
-					</CardTitle>
+					<CardTitle className="text-center text-xl md:text-2xl">Vytvořit účet</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<form
@@ -182,9 +160,7 @@ export function RegisterForm({
 								)}
 							</form.Field>
 
-							<form.Subscribe
-								selector={(state) => [state.canSubmit, state.isSubmitting]}
-							>
+							<form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
 								{([canSubmit, isSubmitting]) => (
 									<div className="flex flex-col gap-2">
 										<Button
@@ -204,11 +180,7 @@ export function RegisterForm({
 							</a>
 						</div>
 					</form>
-					{error !== "" && (
-						<p className="text-center mt-5 text-destructive-foreground">
-							{error}
-						</p>
-					)}
+					{error !== "" && <p className="text-center mt-5 text-destructive-foreground">{error}</p>}
 				</CardContent>
 			</Card>
 		</div>

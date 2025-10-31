@@ -1,8 +1,5 @@
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
-import {
-	fetchSession,
-	getCookieName,
-} from "@convex-dev/better-auth/react-start";
+import { fetchSession, getCookieName } from "@convex-dev/better-auth/react-start";
 import type { ConvexQueryClient } from "@convex-dev/react-query";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
@@ -26,9 +23,7 @@ import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
 const fetchAuth = createServerFn({ method: "GET" }).handler(async () => {
-	const { createAuth } = await import(
-		"../../../../packages/convex/convex/auth"
-	);
+	const { createAuth } = await import("../../../../packages/convex/convex/auth");
 	const { session } = await fetchSession(getRequest());
 	const sessionCookieName = getCookieName(createAuth);
 	const token = getCookie(sessionCookieName);
@@ -76,20 +71,16 @@ export const Route = createRootRouteWithContext<{
 	},
 	component: RootComponent,
 	loader: () => getThemeServerFn(),
-	notFoundComponent: () => {
-		return (
-			<>
-				<p className="mt-10 mb-5 text-red-500 text-center">
-					Tato stránka nebyla nalezena
-				</p>
-				<div className="flex items-center justify-center">
-					<Link to={"/"}>
-						<Button>Domovská stránka</Button>
-					</Link>
-				</div>
-			</>
-		);
-	},
+	notFoundComponent: () => (
+		<>
+			<p className="mt-10 mb-5 text-center text-red-500">Tato stránka nebyla nalezena</p>
+			<div className="flex items-center justify-center">
+				<Link to={"/"}>
+					<Button>Domovská stránka</Button>
+				</Link>
+			</div>
+		</>
+	),
 });
 
 function RootComponent() {
@@ -97,10 +88,7 @@ function RootComponent() {
 	const data = Route.useLoaderData();
 	return (
 		<ThemeProvider theme={data}>
-			<ConvexBetterAuthProvider
-				client={context.convexClient}
-				authClient={authClient}
-			>
+			<ConvexBetterAuthProvider authClient={authClient} client={context.convexClient}>
 				<RootDocument>
 					<Outlet />
 				</RootDocument>
@@ -112,7 +100,7 @@ function RootComponent() {
 function RootDocument({ children }: { children: React.ReactNode }) {
 	const { theme } = useTheme();
 	return (
-		<html lang="en" className={theme}>
+		<html className={theme} lang="en">
 			<head>
 				<HeadContent />
 			</head>

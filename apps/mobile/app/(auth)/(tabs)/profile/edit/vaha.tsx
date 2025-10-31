@@ -1,32 +1,28 @@
+import { useMutation } from "convex/react";
+import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
-import { useMutation } from "convex/react";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
-import { useState } from "react";
 
 export default function Vaha() {
-  const [weight, setWeight] = useState("");
-  const editWeight = useMutation(api.userWeights.updateUserWeight);
+	const [weight, setWeight] = useState("");
+	const editWeight = useMutation(api.userWeights.updateUserWeight);
 
-  const handleEdit = () => {
-
-  }
+	const handleEdit = () => {};
 
 	return (
 		<View className="flex-1 bg-primary px-4">
 			<View className="gap-5">
 				<ComponentHeader text="Změna váhy (kg)" />
 				<TextInput
-					className="bg-secondary rounded-2xl caret-white p-4 text-white text-lg w-full"
+					className="w-full rounded-2xl bg-secondary p-4 text-lg text-white caret-white"
 					keyboardType="numeric"
-					value={weight}
 					onChangeText={(text) => setWeight(text)}
+					value={weight}
 				/>
 			</View>
-			<Pressable className="bg-accent mt-auto mb-4 py-3 rounded-2xl" onPress={handleEdit}>
-				<Text className="text-white text-center text-2xl font-medium">
-					Uložit
-				</Text>
+			<Pressable className="mt-auto mb-4 rounded-2xl bg-accent py-3" onPress={handleEdit}>
+				<Text className="text-center font-medium text-2xl text-white">Uložit</Text>
 			</Pressable>
 		</View>
 	);

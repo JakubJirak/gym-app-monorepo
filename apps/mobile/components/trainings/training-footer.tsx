@@ -7,21 +7,21 @@ export default function TrainingFooter({ id }: { id: string }) {
 		console.log(id);
 	};
 	return (
-		<View className="flex-row items-center pb-8 h-[72px] bg-[#0a0a0a] border-t border-[#1a1a1a] pr-2">
+		<View className="h-[72px] flex-row items-center border-[#1a1a1a] border-t bg-[#0a0a0a] pr-2 pb-8">
 			<TouchableOpacity
-				className="w-1/4 flex items-center pt-2"
+				className="flex w-1/4 items-center pt-2"
 				onPress={stopid}
 			>
-				<Ionicons name="share-social-outline" size={24} color="white" />
+				<Ionicons color="white" name="share-social-outline" size={24} />
 			</TouchableOpacity>
-			<TouchableOpacity className="w-1/4 flex items-center pt-2">
-				<Ionicons name="add-outline" size={32} color="white" />
+			<TouchableOpacity className="flex w-1/4 items-center pt-2">
+				<Ionicons color="white" name="add-outline" size={32} />
 			</TouchableOpacity>
-			<TouchableOpacity className="w-1/4 flex items-center pt-2">
-				<Pencil size={22} color="white" />
+			<TouchableOpacity className="flex w-1/4 items-center pt-2">
+				<Pencil color="white" size={22} />
 			</TouchableOpacity>
-			<TouchableOpacity className="w-1/4 flex items-center pt-2">
-				<Ionicons name="trash-outline" size={24} color="white" />
+			<TouchableOpacity className="flex w-1/4 items-center pt-2">
+				<Ionicons color="white" name="trash-outline" size={24} />
 			</TouchableOpacity>
 		</View>
 	);

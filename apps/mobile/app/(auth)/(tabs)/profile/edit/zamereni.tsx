@@ -7,14 +7,12 @@ export default function Zamereni() {
 			<View className="gap-5">
 				<ComponentHeader text="Změna zaměření" />
 				<TextInput
-					className="bg-secondary rounded-2xl caret-white p-4 text-white text-lg w-full"
+					className="w-full rounded-2xl bg-secondary p-4 text-lg text-white caret-white"
 					defaultValue="79.00"
 				/>
 			</View>
-			<Pressable className="bg-accent mt-auto mb-4 py-3 rounded-2xl">
-				<Text className="text-white text-center text-2xl font-medium">
-					Uložit
-				</Text>
+			<Pressable className="mt-auto mb-4 rounded-2xl bg-accent py-3">
+				<Text className="text-center font-medium text-2xl text-white">Uložit</Text>
 			</Pressable>
 		</View>
 	);

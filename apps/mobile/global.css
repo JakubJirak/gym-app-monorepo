@@ -1,10 +1,10 @@
-@import 'tailwindcss';
-@import 'uniwind';
+@import "tailwindcss";
+@import "uniwind";
 
 @theme {
-	--color-primary: #050402;
-	--color-secondary: #0f0f0f;
-	--color-border: #ff944d;
-	--color-accent: #ed782b;
-	--color-muted: #8c8c8c;
+    --color-primary: #050402;
+    --color-secondary: #0f0f0f;
+    --color-border: #ff944d;
+    --color-accent: #ed782b;
+    --color-muted: #8c8c8c;
 }

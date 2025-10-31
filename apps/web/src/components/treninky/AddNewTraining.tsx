@@ -16,18 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -74,9 +64,7 @@ interface TrainingDialogProps {
 }
 
 const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
-	const { data: filters } = useSuspenseQuery(
-		convexQuery(api.filters.getAllFilters, {}),
-	);
+	const { data: filters } = useSuspenseQuery(convexQuery(api.filters.getAllFilters, {}));
 	const [open, setOpen] = useState<boolean>(false);
 
 	// Safely get first filter ID
@@ -92,9 +80,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 		exercises: [] as Exercise[],
 	});
 
-	const [selectedStatuses, setSelectedStatuses] = useState<
-		Record<string, ExerciseSelect | null>
-	>({});
+	const [selectedStatuses, setSelectedStatuses] = useState<Record<string, ExerciseSelect | null>>({});
 	const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
 
 	const addExercise = () => {
@@ -137,16 +123,10 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 		});
 	};
 
-	const updateExercise = <K extends keyof Exercise>(
-		tempId: string,
-		field: K,
-		value: Exercise[K],
-	) => {
+	const updateExercise = <K extends keyof Exercise>(tempId: string, field: K, value: Exercise[K]) => {
 		setTraining((prev) => ({
 			...prev,
-			exercises: prev.exercises.map((ex) =>
-				ex.tempId === tempId ? { ...ex, [field]: value } : ex,
-			),
+			exercises: prev.exercises.map((ex) => (ex.tempId === tempId ? { ...ex, [field]: value } : ex)),
 		}));
 	};
 
@@ -187,12 +167,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 		}));
 	};
 
-	const updateSet = <K extends keyof Set>(
-		tempId: string,
-		setOrder: number,
-		field: K,
-		value: Set[K],
-	) => {
+	const updateSet = <K extends keyof Set>(tempId: string, setOrder: number, field: K, value: Set[K]) => {
 		setTraining((prev) => ({
 			...prev,
 			exercises: prev.exercises.map((ex) =>
@@ -208,10 +183,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 		}));
 	};
 
-	const handleSetSelectedStatus = (
-		tempId: string,
-		value: ExerciseSelect | null,
-	) => {
+	const handleSetSelectedStatus = (tempId: string, value: ExerciseSelect | null) => {
 		setSelectedStatuses((prev) => ({
 			...prev,
 			[tempId]: value,
@@ -226,19 +198,12 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 	};
 
 	const isValidTraining = (): boolean => {
-		if (
-			!training.name.trim() ||
-			!training.date ||
-			!training.filterId ||
-			training.exercises.length === 0
-		) {
+		if (!training.name.trim() || !training.date || !training.filterId || training.exercises.length === 0) {
 			return false;
 		}
 		return training.exercises.every((exercise) => {
 			if (!exercise.name.trim() || exercise.exerciseId == null) return false;
-			return exercise.sets.some(
-				(set) => set.reps.trim() !== "" && set.weight.trim() !== "",
-			);
+			return exercise.sets.some((set) => set.reps.trim() !== "" && set.weight.trim() !== "");
 		});
 	};
 
@@ -297,9 +262,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 			<DialogContent className="max-w-4xl p-4 pt-6 max-h-[98vh] w-[95vw] sm:w-full">
 				<DialogHeader>
 					<DialogTitle>Přidat nový trénink</DialogTitle>
-					<DialogDescription>
-						Vytvořte nový trénink s cviky a sériemi.
-					</DialogDescription>
+					<DialogDescription>Vytvořte nový trénink s cviky a sériemi.</DialogDescription>
 				</DialogHeader>
 
 				{/*@ts-ignore*/}
@@ -413,7 +376,11 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 														<Button
 															variant="muted"
 															size="icon-sm"
-															onClick={() => removeExercise(exercise.tempId)}
+															onClick={() =>
+																removeExercise(
+																	exercise.tempId,
+																)
+															}
 															className="shrink-0"
 														>
 															<X className="h-4 w-4" />
@@ -421,10 +388,15 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 													</div>
 													<ExerciseCombobox
 														selectedStatus={
-															selectedStatuses[exercise.tempId] ?? null
+															selectedStatuses[
+																exercise.tempId
+															] ?? null
 														}
 														setSelectedStatus={(value) =>
-															handleSetSelectedStatus(exercise.tempId, value)
+															handleSetSelectedStatus(
+																exercise.tempId,
+																value,
+															)
 														}
 														exerciseId={exercise.tempId}
 														selectExercise={selectExercise}
@@ -433,9 +405,13 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 											</div>
 											<div className="space-y-3">
 												<div className="flex items-center justify-between">
-													<Label className="text-sm font-medium">Série</Label>
+													<Label className="text-sm font-medium">
+														Série
+													</Label>
 													<Button
-														onClick={() => addSet(exercise.tempId)}
+														onClick={() =>
+															addSet(exercise.tempId)
+														}
 														size="sm"
 														variant="outline"
 													>
@@ -457,7 +433,9 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 															<div className="hidden sm:block" />
 															<div className="hidden sm:block" />
 															<div>
-																<Label className="text-xs sr-only">Váha</Label>
+																<Label className="text-xs sr-only">
+																	Váha
+																</Label>
 																<div className="text-xs mb-1 text-muted-foreground">
 																	Váha (kg)
 																</div>
@@ -472,7 +450,9 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 																			exercise.tempId,
 																			set.order,
 																			"weight",
-																			e.target.value,
+																			e
+																				.target
+																				.value,
 																		)
 																	}
 																	className="h-8"
@@ -493,7 +473,9 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 																			exercise.tempId,
 																			set.order,
 																			"reps",
-																			e.target.value,
+																			e
+																				.target
+																				.value,
 																		)
 																	}
 																	className="h-8"
@@ -503,7 +485,10 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 																variant="destructive"
 																size="icon"
 																onClick={() =>
-																	removeSet(exercise.tempId, set.order)
+																	removeSet(
+																		exercise.tempId,
+																		set.order,
+																	)
 																}
 																className="h-8 w-8 shrink-0"
 															>
@@ -548,9 +533,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 							{training.exercises.length === 0 && (
 								<div className="text-center py-8 text-muted-foreground border rounded-lg">
 									<p>Zatím nebyly přidány žádné cviky.</p>
-									<p className="text-sm">
-										Klikněte na "Přidat cvik" pro začátek.
-									</p>
+									<p className="text-sm">Klikněte na "Přidat cvik" pro začátek.</p>
 								</div>
 							)}
 						</div>
@@ -565,11 +548,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 					>
 						Zrušit
 					</Button>
-					<Button
-						onClick={handleSave}
-						className="w-full sm:w-auto"
-						disabled={!isValidTraining()}
-					>
+					<Button onClick={handleSave} className="w-full sm:w-auto" disabled={!isValidTraining()}>
 						Uložit trénink
 					</Button>
 				</DialogFooter>

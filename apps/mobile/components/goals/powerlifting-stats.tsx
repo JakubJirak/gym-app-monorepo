@@ -1,7 +1,7 @@
 import { useQuery } from "convex/react";
+import { Trophy } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { api } from "../../../../packages/convex/convex/_generated/api";
-import { Trophy } from "lucide-react-native";
 
 export default function PowerliftingStats({
 	squatPR,
@@ -17,14 +17,14 @@ export default function PowerliftingStats({
 
 	return (
 		<View className="mt-6">
-			<View className="flex flex-row gap-3 items-center text-lg font-bold mb-6">
-				<Trophy size={24} color="white" />
-				<Text className="text-white text-xl font-bold">Powerlifting PR</Text>
+			<View className="mb-6 flex flex-row items-center gap-3 font-bold text-lg">
+				<Trophy color="white" size={24} />
+				<Text className="font-bold text-white text-xl">Powerlifting PR</Text>
 			</View>
 			<View className="flex-row">
 				<View className="w-1/3 items-center gap-1">
 					<Text className="text-white text-xl">{squatPR}kg</Text>
-					<Text className="text-muted text-base">Squat</Text>
+					<Text className="text-base text-muted">Squat</Text>
 					{userWeight && (
 						<Text className="text-white">
 							{(squatPR / Number(userWeight.weight)).toFixed(2)}x BW
@@ -33,7 +33,7 @@ export default function PowerliftingStats({
 				</View>
 				<View className="w-1/3 items-center gap-1">
 					<Text className="text-white text-xl">{benchPR}kg</Text>
-					<Text className="text-muted text-base">Bench</Text>
+					<Text className="text-base text-muted">Bench</Text>
 					{userWeight && (
 						<Text className="text-white">
 							{(benchPR / Number(userWeight.weight)).toFixed(2)}x BW
@@ -42,7 +42,7 @@ export default function PowerliftingStats({
 				</View>
 				<View className="w-1/3 items-center gap-1">
 					<Text className="text-white text-xl">{deadliftPR}kg</Text>
-					<Text className="text-muted text-base">Deadlift</Text>
+					<Text className="text-base text-muted">Deadlift</Text>
 					{userWeight && (
 						<Text className="text-white">
 							{(deadliftPR / Number(userWeight.weight)).toFixed(2)}x BW
@@ -50,14 +50,12 @@ export default function PowerliftingStats({
 					)}
 				</View>
 			</View>
-			<View className="w-full h-0.5 bg-secondary my-4" />
+			<View className="my-4 h-0.5 w-full bg-secondary" />
 			<View className="w-full items-center gap-1">
-				<Text className="text-white text-2xl font-bold">{total}kg</Text>
-				<Text className="text-muted text-lg">Total</Text>
+				<Text className="font-bold text-2xl text-white">{total}kg</Text>
+				<Text className="text-lg text-muted">Total</Text>
 				{userWeight && (
-					<Text className="text-white">
-						{(total / Number(userWeight.weight)).toFixed(2)}x BW
-					</Text>
+					<Text className="text-white">{(total / Number(userWeight.weight)).toFixed(2)}x BW</Text>
 				)}
 			</View>
 		</View>

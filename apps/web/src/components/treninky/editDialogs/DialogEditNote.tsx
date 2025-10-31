@@ -1,3 +1,7 @@
+import { useMutation } from "convex/react";
+import { Pencil } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import {
 	Dialog,
@@ -10,12 +14,8 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { useMutation } from "convex/react";
-import { Pencil } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogEditSet {
 	exerciseId: string;
@@ -27,10 +27,10 @@ export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditSet) {
 	const [note, setNote] = useState<string>("");
 	const editNote = useMutation(api.workoutExercises.editNote);
 
-	function handleEditNote(id: string, note: string) {
+	function handleEditNote(id: string, noteName: string) {
 		editNote({
 			workoutExerciseId: id as Id<"workoutExercises">,
-			note: note,
+			note: noteName,
 		});
 	}
 
@@ -42,28 +42,23 @@ export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditSet) {
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog onOpenChange={setOpen} open={open}>
 			<form>
 				<DialogTrigger asChild>
-					<Button variant="outline" className="w-40">
+					<Button className="w-40" variant="outline">
 						<Pencil className="size-4" />
 						Upravit pozn.
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px] h-auto">
+				<DialogContent className="h-auto sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>Změna poznámky</DialogTitle>
 						<DialogDescription>
-							Zde můžete změnit poznámku ke cviku, odesláním prázdné poznámky se
-							smaže.
+							Zde můžete změnit poznámku ke cviku, odesláním prázdné poznámky se smaže.
 						</DialogDescription>
 					</DialogHeader>
 					<form onSubmit={handleSubmit}>
-						<Input
-							type="text"
-							value={note}
-							onChange={(e) => setNote(e.target.value)}
-						/>
+						<Input onChange={(e) => setNote(e.target.value)} type="text" value={note} />
 						<DialogFooter className="mt-4">
 							<DialogClose asChild>
 								<Button variant="outline">Zrušit</Button>

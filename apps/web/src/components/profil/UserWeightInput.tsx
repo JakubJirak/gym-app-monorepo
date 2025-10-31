@@ -1,23 +1,20 @@
-import { Button } from "@/components/ui/button.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { authClient } from "@/lib/auth-client.ts";
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMutation } from "convex/react";
-
 import { Check, Pencil } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { authClient } from "@/lib/auth-client.ts";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { convexQuery } from "@convex-dev/react-query";
 
 const UserWeightInput = () => {
 	const { data: session } = authClient.useSession();
 	const [weight, setWeight] = useState<string>("");
 	const [changeWeight, setChangeWeight] = useState<boolean>(false);
 
-	const { data: weightData } = useSuspenseQuery(
-		convexQuery(api.userWeights.getUserWeight, {}),
-	);
+	const { data: weightData } = useSuspenseQuery(convexQuery(api.userWeights.getUserWeight, {}));
 	const addWeight = useMutation(api.userWeights.addUserWeight);
 	const editWeight = useMutation(api.userWeights.updateUserWeight);
 
@@ -41,19 +38,19 @@ const UserWeightInput = () => {
 	if (!weightData)
 		return (
 			<div className="p-2">
-				<form className="flex gap-2 items-center" onSubmit={handleAddWeight}>
+				<form className="flex items-center gap-2" onSubmit={handleAddWeight}>
 					<p>Vaše váha (kg):</p>
 					<Input
-						value={weight}
-						onChange={(e) => setWeight(e.target.value)}
 						className="max-w-[70px]"
-						type="number"
-						min="10"
 						max="500"
-						step="0.01"
+						min="10"
+						onChange={(e) => setWeight(e.target.value)}
 						required
+						step="0.01"
+						type="number"
+						value={weight}
 					/>
-					<Button type="submit" className="ml-auto" size="icon">
+					<Button className="ml-auto" size="icon" type="submit">
 						<Check />
 					</Button>
 				</form>
@@ -64,35 +61,32 @@ const UserWeightInput = () => {
 		<>
 			<div className="p-2">
 				{changeWeight ? (
-					<form
-						className="flex gap-2 items-center"
-						onSubmit={handleChangeWeight}
-					>
+					<form className="flex items-center gap-2" onSubmit={handleChangeWeight}>
 						<p>Vaše váha (kg):</p>
 						<Input
 							autoFocus
-							value={weight}
-							onChange={(e) => setWeight(e.target.value)}
 							className="max-w-[70px]"
-							type="number"
-							min="10"
 							max="500"
-							step="0.01"
+							min="10"
+							onChange={(e) => setWeight(e.target.value)}
 							required
+							step="0.01"
+							type="number"
+							value={weight}
 						/>
-						<Button type="submit" className="ml-auto" size="icon">
+						<Button className="ml-auto" size="icon" type="submit">
 							<Check />
 						</Button>
 					</form>
 				) : (
-					<div className="flex gap-2 items-center">
+					<div className="flex items-center gap-2">
 						<p>Vaše váha:</p>
 						<p>{weightData.weight}kg</p>
 						<Button
-							type="button"
-							size="icon"
 							className="ml-auto"
 							onClick={() => setChangeWeight(true)}
+							size="icon"
+							type="button"
 						>
 							<Pencil />
 						</Button>

@@ -1,3 +1,8 @@
+import { useMutation } from "convex/react";
+import { Pencil } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import type { ExerciseSelect } from "utils/training-types";
 import { ExerciseCombobox } from "@/components/treninky/ExerciseCombobox.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -10,26 +15,17 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { useMutation } from "convex/react";
-import { Pencil } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { ExerciseSelect } from "utils/training-types";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogEditSet {
 	exerciseId: string;
 	setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function DialogEditExercise({
-	exerciseId,
-	setOpenParent,
-}: DialogEditSet) {
+export function DialogEditExercise({ exerciseId, setOpenParent }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
-	const [selectedStatusesEx, setSelectedStatusesEx] =
-		useState<ExerciseSelect | null>(null);
+	const [selectedStatusesEx, setSelectedStatusesEx] = useState<ExerciseSelect | null>(null);
 	const editExercise = useMutation(api.workoutExercises.editExercise);
 
 	function handleEditExercise(id: string) {
@@ -51,26 +47,24 @@ export function DialogEditExercise({
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog onOpenChange={setOpen} open={open}>
 			<form>
 				<DialogTrigger asChild>
-					<Button variant="outline" className="w-40">
+					<Button className="w-40" variant="outline">
 						<Pencil className="size-4" />
 						Změnit cvik
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px] h-auto">
+				<DialogContent className="h-auto sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>Změna cviku</DialogTitle>
-						<DialogDescription>
-							Zde můžete změnit typ cviku v tréninku.
-						</DialogDescription>
+						<DialogDescription>Zde můžete změnit typ cviku v tréninku.</DialogDescription>
 					</DialogHeader>
 					<form onSubmit={handleSubmit}>
 						<ExerciseCombobox
+							exerciseId="a"
 							selectedStatus={selectedStatusesEx}
 							setSelectedStatus={setSelectedStatusesEx}
-							exerciseId="a"
 						/>
 						<DialogFooter className="mt-4">
 							<DialogClose asChild>

@@ -19,10 +19,7 @@ interface EditOptionsDialogProps {
 	exerciseId: string;
 }
 
-export function EditOptionsDialog({
-	order,
-	exerciseId,
-}: EditOptionsDialogProps) {
+export function EditOptionsDialog({ order, exerciseId }: EditOptionsDialogProps) {
 	const [openParent, setOpenParent] = useState(false);
 	return (
 		<Dialog open={openParent} onOpenChange={setOpenParent}>
@@ -35,9 +32,7 @@ export function EditOptionsDialog({
 				<DialogContent className="sm:max-w-[425px] h-auto">
 					<DialogHeader>
 						<DialogTitle>Změna ve cviku</DialogTitle>
-						<DialogDescription>
-							Zde můžete změnit vše v daném cviku.
-						</DialogDescription>
+						<DialogDescription>Zde můžete změnit vše v daném cviku.</DialogDescription>
 
 						<div className="flex w-full flex-col items-center gap-2 mt-4">
 							<DialogAddSet
@@ -46,20 +41,11 @@ export function EditOptionsDialog({
 								setOpenParent={setOpenParent}
 							/>
 
-							<DialogEditExercise
-								exerciseId={exerciseId}
-								setOpenParent={setOpenParent}
-							/>
+							<DialogEditExercise exerciseId={exerciseId} setOpenParent={setOpenParent} />
 
-							<DialogEditNote
-								setOpenParent={setOpenParent}
-								exerciseId={exerciseId}
-							/>
+							<DialogEditNote setOpenParent={setOpenParent} exerciseId={exerciseId} />
 
-							<DialogDeleteExercise
-								exerciseId={exerciseId}
-								setOpenParent={setOpenParent}
-							/>
+							<DialogDeleteExercise exerciseId={exerciseId} setOpenParent={setOpenParent} />
 						</div>
 					</DialogHeader>
 				</DialogContent>

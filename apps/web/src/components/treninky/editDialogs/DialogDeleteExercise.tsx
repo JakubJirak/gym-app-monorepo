@@ -1,3 +1,6 @@
+import { useMutation } from "convex/react";
+import type React from "react";
+import { FaRegTrashCan } from "react-icons/fa6";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -10,24 +13,16 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { useMutation } from "convex/react";
-import type React from "react";
-import { FaRegTrashCan } from "react-icons/fa6";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 interface DialogDeleteTraining {
 	exerciseId: string;
 	setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DialogDeleteTraining = ({
-	exerciseId,
-	setOpenParent,
-}: DialogDeleteTraining) => {
-	const deleteWorkoutExercise = useMutation(
-		api.workoutExercises.deleteWorkoutExercise,
-	);
+const DialogDeleteTraining = ({ exerciseId, setOpenParent }: DialogDeleteTraining) => {
+	const deleteWorkoutExercise = useMutation(api.workoutExercises.deleteWorkoutExercise);
 
 	function handleDeleteExercise(id: string) {
 		deleteWorkoutExercise({
@@ -37,9 +32,9 @@ const DialogDeleteTraining = ({
 
 	return (
 		<AlertDialog>
-			{/*@ts-ignore*/}
+			{/*@ts-expect-error allright*/}
 			<AlertDialogTrigger asChild>
-				<Button variant="destructive" className="mx-auto w-40">
+				<Button className="mx-auto w-40" variant="destructive">
 					<FaRegTrashCan className="size-3" />
 					Odstranit cvik
 				</Button>
@@ -48,13 +43,12 @@ const DialogDeleteTraining = ({
 				<AlertDialogHeader>
 					<AlertDialogTitle>Jste si opravdu jistí?</AlertDialogTitle>
 					<AlertDialogDescription>
-						Tato akce se nedá navrátit. Navždy smaže váš cvik se všemi sériemi a
-						poznámkami.
+						Tato akce se nedá navrátit. Navždy smaže váš cvik se všemi sériemi a poznámkami.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Zrušit</AlertDialogCancel>
-					{/*@ts-ignore*/}
+					{/*@ts-expect-error allright*/}
 					<AlertDialogAction
 						asChild
 						onClick={() => {

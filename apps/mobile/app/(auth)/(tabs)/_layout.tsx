@@ -24,11 +24,7 @@ export default function TabsLayout() {
 				name="index"
 				options={{
 					tabBarIcon: ({ color, size, focused }) => (
-						<Ionicons
-							name={focused ? "home" : "home-outline"}
-							size={size}
-							color={color}
-						/>
+						<Ionicons color={color} name={focused ? "home" : "home-outline"} size={size} />
 					),
 				}}
 			/>
@@ -36,11 +32,7 @@ export default function TabsLayout() {
 				name="trainings"
 				options={{
 					tabBarIcon: ({ color, size, focused }) => (
-						<Ionicons
-							name={focused ? "list" : "list-outline"}
-							size={size}
-							color={color}
-						/>
+						<Ionicons color={color} name={focused ? "list" : "list-outline"} size={size} />
 					),
 				}}
 			/>
@@ -49,9 +41,9 @@ export default function TabsLayout() {
 				options={{
 					tabBarIcon: ({ color, size, focused }) => (
 						<Ionicons
+							color={color}
 							name={focused ? "add-circle" : "add-circle-outline"}
 							size={size}
-							color={color}
 						/>
 					),
 				}}
@@ -61,9 +53,9 @@ export default function TabsLayout() {
 				options={{
 					tabBarIcon: ({ color, size, focused }) => (
 						<Ionicons
+							color={color}
 							name={focused ? "stats-chart" : "stats-chart-outline"}
 							size={size}
-							color={color}
 						/>
 					),
 				}}
@@ -72,11 +64,7 @@ export default function TabsLayout() {
 				name="profile"
 				options={{
 					tabBarIcon: ({ color, size, focused }) => (
-						<Ionicons
-							name={focused ? "person" : "person-outline"}
-							size={size}
-							color={color}
-						/>
+						<Ionicons color={color} name={focused ? "person" : "person-outline"} size={size} />
 					),
 				}}
 			/>

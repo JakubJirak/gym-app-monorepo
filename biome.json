@@ -1,0 +1,18 @@
+{
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "formatter": {
+    "lineWidth": 120,
+    "indentStyle": "space",
+    "indentWidth": 6
+  },
+  "extends": [
+    "ultracite/core",
+    "ultracite/react"
+  ],
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json"
+}

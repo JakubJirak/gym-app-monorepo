@@ -6,31 +6,28 @@ import "../global.css";
 import { COLORS } from "@/constants/COLORS";
 import { authClient } from "../src/lib/auth-client";
 
-const convex = new ConvexReactClient(
-	process.env.EXPO_PUBLIC_CONVEX_URL as string,
-	{
-		// Optionally pause queries until the user is authenticated
-		expectAuth: true,
-		unsavedChangesWarning: false,
-	},
-);
+const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL as string, {
+	// Optionally pause queries until the user is authenticated
+	expectAuth: true,
+	unsavedChangesWarning: false,
+});
 
 export default function RootLayout() {
 	return (
-	<ConvexProvider client={convex}>
-		<ConvexBetterAuthProvider client={convex} authClient={authClient}>
-			<PaperProvider>
-				<StackLayout />
-			</PaperProvider>
-		</ConvexBetterAuthProvider>
-	</ConvexProvider>
+		<ConvexProvider client={convex}>
+			<ConvexBetterAuthProvider authClient={authClient} client={convex}>
+				<PaperProvider>
+					<StackLayout />
+				</PaperProvider>
+			</ConvexBetterAuthProvider>
+		</ConvexProvider>
 	);
 }
 
 function StackLayout() {
 	//const isAuth = true;
 	const { data: session } = authClient.useSession();
-  const isAuth = session ? true : false;
+	const isAuth = session ? true : false;
 
 	return (
 		<Stack

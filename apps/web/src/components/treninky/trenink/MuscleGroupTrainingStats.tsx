@@ -1,15 +1,10 @@
-import {
-	type ChartConfig,
-	ChartContainer,
-	ChartTooltip,
-	ChartTooltipContent,
-} from "@/components/ui/chart";
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { BicepsFlexed } from "lucide-react";
 import { Pie, PieChart } from "recharts";
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 const chartConfig = {
 	visitors: {
@@ -50,7 +45,7 @@ const MuscleGroupTrainingStats = ({ trainingId }: { trainingId: string }) => {
 	const { data: training } = useSuspenseQuery(
 		convexQuery(api.workouts.getWorkoutById, {
 			workoutId: trainingId as Id<"workouts">,
-		}),
+		})
 	);
 
 	const muscleGroupCounts =
@@ -62,41 +57,30 @@ const MuscleGroupTrainingStats = ({ trainingId }: { trainingId: string }) => {
 			return acc;
 		}, {}) ?? {};
 
-	const muscleGroupStats = Object.entries(muscleGroupCounts).map(
-		([muscleGroup, number], index) => ({
-			muscleGroup,
-			number,
-			fill: COLORS[index % COLORS.length],
-		}),
-	);
+	const muscleGroupStats = Object.entries(muscleGroupCounts).map(([muscleGroup, number], index) => ({
+		muscleGroup,
+		number,
+		fill: COLORS[index % COLORS.length],
+	}));
 
 	return (
 		<div>
-			<p className="flex gap-3 items-center text-lg font-bold mb-4">
+			<p className="mb-4 flex items-center gap-3 font-bold text-lg">
 				<BicepsFlexed />
 				Statistiky podle partie
 			</p>
 
-			<ChartContainer
-				config={chartConfig}
-				className="mx-auto aspect-square max-h-[250px]"
-			>
+			<ChartContainer className="mx-auto aspect-square max-h-[250px]" config={chartConfig}>
 				<PieChart>
-					<ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+					<ChartTooltip content={<ChartTooltipContent />} cursor={false} />
 					<Pie data={muscleGroupStats} dataKey="number" nameKey="muscleGroup" />
 				</PieChart>
 			</ChartContainer>
 
 			<div className="grid grid-cols-2 gap-y-2">
 				{muscleGroupStats.map((muscleGroup) => (
-					<div
-						key={muscleGroup.muscleGroup}
-						className="flex gap-1.5 items-center"
-					>
-						<div
-							style={{ backgroundColor: muscleGroup.fill }}
-							className="size-4 rounded-sm"
-						/>
+					<div className="flex items-center gap-1.5" key={muscleGroup.muscleGroup}>
+						<div className="size-4 rounded-sm" style={{ backgroundColor: muscleGroup.fill }} />
 						<p>{muscleGroup.muscleGroup}</p>
 						<p>{muscleGroup.number}</p>
 					</div>

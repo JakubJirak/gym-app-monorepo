@@ -6,11 +6,7 @@ export default function Settings() {
 	return (
 		<View className="flex-1 bg-black px-4">
 			<ComponentHeader text="Nastavení" />
-			<ProfileLink
-				href="/profile/about"
-				icon="information-circle-outline"
-				text="O aplikaci"
-			/>
+			<ProfileLink href="/profile/about" icon="information-circle-outline" text="O aplikaci" />
 		</View>
 	);
 }

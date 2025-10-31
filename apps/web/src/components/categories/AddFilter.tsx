@@ -1,3 +1,7 @@
+import { useMutation } from "convex/react";
+import { Plus } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import {
 	Dialog,
@@ -10,10 +14,6 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { useMutation } from "convex/react";
-import { Plus } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 
 export function AddFilter() {
@@ -22,9 +22,9 @@ export function AddFilter() {
 	const [color, setColor] = useState<string>("#000000");
 	const addFilter = useMutation(api.filters.addFilter);
 
-	function handleAddFilter(filter: string) {
+	function handleAddFilter(filterName: string) {
 		addFilter({
-			name: filter,
+			name: filterName,
 			color,
 		});
 		setOpen(false);
@@ -37,14 +37,14 @@ export function AddFilter() {
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog onOpenChange={setOpen} open={open}>
 			<form>
 				<DialogTrigger asChild>
 					<Button size="icon">
 						<Plus />
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px] h-auto">
+				<DialogContent className="h-auto sm:max-w-[425px]">
 					<DialogHeader>
 						<DialogTitle>Přidání kategorie</DialogTitle>
 						<DialogDescription>
@@ -53,20 +53,20 @@ export function AddFilter() {
 					</DialogHeader>
 					<form onSubmit={handleSubmit}>
 						<Input
+							className="mt-2"
+							onChange={(e) => setFilter(e.target.value)}
+							required
 							type="text"
 							value={filter}
-							onChange={(e) => setFilter(e.target.value)}
-							className="mt-2"
-							required
 						/>
-						<div className="flex items-center mt-4 gap-4">
+						<div className="mt-4 flex items-center gap-4">
 							<p>Vyber barvu:</p>
 							<input
-								type="color"
-								required
-								onChange={(e) => setColor(e.target.value)}
-								value={color}
 								className="cursor-pointer"
+								onChange={(e) => setColor(e.target.value)}
+								required
+								type="color"
+								value={color}
 							/>
 						</div>
 

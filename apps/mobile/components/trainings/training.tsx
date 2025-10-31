@@ -5,7 +5,7 @@ import { Link } from "expo-router";
 import { Text, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 
-interface TrainingProps {
+type TrainingProps = {
 	id: string;
 	name: string;
 	date: string;
@@ -24,7 +24,7 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 				params: { id },
 			}}
 		>
-			<View className="py-6 px-2 flex-row">
+			<View className="flex-row px-2 py-6">
 				<View
 					// className={`w-[3px] h-full rounded-lg mr-6 bg-[${filter.color}]/60`}
 					style={{
@@ -36,10 +36,10 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 						opacity: 0.8,
 					}}
 				/>
-				<View className="gap-3 flex-1">
-					<Text className="text-white text-xl font-semibold">{name}</Text>
-					<View className="flex-row gap-2 items-center">
-						<Ionicons name="calendar-outline" size={20} color={COLORS.muted} />
+				<View className="flex-1 gap-3">
+					<Text className="font-semibold text-white text-xl">{name}</Text>
+					<View className="flex-row items-center gap-2">
+						<Ionicons color={COLORS.muted} name="calendar-outline" size={20} />
 						<Text className="text-muted">
 							{format(new Date(date), "PPPP", { locale: cs })}
 						</Text>
@@ -47,7 +47,9 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 				</View>
 				<View className="flex-col justify-between">
 					<Text
-						className={`text-white text-sm border px-2.5 py-1.5 rounded-xl text-center`}
+						className={
+							"rounded-xl border px-2.5 py-1.5 text-center text-sm text-white"
+						}
 						style={{ borderColor: `${filter ? `${filter.color}99` : "gray"}` }}
 					>
 						{filter ? filter.name : "Žádný"}

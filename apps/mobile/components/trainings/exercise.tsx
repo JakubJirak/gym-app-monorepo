@@ -1,7 +1,7 @@
 import { FlatList, Text, View } from "react-native";
 import ExerciseSet from "./set";
 
-interface ExerciseProps {
+type ExerciseProps = {
 	name: string;
 	muscleGroup: string | null;
 	note: string | undefined;
@@ -13,34 +13,23 @@ interface ExerciseProps {
 				order: number;
 		  }[]
 		| null;
-}
+};
 
-export default function Exercise({
-	name,
-	muscleGroup,
-	sets,
-	note,
-}: ExerciseProps) {
+export default function Exercise({ name, muscleGroup, sets, note }: ExerciseProps) {
 	return (
 		<View className="py-4">
-			<View className="flex-row items-center mb-2">
-				<Text className="text-white flex-1 text-xl font-semibold">{name}</Text>
-				<Text className="text-muted border-2 border-secondary px-2 py-1 rounded-xl">
-					{muscleGroup}
-				</Text>
+			<View className="mb-2 flex-row items-center">
+				<Text className="flex-1 font-semibold text-white text-xl">{name}</Text>
+				<Text className="rounded-xl border-2 border-secondary px-2 py-1 text-muted">{muscleGroup}</Text>
 			</View>
 			<FlatList
 				data={sets}
-				renderItem={({ item }) => (
-					<ExerciseSet
-						order={item.order}
-						weight={item.weight}
-						reps={item.reps}
-					/>
-				)}
 				keyExtractor={(item) => item._id}
+				renderItem={({ item }) => (
+					<ExerciseSet order={item.order} reps={item.reps} weight={item.weight} />
+				)}
 			/>
-			{note && <Text className="text-muted mt-2">{note}</Text>}
+			{note && <Text className="mt-2 text-muted">{note}</Text>}
 		</View>
 	);
 }

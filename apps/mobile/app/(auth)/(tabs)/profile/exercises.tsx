@@ -1,8 +1,8 @@
+import { useQuery } from "convex/react";
+import { useMemo } from "react";
 import { View } from "react-native";
 import ComponentHeader from "@/components/component-header";
-import { useQuery } from "convex/react";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { useMemo } from "react";
 
 type Exercise = {
 	_id: string;
@@ -15,17 +15,23 @@ type SortedExercises = {
 };
 
 export default function Exercises() {
-  const exercises = useQuery(api.exercises.getAllExercises);
+	const exercises = useQuery(api.exercises.getAllExercises);
 
-  const sortedExercises = useMemo<SortedExercises>(() => {
-		return (exercises ?? []).reduce<SortedExercises>((acc, exercise) => {
-			if (!acc[exercise.muscleGroup]) acc[exercise.muscleGroup] = [];
-			acc[exercise.muscleGroup].push(exercise);
-			return acc;
-		}, {});
-	}, [exercises]);
+	const sortedExercises = useMemo<SortedExercises>(
+		() =>
+			(exercises ?? []).reduce<SortedExercises>((acc, exercise) => {
+				if (!acc[exercise.muscleGroup]) {
+					acc[exercise.muscleGroup] = [];
+				}
+				acc[exercise.muscleGroup].push(exercise);
+				return acc;
+			}, {}),
+		[exercises]
+	);
 
-  if (!exercises || exercises === undefined) return null;
+	if (!exercises || exercises === undefined) {
+		return null;
+	}
 
 	return (
 		<View className="flex-1 bg-primary px-4">

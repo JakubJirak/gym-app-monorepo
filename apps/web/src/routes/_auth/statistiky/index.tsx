@@ -1,18 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
-import {
-	Tabs,
-	TabsContent,
-	TabsList,
-	TabsTrigger,
-} from "@/components/ui/tabs.tsx";
-import Header from "@/components/Header";
-import OverallStats from "@/components/statistiky/stats/OverallStats";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { convexQuery } from "@convex-dev/react-query";
-import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { Card } from "@/components/ui/card";
-import MuscleGroupStats from "@/components/statistiky/muscleGroup/MuscleGroupStats";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import Header from "@/components/Header";
 import HistorySets from "@/components/statistiky/history/HistorySets";
+import MuscleGroupStats from "@/components/statistiky/muscleGroup/MuscleGroupStats";
+import OverallStats from "@/components/statistiky/stats/OverallStats";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export const Route = createFileRoute("/_auth/statistiky/")({
 	component: RouteComponent,
@@ -25,15 +20,13 @@ export const Route = createFileRoute("/_auth/statistiky/")({
 });
 
 function RouteComponent() {
-	const { data: trainings } = useSuspenseQuery(
-		convexQuery(api.workouts.getUserWorkouts, {}),
-	);
+	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
 
 	if (trainings === undefined || trainings?.length === 0)
 		return (
 			<>
 				<Header page="STATISTIKY" />
-				<div className="max-w-[500px] mx-auto w-[90%]">
+				<div className="mx-auto w-[90%] max-w-[500px]">
 					<Card className="p-4 text-center">
 						<p>Pro zobrazení statistik musíte nejprve vytvořit trénink</p>
 					</Card>
@@ -45,10 +38,7 @@ function RouteComponent() {
 		<>
 			<Header page="STATISTIKY" />
 
-			<Tabs
-				defaultValue="stats"
-				className="max-w-[500px] mx-auto w-[90%] space-y-3"
-			>
+			<Tabs className="mx-auto w-[90%] max-w-[500px] space-y-3" defaultValue="stats">
 				<TabsList className="w-full bg-secondary">
 					<TabsTrigger value="stats">Celkově</TabsTrigger>
 					<TabsTrigger value="musclegroup">Podle partie</TabsTrigger>
