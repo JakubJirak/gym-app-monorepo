@@ -29,7 +29,7 @@ export default function TrainingById() {
 					ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 					keyExtractor={(item) => item._id}
 					ListHeaderComponent={() => (
-						<View className="mt-4 flex-row items-center pb-4">
+						<View className="mt-3 flex-row items-center pb-4">
 							<View className="flex-1 flex-row gap-2">
 								<Ionicons color={COLORS.muted} name="calendar-outline" size={20} />
 								<Text className="text-muted">
@@ -43,11 +43,13 @@ export default function TrainingById() {
 								style={{
 									borderColor: `${workout?.filter?.color}CC`,
 									color: "white",
-									borderRadius: 12,
+									borderRadius: 1200,
 									paddingHorizontal: 10,
-									paddingVertical: 6,
+									paddingVertical: 4,
 									borderWidth: 1,
 									opacity: 0.9,
+									fontSize: 14,
+									fontWeight: "300",
 								}}
 							>
 								{workout.filter?.name}

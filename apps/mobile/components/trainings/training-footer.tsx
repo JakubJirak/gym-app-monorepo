@@ -8,10 +8,7 @@ export default function TrainingFooter({ id }: { id: string }) {
 	};
 	return (
 		<View className="h-[72px] flex-row items-center border-[#1a1a1a] border-t bg-[#0a0a0a] pr-2 pb-8">
-			<TouchableOpacity
-				className="flex w-1/4 items-center pt-2"
-				onPress={stopid}
-			>
+			<TouchableOpacity className="flex w-1/4 items-center pt-2" onPress={stopid}>
 				<Ionicons color="white" name="share-social-outline" size={24} />
 			</TouchableOpacity>
 			<TouchableOpacity className="flex w-1/4 items-center pt-2">

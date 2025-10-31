@@ -14,7 +14,7 @@ export default function Categories() {
 		<ScrollView contentContainerClassName="gap-2 mb-3" horizontal showsHorizontalScrollIndicator={false}>
 			{categories.map((category) => (
 				<TouchableOpacity
-					className="flex items-center justify-center rounded-xl border bg-secondary px-3 py-1.5 text-center"
+					className="flex items-center justify-center rounded-full border bg-secondary px-3 py-1.5 text-center"
 					key={category._id}
 					style={{ borderColor: `${category.color}CC` }}
 				>

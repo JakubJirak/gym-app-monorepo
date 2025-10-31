@@ -1,6 +1,6 @@
 import { formatSetInfo } from "utils/training-format";
-import { Badge } from "@/components/ui/badge.tsx";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
 type Exercise = {
@@ -33,8 +33,9 @@ const CalendarTrainingLi = ({ exercise, index, len }: Props) => (
 	<div className="mt-2 space-y-3 rounded-lg" key={exercise._id}>
 		<div className="flex justify-between">
 			<h4 className="font-semibold text-lg">{exercise?.exercise?.name}</h4>
-			<Badge variant="outline">{exercise?.exercise?.muscleGroup}<Badge>
+			<Badge variant="outline">{exercise.exercise?.muscleGroup}</Badge>
 		</div>
+		<div />
 
 		<div>
 			<div className="grid gap-2">

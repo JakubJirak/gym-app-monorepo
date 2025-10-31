@@ -43,20 +43,24 @@ export default function Edit() {
 				</View>
 
 				<View className="gap-4">
-					<Link href="/(auth)/(tabs)/profile/edit/vaha" style={{ width: "100%" }}>
-						<View className="my-3 w-full gap-2">
-							<Text className="font-semibold text-lg text-white tracking-wide">Váha</Text>
-							<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
-								<Text className="text-lg text-white">{userWeight?.weight}kg</Text>
+					{userWeight && (
+						<Link href="/(auth)/(tabs)/profile/edit/vaha" style={{ width: "100%" }}>
+							<View className="my-3 w-full gap-2">
+								<Text className="font-semibold text-lg text-white tracking-wide">
+									Váha
+								</Text>
+								<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
+									<Text className="text-lg text-white">{userWeight.weight}kg</Text>
+								</View>
 							</View>
-						</View>
-					</Link>
+						</Link>
+					)}
 
 					<Link href="/(auth)/(tabs)/profile/edit/jmeno" style={{ width: "100%" }}>
 						<View className="my-3 w-full gap-2">
 							<Text className="font-semibold text-lg text-white tracking-wide">Jméno</Text>
 							<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
-								<Text className="text-lg text-white">79.00</Text>
+								<Text className="text-lg text-white">{session.user.name}</Text>
 							</View>
 						</View>
 					</Link>

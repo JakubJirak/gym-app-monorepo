@@ -14,7 +14,7 @@ type TrainingProps = {
 		name: string;
 		color: string;
 	} | null;
-}
+};
 
 export default function Training({ id, name, date, filter }: TrainingProps) {
 	return (
@@ -40,15 +40,13 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 					<Text className="font-semibold text-white text-xl">{name}</Text>
 					<View className="flex-row items-center gap-2">
 						<Ionicons color={COLORS.muted} name="calendar-outline" size={20} />
-						<Text className="text-muted">
-							{format(new Date(date), "PPPP", { locale: cs })}
-						</Text>
+						<Text className="text-muted">{format(new Date(date), "PPPP", { locale: cs })}</Text>
 					</View>
 				</View>
 				<View className="flex-col justify-between">
 					<Text
 						className={
-							"rounded-xl border px-2.5 py-1.5 text-center text-sm text-white"
+							"rounded-full border px-2.5 py-1.5 text-center font-light text-sm text-white"
 						}
 						style={{ borderColor: `${filter ? `${filter.color}99` : "gray"}` }}
 					>

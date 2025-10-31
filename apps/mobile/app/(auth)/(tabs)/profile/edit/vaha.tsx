@@ -1,23 +1,47 @@
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Vaha() {
-	const [weight, setWeight] = useState("");
+	const userWeight = useQuery(api.userWeights.getUserWeight);
+	const [weight, setWeight] = useState(userWeight ? String(userWeight.weight) : "");
 	const editWeight = useMutation(api.userWeights.updateUserWeight);
 
-	const handleEdit = () => {};
+	const handleEdit = async () => {
+		const trimmed = weight.toString().trim();
+		if (trimmed === "" || isNaN(Number(trimmed))) return;
+
+		const numeric = Number(trimmed);
+		if (numeric > 200 || numeric < 10) {
+			setWeight("");
+			return;
+		}
+
+		if (userWeight) {
+			await editWeight({
+				weightId: userWeight._id,
+				changeWeight: trimmed,
+			});
+			router.back();
+		}
+	};
 
 	return (
 		<View className="flex-1 bg-primary px-4">
 			<View className="gap-5">
 				<ComponentHeader text="Změna váhy (kg)" />
 				<TextInput
+					autoFocus
 					className="w-full rounded-2xl bg-secondary p-4 text-lg text-white caret-white"
+					defaultValue={userWeight ? String(userWeight.weight) : ""}
 					keyboardType="numeric"
 					onChangeText={(text) => setWeight(text)}
+					onSubmitEditing={handleEdit}
+					returnKeyType="done"
+					submitBehavior="blurAndSubmit"
 					value={weight}
 				/>
 			</View>

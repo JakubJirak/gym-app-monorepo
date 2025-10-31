@@ -8,339 +8,341 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as AuthRouteImport } from "./routes/_auth";
-import { Route as AuthCvikyIndexRouteImport } from "./routes/_auth/cviky/index";
-import { Route as AuthKalendarIndexRouteImport } from "./routes/_auth/kalendar/index";
-import { Route as AuthKategorieIndexRouteImport } from "./routes/_auth/kategorie/index";
-import { Route as AuthMenuIndexRouteImport } from "./routes/_auth/menu/index";
-import { Route as AuthPowerliftingIndexRouteImport } from "./routes/_auth/powerlifting/index";
-import { Route as AuthProfilIndexRouteImport } from "./routes/_auth/profil/index";
-import { Route as AuthStatistikyIndexRouteImport } from "./routes/_auth/statistiky/index";
-import { Route as AuthTreninkyTrainingIdRouteImport } from "./routes/_auth/treninky/$trainingId";
-import { Route as AuthTreninkyIndexRouteImport } from "./routes/_auth/treninky/index";
-import { Route as ApiAuthSplatRouteImport } from "./routes/api/auth/$";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as LoginIndexRouteImport } from "./routes/login/index";
-import { Route as RegisterIndexRouteImport } from "./routes/register/index";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegisterIndexRouteImport } from './routes/register/index'
+import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as AuthTreninkyIndexRouteImport } from './routes/_auth/treninky/index'
+import { Route as AuthStatistikyIndexRouteImport } from './routes/_auth/statistiky/index'
+import { Route as AuthProfilIndexRouteImport } from './routes/_auth/profil/index'
+import { Route as AuthPowerliftingIndexRouteImport } from './routes/_auth/powerlifting/index'
+import { Route as AuthMenuIndexRouteImport } from './routes/_auth/menu/index'
+import { Route as AuthKategorieIndexRouteImport } from './routes/_auth/kategorie/index'
+import { Route as AuthKalendarIndexRouteImport } from './routes/_auth/kalendar/index'
+import { Route as AuthCvikyIndexRouteImport } from './routes/_auth/cviky/index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AuthTreninkyTrainingIdRouteImport } from './routes/_auth/treninky/$trainingId'
 
 const AuthRoute = AuthRouteImport.update({
-	id: "/_auth",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
-	id: "/register/",
-	path: "/register/",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
-	id: "/login/",
-	path: "/login/",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthTreninkyIndexRoute = AuthTreninkyIndexRouteImport.update({
-	id: "/treninky/",
-	path: "/treninky/",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/treninky/',
+  path: '/treninky/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthStatistikyIndexRoute = AuthStatistikyIndexRouteImport.update({
-	id: "/statistiky/",
-	path: "/statistiky/",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/statistiky/',
+  path: '/statistiky/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthProfilIndexRoute = AuthProfilIndexRouteImport.update({
-	id: "/profil/",
-	path: "/profil/",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/profil/',
+  path: '/profil/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthPowerliftingIndexRoute = AuthPowerliftingIndexRouteImport.update({
-	id: "/powerlifting/",
-	path: "/powerlifting/",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/powerlifting/',
+  path: '/powerlifting/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthMenuIndexRoute = AuthMenuIndexRouteImport.update({
-	id: "/menu/",
-	path: "/menu/",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/menu/',
+  path: '/menu/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthKategorieIndexRoute = AuthKategorieIndexRouteImport.update({
-	id: "/kategorie/",
-	path: "/kategorie/",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/kategorie/',
+  path: '/kategorie/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthKalendarIndexRoute = AuthKalendarIndexRouteImport.update({
-	id: "/kalendar/",
-	path: "/kalendar/",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/kalendar/',
+  path: '/kalendar/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthCvikyIndexRoute = AuthCvikyIndexRouteImport.update({
-	id: "/cviky/",
-	path: "/cviky/",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/cviky/',
+  path: '/cviky/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-	id: "/api/auth/$",
-	path: "/api/auth/$",
-	getParentRoute: () => rootRouteImport,
-} as any);
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthTreninkyTrainingIdRoute = AuthTreninkyTrainingIdRouteImport.update({
-	id: "/treninky/$trainingId",
-	path: "/treninky/$trainingId",
-	getParentRoute: () => AuthRoute,
-} as any);
+  id: '/treninky/$trainingId',
+  path: '/treninky/$trainingId',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-	"/": typeof IndexRoute;
-	"/login": typeof LoginIndexRoute;
-	"/register": typeof RegisterIndexRoute;
-	"/treninky/$trainingId": typeof AuthTreninkyTrainingIdRoute;
-	"/api/auth/$": typeof ApiAuthSplatRoute;
-	"/cviky": typeof AuthCvikyIndexRoute;
-	"/kalendar": typeof AuthKalendarIndexRoute;
-	"/kategorie": typeof AuthKategorieIndexRoute;
-	"/menu": typeof AuthMenuIndexRoute;
-	"/powerlifting": typeof AuthPowerliftingIndexRoute;
-	"/profil": typeof AuthProfilIndexRoute;
-	"/statistiky": typeof AuthStatistikyIndexRoute;
-	"/treninky": typeof AuthTreninkyIndexRoute;
+  '/': typeof IndexRoute
+  '/login': typeof LoginIndexRoute
+  '/register': typeof RegisterIndexRoute
+  '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/cviky': typeof AuthCvikyIndexRoute
+  '/kalendar': typeof AuthKalendarIndexRoute
+  '/kategorie': typeof AuthKategorieIndexRoute
+  '/menu': typeof AuthMenuIndexRoute
+  '/powerlifting': typeof AuthPowerliftingIndexRoute
+  '/profil': typeof AuthProfilIndexRoute
+  '/statistiky': typeof AuthStatistikyIndexRoute
+  '/treninky': typeof AuthTreninkyIndexRoute
 }
 export interface FileRoutesByTo {
-	"/": typeof IndexRoute;
-	"/login": typeof LoginIndexRoute;
-	"/register": typeof RegisterIndexRoute;
-	"/treninky/$trainingId": typeof AuthTreninkyTrainingIdRoute;
-	"/api/auth/$": typeof ApiAuthSplatRoute;
-	"/cviky": typeof AuthCvikyIndexRoute;
-	"/kalendar": typeof AuthKalendarIndexRoute;
-	"/kategorie": typeof AuthKategorieIndexRoute;
-	"/menu": typeof AuthMenuIndexRoute;
-	"/powerlifting": typeof AuthPowerliftingIndexRoute;
-	"/profil": typeof AuthProfilIndexRoute;
-	"/statistiky": typeof AuthStatistikyIndexRoute;
-	"/treninky": typeof AuthTreninkyIndexRoute;
+  '/': typeof IndexRoute
+  '/login': typeof LoginIndexRoute
+  '/register': typeof RegisterIndexRoute
+  '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/cviky': typeof AuthCvikyIndexRoute
+  '/kalendar': typeof AuthKalendarIndexRoute
+  '/kategorie': typeof AuthKategorieIndexRoute
+  '/menu': typeof AuthMenuIndexRoute
+  '/powerlifting': typeof AuthPowerliftingIndexRoute
+  '/profil': typeof AuthProfilIndexRoute
+  '/statistiky': typeof AuthStatistikyIndexRoute
+  '/treninky': typeof AuthTreninkyIndexRoute
 }
 export interface FileRoutesById {
-	__root__: typeof rootRouteImport;
-	"/": typeof IndexRoute;
-	"/_auth": typeof AuthRouteWithChildren;
-	"/login/": typeof LoginIndexRoute;
-	"/register/": typeof RegisterIndexRoute;
-	"/_auth/treninky/$trainingId": typeof AuthTreninkyTrainingIdRoute;
-	"/api/auth/$": typeof ApiAuthSplatRoute;
-	"/_auth/cviky/": typeof AuthCvikyIndexRoute;
-	"/_auth/kalendar/": typeof AuthKalendarIndexRoute;
-	"/_auth/kategorie/": typeof AuthKategorieIndexRoute;
-	"/_auth/menu/": typeof AuthMenuIndexRoute;
-	"/_auth/powerlifting/": typeof AuthPowerliftingIndexRoute;
-	"/_auth/profil/": typeof AuthProfilIndexRoute;
-	"/_auth/statistiky/": typeof AuthStatistikyIndexRoute;
-	"/_auth/treninky/": typeof AuthTreninkyIndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/login/': typeof LoginIndexRoute
+  '/register/': typeof RegisterIndexRoute
+  '/_auth/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_auth/cviky/': typeof AuthCvikyIndexRoute
+  '/_auth/kalendar/': typeof AuthKalendarIndexRoute
+  '/_auth/kategorie/': typeof AuthKategorieIndexRoute
+  '/_auth/menu/': typeof AuthMenuIndexRoute
+  '/_auth/powerlifting/': typeof AuthPowerliftingIndexRoute
+  '/_auth/profil/': typeof AuthProfilIndexRoute
+  '/_auth/statistiky/': typeof AuthStatistikyIndexRoute
+  '/_auth/treninky/': typeof AuthTreninkyIndexRoute
 }
 export interface FileRouteTypes {
-	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths:
-		| "/"
-		| "/login"
-		| "/register"
-		| "/treninky/$trainingId"
-		| "/api/auth/$"
-		| "/cviky"
-		| "/kalendar"
-		| "/kategorie"
-		| "/menu"
-		| "/powerlifting"
-		| "/profil"
-		| "/statistiky"
-		| "/treninky";
-	fileRoutesByTo: FileRoutesByTo;
-	to:
-		| "/"
-		| "/login"
-		| "/register"
-		| "/treninky/$trainingId"
-		| "/api/auth/$"
-		| "/cviky"
-		| "/kalendar"
-		| "/kategorie"
-		| "/menu"
-		| "/powerlifting"
-		| "/profil"
-		| "/statistiky"
-		| "/treninky";
-	id:
-		| "__root__"
-		| "/"
-		| "/_auth"
-		| "/login/"
-		| "/register/"
-		| "/_auth/treninky/$trainingId"
-		| "/api/auth/$"
-		| "/_auth/cviky/"
-		| "/_auth/kalendar/"
-		| "/_auth/kategorie/"
-		| "/_auth/menu/"
-		| "/_auth/powerlifting/"
-		| "/_auth/profil/"
-		| "/_auth/statistiky/"
-		| "/_auth/treninky/";
-	fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/treninky/$trainingId'
+    | '/api/auth/$'
+    | '/cviky'
+    | '/kalendar'
+    | '/kategorie'
+    | '/menu'
+    | '/powerlifting'
+    | '/profil'
+    | '/statistiky'
+    | '/treninky'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/treninky/$trainingId'
+    | '/api/auth/$'
+    | '/cviky'
+    | '/kalendar'
+    | '/kategorie'
+    | '/menu'
+    | '/powerlifting'
+    | '/profil'
+    | '/statistiky'
+    | '/treninky'
+  id:
+    | '__root__'
+    | '/'
+    | '/_auth'
+    | '/login/'
+    | '/register/'
+    | '/_auth/treninky/$trainingId'
+    | '/api/auth/$'
+    | '/_auth/cviky/'
+    | '/_auth/kalendar/'
+    | '/_auth/kategorie/'
+    | '/_auth/menu/'
+    | '/_auth/powerlifting/'
+    | '/_auth/profil/'
+    | '/_auth/statistiky/'
+    | '/_auth/treninky/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-	IndexRoute: typeof IndexRoute;
-	AuthRoute: typeof AuthRouteWithChildren;
-	LoginIndexRoute: typeof LoginIndexRoute;
-	RegisterIndexRoute: typeof RegisterIndexRoute;
-	ApiAuthSplatRoute: typeof ApiAuthSplatRoute;
+  IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  LoginIndexRoute: typeof LoginIndexRoute
+  RegisterIndexRoute: typeof RegisterIndexRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
-declare module "@tanstack/react-router" {
-	interface FileRoutesByPath {
-		"/_auth": {
-			id: "/_auth";
-			path: "";
-			fullPath: "";
-			preLoaderRoute: typeof AuthRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/": {
-			id: "/";
-			path: "/";
-			fullPath: "/";
-			preLoaderRoute: typeof IndexRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/register/": {
-			id: "/register/";
-			path: "/register";
-			fullPath: "/register";
-			preLoaderRoute: typeof RegisterIndexRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/login/": {
-			id: "/login/";
-			path: "/login";
-			fullPath: "/login";
-			preLoaderRoute: typeof LoginIndexRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/_auth/treninky/": {
-			id: "/_auth/treninky/";
-			path: "/treninky";
-			fullPath: "/treninky";
-			preLoaderRoute: typeof AuthTreninkyIndexRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/_auth/statistiky/": {
-			id: "/_auth/statistiky/";
-			path: "/statistiky";
-			fullPath: "/statistiky";
-			preLoaderRoute: typeof AuthStatistikyIndexRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/_auth/profil/": {
-			id: "/_auth/profil/";
-			path: "/profil";
-			fullPath: "/profil";
-			preLoaderRoute: typeof AuthProfilIndexRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/_auth/powerlifting/": {
-			id: "/_auth/powerlifting/";
-			path: "/powerlifting";
-			fullPath: "/powerlifting";
-			preLoaderRoute: typeof AuthPowerliftingIndexRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/_auth/menu/": {
-			id: "/_auth/menu/";
-			path: "/menu";
-			fullPath: "/menu";
-			preLoaderRoute: typeof AuthMenuIndexRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/_auth/kategorie/": {
-			id: "/_auth/kategorie/";
-			path: "/kategorie";
-			fullPath: "/kategorie";
-			preLoaderRoute: typeof AuthKategorieIndexRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/_auth/kalendar/": {
-			id: "/_auth/kalendar/";
-			path: "/kalendar";
-			fullPath: "/kalendar";
-			preLoaderRoute: typeof AuthKalendarIndexRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/_auth/cviky/": {
-			id: "/_auth/cviky/";
-			path: "/cviky";
-			fullPath: "/cviky";
-			preLoaderRoute: typeof AuthCvikyIndexRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/api/auth/$": {
-			id: "/api/auth/$";
-			path: "/api/auth/$";
-			fullPath: "/api/auth/$";
-			preLoaderRoute: typeof ApiAuthSplatRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/_auth/treninky/$trainingId": {
-			id: "/_auth/treninky/$trainingId";
-			path: "/treninky/$trainingId";
-			fullPath: "/treninky/$trainingId";
-			preLoaderRoute: typeof AuthTreninkyTrainingIdRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-	}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register/': {
+      id: '/register/'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/treninky/': {
+      id: '/_auth/treninky/'
+      path: '/treninky'
+      fullPath: '/treninky'
+      preLoaderRoute: typeof AuthTreninkyIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/statistiky/': {
+      id: '/_auth/statistiky/'
+      path: '/statistiky'
+      fullPath: '/statistiky'
+      preLoaderRoute: typeof AuthStatistikyIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/profil/': {
+      id: '/_auth/profil/'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof AuthProfilIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/powerlifting/': {
+      id: '/_auth/powerlifting/'
+      path: '/powerlifting'
+      fullPath: '/powerlifting'
+      preLoaderRoute: typeof AuthPowerliftingIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/menu/': {
+      id: '/_auth/menu/'
+      path: '/menu'
+      fullPath: '/menu'
+      preLoaderRoute: typeof AuthMenuIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/kategorie/': {
+      id: '/_auth/kategorie/'
+      path: '/kategorie'
+      fullPath: '/kategorie'
+      preLoaderRoute: typeof AuthKategorieIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/kalendar/': {
+      id: '/_auth/kalendar/'
+      path: '/kalendar'
+      fullPath: '/kalendar'
+      preLoaderRoute: typeof AuthKalendarIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/cviky/': {
+      id: '/_auth/cviky/'
+      path: '/cviky'
+      fullPath: '/cviky'
+      preLoaderRoute: typeof AuthCvikyIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/treninky/$trainingId': {
+      id: '/_auth/treninky/$trainingId'
+      path: '/treninky/$trainingId'
+      fullPath: '/treninky/$trainingId'
+      preLoaderRoute: typeof AuthTreninkyTrainingIdRouteImport
+      parentRoute: typeof AuthRoute
+    }
+  }
 }
 
 interface AuthRouteChildren {
-	AuthTreninkyTrainingIdRoute: typeof AuthTreninkyTrainingIdRoute;
-	AuthCvikyIndexRoute: typeof AuthCvikyIndexRoute;
-	AuthKalendarIndexRoute: typeof AuthKalendarIndexRoute;
-	AuthKategorieIndexRoute: typeof AuthKategorieIndexRoute;
-	AuthMenuIndexRoute: typeof AuthMenuIndexRoute;
-	AuthPowerliftingIndexRoute: typeof AuthPowerliftingIndexRoute;
-	AuthProfilIndexRoute: typeof AuthProfilIndexRoute;
-	AuthStatistikyIndexRoute: typeof AuthStatistikyIndexRoute;
-	AuthTreninkyIndexRoute: typeof AuthTreninkyIndexRoute;
+  AuthTreninkyTrainingIdRoute: typeof AuthTreninkyTrainingIdRoute
+  AuthCvikyIndexRoute: typeof AuthCvikyIndexRoute
+  AuthKalendarIndexRoute: typeof AuthKalendarIndexRoute
+  AuthKategorieIndexRoute: typeof AuthKategorieIndexRoute
+  AuthMenuIndexRoute: typeof AuthMenuIndexRoute
+  AuthPowerliftingIndexRoute: typeof AuthPowerliftingIndexRoute
+  AuthProfilIndexRoute: typeof AuthProfilIndexRoute
+  AuthStatistikyIndexRoute: typeof AuthStatistikyIndexRoute
+  AuthTreninkyIndexRoute: typeof AuthTreninkyIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-	AuthTreninkyTrainingIdRoute,
-	AuthCvikyIndexRoute,
-	AuthKalendarIndexRoute,
-	AuthKategorieIndexRoute,
-	AuthMenuIndexRoute,
-	AuthPowerliftingIndexRoute,
-	AuthProfilIndexRoute,
-	AuthStatistikyIndexRoute,
-	AuthTreninkyIndexRoute,
-};
+  AuthTreninkyTrainingIdRoute: AuthTreninkyTrainingIdRoute,
+  AuthCvikyIndexRoute: AuthCvikyIndexRoute,
+  AuthKalendarIndexRoute: AuthKalendarIndexRoute,
+  AuthKategorieIndexRoute: AuthKategorieIndexRoute,
+  AuthMenuIndexRoute: AuthMenuIndexRoute,
+  AuthPowerliftingIndexRoute: AuthPowerliftingIndexRoute,
+  AuthProfilIndexRoute: AuthProfilIndexRoute,
+  AuthStatistikyIndexRoute: AuthStatistikyIndexRoute,
+  AuthTreninkyIndexRoute: AuthTreninkyIndexRoute,
+}
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-	IndexRoute,
-	AuthRoute: AuthRouteWithChildren,
-	LoginIndexRoute,
-	RegisterIndexRoute,
-	ApiAuthSplatRoute,
-};
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
+  IndexRoute: IndexRoute,
+  AuthRoute: AuthRouteWithChildren,
+  LoginIndexRoute: LoginIndexRoute,
+  RegisterIndexRoute: RegisterIndexRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
+}
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx";
-
-declare module "@tanstack/react-start" {
-	interface Register {
-		ssr: true;
-		router: Awaited<ReturnType<typeof getRouter>>;
-	}
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
 }

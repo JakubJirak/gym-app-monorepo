@@ -7,7 +7,7 @@ import type { ParamListBase, TabNavigationState } from "@react-navigation/native
 import { useQuery } from "convex/react";
 import { useLocalSearchParams, withLayoutContext } from "expo-router";
 import { createContext } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import TrainingHeader from "@/components/trainings/training-header";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
@@ -52,6 +52,13 @@ export default function TrainingIdLayout() {
 						tabBarIndicatorStyle: {
 							backgroundColor: COLORS.accent,
 						},
+						tabBarLabel: ({ focused, children }) => (
+							<Text
+								className={`${focused ? "font-bold text-accent" : "font-normal text-muted"} text-lg`}
+							>
+								{children}
+							</Text>
+						),
 					}}
 				>
 					<MaterialTopTabs.Screen name="index" options={{ title: "Cviky" }} />

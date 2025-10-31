@@ -7,7 +7,7 @@ export default [
 
 	// Lokální ignorace (např. build artefakty specifické pro tento workspace)
 	{
-		ignores: ["build/**", "dist/**"],
+		ignores: ["build/**", "dist/**", "./src/routeTree.gen.ts"],
 	},
 
 	// Lokální TS/JS overrides (pokud potřebuješ jiný parserOptions / project)
