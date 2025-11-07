@@ -1,17 +1,16 @@
 import { v } from "convex/values";
-import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 
 export const getUserWorkouts = query({
   args: {},
-  async handler(ctx, args) {
-    //@ts-ignore
+  async handler(ctx) {
+    //@ts-expect-error
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
       return null;
     }
-    //@ts-ignore
+    //@ts-expect-error
     const userId = user._id;
 
     const workouts = await ctx.db
@@ -95,12 +94,12 @@ export const getWorkoutById = query({
   },
   async handler(ctx, args) {
     // Získej přihlášeného uživatele přes tvůj helper
-    // @ts-ignore
+    //@ts-expect-error
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
       return null; // Uživatel není přihlášen
     }
-    // @ts-ignore
+    //@ts-expect-error
     const userId = user._id; // Interní databázové ID uživatele
 
     // Načti trénink podle ID
@@ -197,12 +196,12 @@ export const createWorkout = mutation({
     ),
   },
   async handler(ctx, args) {
-    //@ts-ignore
+    //@ts-expect-error
     const user = await authComponent.getAuthUser(ctx);
     if (!user) {
       return null;
     }
-    //@ts-ignore
+    //@ts-expect-error
     const userId = user._id;
 
     // 1. Vytvoření tréninku

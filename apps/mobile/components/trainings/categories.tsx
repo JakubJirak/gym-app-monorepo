@@ -3,7 +3,6 @@ import { ScrollView, Text, TouchableOpacity } from "react-native";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 
 export default function Categories() {
-	//const categories = ["Push", "Pull", "Fullbody", "Upper", "Lower"];
 	const categories = useQuery(api.filters.getAllFilters);
 
 	if (!categories || categories === undefined) {
