@@ -8,13 +8,11 @@ export default function Links() {
 
 			<ProfileLink href="/profile/exercises" icon="barbell-outline" text="Cviky" />
 
+			<ProfileLink href="/profile/filtry" icon="people-outline" text="Filtry" />
+
 			<ProfileLink href="/profile/rutiny" icon="layers-outline" text="Rutiny" />
 
 			<ProfileLink href="/profile/friends" icon="people-outline" text="Přátelé" />
-
-			<ProfileLink href="/profile/edit" icon="options-outline" text="Upravit profil" />
-
-			<ProfileLink href="/profile/settings" icon="settings-outline" text="Nastavení" />
 		</View>
 	);
 }

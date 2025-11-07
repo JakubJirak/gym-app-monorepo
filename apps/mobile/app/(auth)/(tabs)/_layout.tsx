@@ -1,22 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Layers } from "lucide-react-native";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
-import Modal from "react-native-modal";
+import CreateTrainingModal from "@/components/create/create-training-modal";
+import MenuModal from "@/components/create/menu-modal";
+import TrainingRoutineModal from "@/components/create/training-routine-modal";
 import { COLORS } from "@/constants/COLORS";
 
 export default function TabsLayout() {
 	const [sheetVisible, setSheetVisible] = useState(false);
-
+	const [createModalVisible, setCreateModalVisible] = useState(false);
+	const [trainingRoutineModalVisible, setTrainingRoutineModalVisible] = useState(false);
 	const openSheet = () => setSheetVisible(true);
-	const closeSheet = () => setSheetVisible(false);
-
-	const onSelect = (opt: string) => {
-		console.log("Vybráno:", opt);
-		// tady můžeš zavolat router.push(...) nebo další akci
-		closeSheet();
-	};
 
 	return (
 		<>
@@ -71,9 +65,7 @@ export default function TabsLayout() {
 					}}
 					name="create"
 					options={{
-						tabBarIcon: ({ color, size }) => (
-							// ikona zůstane jednoduchá; vizuální FAB můžeme docílit přes custom tabBarButton,
-							// zde zachováme default layout a použijeme listener (čistší integrace)
+						tabBarIcon: ({ color }) => (
 							<Ionicons color={color} name="add-circle-outline" size={28} />
 						),
 						tabBarShowLabel: false,
@@ -106,47 +98,20 @@ export default function TabsLayout() {
 				/>
 			</Tabs>
 
-			{/* Half-sheet modal */}
-			<Modal
-				animationIn="slideInUp"
-				animationOut="slideOutDown"
-				isVisible={sheetVisible}
-				// react-native-modal styl se musí stále předat jako JS objekt
-				onBackButtonPress={closeSheet}
-				onBackdropPress={closeSheet}
-				onSwipeComplete={closeSheet}
-				propagateSwipe
-				style={{ justifyContent: "flex-end", margin: 0 }}
-				swipeDirection={["down"]}
-				useNativeDriver
-			>
-				<View
-					// tady používáme tailwind-like className přes uniwind
-					// výška 1/2 obrazovky => h-1/2, pozadí bílé, zaoblené rohy nahoře, padding
-					className="h-[35%] rounded-t-lg bg-[#0a0a0a] p-4"
-				>
-					{/* handle */}
-					<View className="mb-2 h-1 w-10 self-center rounded-full bg-muted" />
-
-					<View className="flex-1 justify-center gap-4">
-						<Pressable
-							className="boder-accent mx-4 flex flex-row items-center justify-center gap-4 rounded-2xl bg-secondary py-4"
-							onPress={() => onSelect("novy")}
-						>
-							<Ionicons color={COLORS.accent} name="add-circle-outline" size={40} />
-							<Text className="font-semibold text-white text-xl">Nový trénink</Text>
-						</Pressable>
-
-						<Pressable
-							className="mx-4 flex flex-row items-center justify-center gap-4 rounded-2xl bg-secondary px-12 py-5"
-							onPress={() => onSelect("rutina")}
-						>
-							<Layers color={COLORS.accent} size={36} />
-							<Text className="font-semibold text-white text-xl">Podle rutiny</Text>
-						</Pressable>
-					</View>
-				</View>
-			</Modal>
+			<MenuModal
+				setCreateModalVisible={setCreateModalVisible}
+				setSheetVisible={setSheetVisible}
+				setTrainingRoutineModalVisible={setTrainingRoutineModalVisible}
+				sheetVisible={sheetVisible}
+			/>
+			<CreateTrainingModal
+				createModalVisible={createModalVisible}
+				setCreateModalVisible={setCreateModalVisible}
+			/>
+			<TrainingRoutineModal
+				setTrainingRoutineModalVisible={setTrainingRoutineModalVisible}
+				trainingRoutineModalVisible={trainingRoutineModalVisible}
+			/>
 		</>
 	);
 }
