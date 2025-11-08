@@ -1,7 +1,10 @@
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { CalendarIcon, Plus, Trash2, X } from "lucide-react";
 import { useState } from "react";
+import type { ExerciseSelect } from "utils/training-types";
 import { ExerciseCombobox } from "@/components/treninky/ExerciseCombobox.tsx";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -17,32 +20,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { ExerciseSelect } from "utils/training-types";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { convexQuery } from "@convex-dev/react-query";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
-export interface Set {
+export type Set = {
 	reps: string;
 	weight: string;
 	order: number;
-}
+};
 
-export interface Exercise {
+export type Exercise = {
 	tempId: string;
 	name: string;
 	exerciseId: string | null;
 	notes: string;
 	sets: Set[];
 	order: number;
-}
+};
 
-export interface Training {
+export type Training = {
 	name: string;
 	workoutDate: string;
 	filterId: Id<"filters">;
@@ -57,11 +57,11 @@ export interface Training {
 			order: number;
 		}[];
 	}[];
-}
+};
 
-interface TrainingDialogProps {
+type TrainingDialogProps = {
 	onSave: (training: Training) => void;
-}
+};
 
 const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 	const { data: filters } = useSuspenseQuery(convexQuery(api.filters.getAllFilters, {}));
@@ -69,8 +69,10 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 
 	// Safely get first filter ID
 	const getDefaultFilterId = () => {
-		if (filters && filters.length > 0) return filters[0]._id;
-		return undefined;
+		if (filters && filters.length > 0) {
+			return filters[0]._id;
+		}
+		return;
 	};
 
 	const [training, setTraining] = useState({
@@ -146,7 +148,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 								},
 							],
 						}
-					: ex,
+					: ex
 			),
 		}));
 	};
@@ -162,7 +164,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 								.filter((set) => set.order !== setOrder)
 								.map((set, idx) => ({ ...set, order: idx })),
 						}
-					: ex,
+					: ex
 			),
 		}));
 	};
@@ -175,10 +177,10 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 					? {
 							...ex,
 							sets: ex.sets.map((set) =>
-								set.order === setOrder ? { ...set, [field]: value } : set,
+								set.order === setOrder ? { ...set, [field]: value } : set
 							),
 						}
-					: ex,
+					: ex
 			),
 		}));
 	};
@@ -198,17 +200,21 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 	};
 
 	const isValidTraining = (): boolean => {
-		if (!training.name.trim() || !training.date || !training.filterId || training.exercises.length === 0) {
+		if (!(training.name.trim() && training.date && training.filterId) || training.exercises.length === 0) {
 			return false;
 		}
 		return training.exercises.every((exercise) => {
-			if (!exercise.name.trim() || exercise.exerciseId == null) return false;
+			if (!exercise.name.trim() || exercise.exerciseId == null) {
+				return false;
+			}
 			return exercise.sets.some((set) => set.reps.trim() !== "" && set.weight.trim() !== "");
 		});
 	};
 
 	const handleSave = () => {
-		if (!training.date || !training.filterId) return;
+		if (!(training.date && training.filterId)) {
+			return;
+		}
 
 		const newTraining: Training = {
 			name: training.name,
@@ -221,8 +227,8 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 				sets: ex.sets
 					.filter((set) => set.reps.trim() !== "" && set.weight.trim() !== "")
 					.map((set) => ({
-						reps: parseFloat(set.reps),
-						weight: parseFloat(set.weight),
+						reps: Number.parseFloat(set.reps),
+						weight: Number.parseFloat(set.weight),
 						order: set.order,
 					})),
 			})),
@@ -253,23 +259,23 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 	const hasFilters = filters && filters.length > 0;
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog onOpenChange={setOpen} open={open}>
 			<DialogTrigger asChild>
-				<Button size="sm" disabled={!hasFilters}>
+				<Button disabled={!hasFilters} size="sm">
 					Přidat trénink
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="max-w-4xl p-4 pt-6 max-h-[98vh] w-[95vw] sm:w-full">
+			<DialogContent className="max-h-[98vh] w-[95vw] max-w-4xl p-4 pt-6 sm:w-full">
 				<DialogHeader>
 					<DialogTitle>Přidat nový trénink</DialogTitle>
 					<DialogDescription>Vytvořte nový trénink s cviky a sériemi.</DialogDescription>
 				</DialogHeader>
 
-				{/*@ts-ignore*/}
+				{/*@ts-expect-error not a valid error */}
 				<ScrollArea className="max-h-[68dvh] min-h-[60dvh] pr-4">
 					<div className="space-y-6">
 						{!hasFilters && (
-							<div className="p-4 border border-yellow-500/50 bg-yellow-500/10 rounded-lg">
+							<div className="rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4">
 								<p className="text-sm text-yellow-600 dark:text-yellow-400">
 									Pro vytvoření tréninku musíte mít alespoň jeden filtr.
 								</p>
@@ -279,29 +285,29 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 						<div className="space-y-2">
 							<Label htmlFor="training-name">Název tréninku *</Label>
 							<Input
+								className="text-sm placeholder:text-sm"
 								id="training-name"
-								placeholder="Zadejte název tréninku"
-								className="placeholder:text-sm text-sm"
-								value={training.name}
 								onChange={(e) =>
 									setTraining((prev) => ({ ...prev, name: e.target.value }))
 								}
+								placeholder="Zadejte název tréninku"
+								value={training.name}
 							/>
 						</div>
 
 						<div className="space-y-2">
 							<Label htmlFor="filter-select">Filtr *</Label>
 							<Select
-								value={training.filterId}
+								disabled={!hasFilters}
 								onValueChange={(value) =>
 									setTraining((prev) => ({
 										...prev,
 										filterId: value as Id<"filters">,
 									}))
 								}
-								disabled={!hasFilters}
+								value={training.filterId}
 							>
-								<SelectTrigger id="filter-select" className="w-full">
+								<SelectTrigger className="w-full" id="filter-select">
 									<SelectValue placeholder="Vyberte filtr" />
 								</SelectTrigger>
 								<SelectContent>
@@ -309,7 +315,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 										<SelectItem key={filter._id} value={filter._id}>
 											<div className="flex items-center gap-2">
 												<div
-													className="w-3 h-3 rounded-full"
+													className="h-3 w-3 rounded-full"
 													style={{ backgroundColor: filter.color }}
 												/>
 												{filter.name}
@@ -322,14 +328,14 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 
 						<div className="space-y-2">
 							<Label>Datum tréninku *</Label>
-							<Popover open={openDatePicker} onOpenChange={setOpenDatePicker}>
+							<Popover onOpenChange={setOpenDatePicker} open={openDatePicker}>
 								<PopoverTrigger asChild>
 									<Button
-										variant="outline"
 										className={cn(
 											"w-full justify-start text-left font-normal",
-											!training.date && "text-muted-foreground",
+											!training.date && "text-muted-foreground"
 										)}
+										variant="outline"
 									>
 										<CalendarIcon className="mr-2 h-4 w-4" />
 										{training.date
@@ -337,26 +343,26 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 											: "Vyberte datum"}
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent className="w-auto p-0" align="start">
+								<PopoverContent align="start" className="w-auto p-0">
 									<Calendar
 										className="bg-secondary"
+										locale={cs}
 										mode="single"
-										selected={training.date}
 										onSelect={(date) => {
 											setTraining((prev) => ({ ...prev, date }));
 											setOpenDatePicker(false);
 										}}
-										locale={cs}
+										selected={training.date}
 									/>
 								</PopoverContent>
 							</Popover>
 						</div>
 
 						<div className="space-y-4">
-							<div className="flex items-center justify-between top-100 z-1000 w-full">
-								<Label className="text-base font-semibold">Cviky *</Label>
+							<div className="top-100 z-1000 flex w-full items-center justify-between">
+								<Label className="font-semibold text-base">Cviky *</Label>
 								<Button onClick={addExercise} size="sm">
-									<Plus className="h-4 w-4 mr-2" />
+									<Plus className="mr-2 h-4 w-4" />
 									Přidat cvik
 								</Button>
 							</div>
@@ -364,29 +370,31 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 								<div className="space-y-4">
 									{training.exercises.map((exercise, exerciseIndex) => (
 										<div
+											className="relative space-y-4 rounded-lg border bg-secondary p-4"
 											key={exercise.tempId}
-											className="border rounded-lg bg-secondary p-4 space-y-4 relative"
 										>
 											<div className="flex items-start gap-2">
 												<div className="flex-1 space-y-2">
 													<div className="flex w-full">
-														<Label className="text-sm font-medium flex-1">
+														<Label className="flex-1 font-medium text-sm">
 															{exerciseIndex + 1}. Cvik
 														</Label>
 														<Button
-															variant="muted"
-															size="icon-sm"
+															className="shrink-0"
 															onClick={() =>
 																removeExercise(
-																	exercise.tempId,
+																	exercise.tempId
 																)
 															}
-															className="shrink-0"
+															size="icon-sm"
+															variant="muted"
 														>
 															<X className="h-4 w-4" />
 														</Button>
 													</div>
 													<ExerciseCombobox
+														exerciseId={exercise.tempId}
+														selectExercise={selectExercise}
 														selectedStatus={
 															selectedStatuses[
 																exercise.tempId
@@ -395,17 +403,15 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 														setSelectedStatus={(value) =>
 															handleSetSelectedStatus(
 																exercise.tempId,
-																value,
+																value
 															)
 														}
-														exerciseId={exercise.tempId}
-														selectExercise={selectExercise}
 													/>
 												</div>
 											</div>
 											<div className="space-y-3">
 												<div className="flex items-center justify-between">
-													<Label className="text-sm font-medium">
+													<Label className="font-medium text-sm">
 														Série
 													</Label>
 													<Button
@@ -415,15 +421,15 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 														size="sm"
 														variant="outline"
 													>
-														<Plus className="h-3 w-3 mr-1" />
+														<Plus className="mr-1 h-3 w-3" />
 														Přidat sérii
 													</Button>
 												</div>
 												<div className="space-y-2">
 													{exercise.sets.map((set, setIndex) => (
 														<div
+															className="grid grid-cols-[1fr_1fr_32px] items-end gap-2 sm:grid-cols-3"
 															key={set.order}
-															className="grid grid-cols-[1fr_1fr_32px] sm:grid-cols-3 gap-2 items-end"
 														>
 															<Label className="text-sm">
 																{setIndex + 1}. série
@@ -433,18 +439,16 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 															<div className="hidden sm:block" />
 															<div className="hidden sm:block" />
 															<div>
-																<Label className="text-xs sr-only">
+																<Label className="sr-only text-xs">
 																	Váha
 																</Label>
-																<div className="text-xs mb-1 text-muted-foreground">
+																<div className="mb-1 text-muted-foreground text-xs">
 																	Váha (kg)
 																</div>
 																<Input
-																	type="number"
-																	value={set.weight}
+																	className="h-8"
+																	max={10_000}
 																	min={0}
-																	max={10000}
-																	step={0.25}
 																	onChange={(e) =>
 																		updateSet(
 																			exercise.tempId,
@@ -452,22 +456,22 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 																			"weight",
 																			e
 																				.target
-																				.value,
+																				.value
 																		)
 																	}
-																	className="h-8"
+																	step={0.25}
+																	type="number"
+																	value={set.weight}
 																/>
 															</div>
 															<div>
-																<div className="text-xs mb-1 text-muted-foreground">
+																<div className="mb-1 text-muted-foreground text-xs">
 																	Opakování
 																</div>
 																<Input
-																	type="number"
+																	className="h-8"
+																	max={10_000}
 																	min={0}
-																	max={10000}
-																	step={1}
-																	value={set.reps}
 																	onChange={(e) =>
 																		updateSet(
 																			exercise.tempId,
@@ -475,22 +479,24 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 																			"reps",
 																			e
 																				.target
-																				.value,
+																				.value
 																		)
 																	}
-																	className="h-8"
+																	step={1}
+																	type="number"
+																	value={set.reps}
 																/>
 															</div>
 															<Button
-																variant="destructive"
-																size="icon"
+																className="h-8 w-8 shrink-0"
 																onClick={() =>
 																	removeSet(
 																		exercise.tempId,
-																		set.order,
+																		set.order
 																	)
 																}
-																className="h-8 w-8 shrink-0"
+																size="icon"
+																variant="destructive"
 															>
 																<Trash2 className="h-3 w-3" />
 															</Button>
@@ -499,27 +505,27 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 												</div>
 											</div>
 											<div className="flex flex-col gap-2">
-												<Label className="text-sm font-medium">
+												<Label className="font-medium text-sm">
 													Poznámky (volitelné)
 												</Label>
 												<Input
-													placeholder="Přidejte poznámky k tomuto cviku..."
-													value={exercise.notes}
-													className="placeholder:text-sm text-sm"
+													className="text-sm placeholder:text-sm"
 													onChange={(e) =>
 														updateExercise(
 															exercise.tempId,
 															"notes",
-															e.target.value,
+															e.target.value
 														)
 													}
+													placeholder="Přidejte poznámky k tomuto cviku..."
+													value={exercise.notes}
 												/>
 												<div className="self-end">
 													<Button
+														className="mt-2 inline-flex"
 														onClick={addExercise}
-														variant="outline"
-														className="inline-flex mt-2"
 														size="sm"
+														variant="outline"
 													>
 														<Plus className="mr-1" />
 														Další cvik
@@ -531,7 +537,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 								</div>
 							)}
 							{training.exercises.length === 0 && (
-								<div className="text-center py-8 text-muted-foreground border rounded-lg">
+								<div className="rounded-lg border py-8 text-center text-muted-foreground">
 									<p>Zatím nebyly přidány žádné cviky.</p>
 									<p className="text-sm">Klikněte na "Přidat cvik" pro začátek.</p>
 								</div>
@@ -540,15 +546,15 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 					</div>
 				</ScrollArea>
 				<Separator />
-				<DialogFooter className="flex-col sm:flex-row gap-4 mt-auto">
+				<DialogFooter className="mt-auto flex-col gap-4 sm:flex-row">
 					<Button
-						variant="outline"
+						className="w-full bg-transparent sm:w-auto"
 						onClick={handleCancel}
-						className="w-full sm:w-auto bg-transparent"
+						variant="outline"
 					>
 						Zrušit
 					</Button>
-					<Button onClick={handleSave} className="w-full sm:w-auto" disabled={!isValidTraining()}>
+					<Button className="w-full sm:w-auto" disabled={!isValidTraining()} onClick={handleSave}>
 						Uložit trénink
 					</Button>
 				</DialogFooter>

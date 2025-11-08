@@ -27,6 +27,7 @@ export default function RootLayout() {
 function StackLayout() {
 	//const isAuth = true;
 	const { data: session } = authClient.useSession();
+	// biome-ignore lint/complexity/noUselessTernary: guard needs boolean
 	const isAuth = session ? true : false;
 
 	return (

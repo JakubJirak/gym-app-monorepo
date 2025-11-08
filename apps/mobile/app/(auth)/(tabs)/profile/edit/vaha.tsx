@@ -12,7 +12,9 @@ export default function Vaha() {
 
 	const handleEdit = async () => {
 		const trimmed = weight.toString().trim();
-		if (trimmed === "" || isNaN(Number(trimmed))) return;
+		if (trimmed === "" || Number.isNaN(Number(trimmed))) {
+			return;
+		}
 
 		const numeric = Number(trimmed);
 		if (numeric > 200 || numeric < 10) {

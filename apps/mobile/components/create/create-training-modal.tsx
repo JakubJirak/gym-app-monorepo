@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import Modal from "react-native-modal";
+import { COLORS } from "@/constants/COLORS";
 import { toLocalISODateString } from "@/src/utils/date-utils";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
@@ -80,9 +81,10 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 				</View>
 
 				<Pressable
-					className="mt-auto mb-8 rounded-2xl bg-accent py-3"
+					className="mt-auto mb-8 rounded-2xl py-3"
 					disabled={isDisabled}
 					onPress={createTraining}
+					style={{ backgroundColor: isDisabled ? COLORS.disabled : COLORS.accent }}
 				>
 					<Text className="text-center font-bold text-white text-xl">Vytvořit trénink</Text>
 				</Pressable>

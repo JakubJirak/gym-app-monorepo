@@ -1,0 +1,118 @@
+import { useQuery } from "convex/react";
+import { Check, ChevronDown } from "lucide-react-native";
+import { useMemo, useState } from "react";
+import { FlatList, Keyboard, type ListRenderItem, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Modal from "react-native-modal";
+import { COLORS } from "@/constants/COLORS";
+import { api } from "../../../../packages/convex/convex/_generated/api";
+
+type Exercise = {
+	_id: string;
+	name: string;
+};
+
+interface ExercisePickerProps {
+	selectedId?: string | null;
+	onSelect: (id: string) => void;
+}
+
+export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
+	const [internalSelectedId, setInternalSelectedId] = useState<string | null>(null);
+	const [modalVisible, setModalVisible] = useState(false);
+	const [query, setQuery] = useState("");
+	const exercises = useQuery(api.exercises.getAllExercises);
+
+	const chosenId = selectedId ?? internalSelectedId;
+	const chosenExercise = useMemo(() => exercises?.find((e) => e._id === chosenId) ?? null, [exercises, chosenId]);
+
+	const filtered = useMemo(() => {
+		const q = query.trim().toLowerCase();
+		if (!q) return exercises;
+		return exercises?.filter((e) => (e.name || "").toLowerCase().includes(q));
+	}, [query, exercises]);
+
+	function handleSelect(item: Exercise) {
+		onSelect(item._id);
+		if (selectedId === undefined) {
+			setInternalSelectedId(item._id);
+		}
+		setModalVisible(false);
+	}
+
+	const renderItem: ListRenderItem<Exercise> = ({ item }) => {
+		const selected = item._id === chosenId;
+		return (
+			<TouchableOpacity
+				className={`flex-row items-center justify-between rounded-md px-2 py-3 ${selected ? "bg-secondary" : ""}`}
+				onPress={() => handleSelect(item)}
+			>
+				<Text className={`text-base text-white ${selected && "font-bold"}`}>{item.name}</Text>
+				{selected ? <Check color="white" size={20} /> : null}
+			</TouchableOpacity>
+		);
+	};
+
+	return (
+		<>
+			<TouchableOpacity
+				accessibilityRole="button"
+				className="w-full flex-row items-center justify-between rounded-lg bg-secondary px-4 py-3"
+				onPress={() => setModalVisible(true)}
+			>
+				<View>
+					<Text className={`${chosenExercise ? "text-white" : "text-gray-400"} text-base`}>
+						{chosenExercise ? chosenExercise.name : "Vyberte cvik..."}
+					</Text>
+				</View>
+				<ChevronDown color={COLORS.muted} size={20} />
+			</TouchableOpacity>
+
+			<Modal
+				animationIn="slideInUp"
+				animationOut="slideOutDown"
+				backdropOpacity={0.5}
+				hideModalContentWhileAnimating={true}
+				isVisible={modalVisible}
+				onBackButtonPress={() => setModalVisible(false)}
+				onBackdropPress={() => {
+					Keyboard.dismiss();
+					setModalVisible(false);
+				}}
+				onSwipeComplete={() => setModalVisible(false)}
+				propagateSwipe
+				style={{ justifyContent: "flex-end", margin: 0 }}
+				swipeDirection={["down"]}
+				useNativeDriver
+			>
+				<View className="h-[80%] rounded-t-2xl bg-darker p-4">
+					<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />
+					<View className="mb-3 flex-row items-center justify-between">
+						<View className="flex-1">
+							<TextInput
+								className="rounded-xl bg-secondary px-4 py-3 text-base text-white"
+								clearButtonMode="while-editing"
+								onChangeText={setQuery}
+								placeholder="Hledej cvik..."
+								placeholderTextColorClassName="accent-muted"
+								value={query}
+							/>
+						</View>
+					</View>
+
+					<FlatList
+						data={filtered}
+						keyboardShouldPersistTaps="handled"
+						keyExtractor={(item) => item._id}
+						ListEmptyComponent={() => (
+							<View className="items-center py-8">
+								<Text className="text-gray-400">Žádné cviky</Text>
+							</View>
+						)}
+						renderItem={renderItem}
+						showsVerticalScrollIndicator={false}
+					/>
+				</View>
+			</Modal>
+		</>
+	);
+}

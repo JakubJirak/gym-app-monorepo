@@ -1,6 +1,7 @@
 import { useQuery } from "convex/react";
+import { Dumbbell } from "lucide-react-native";
 import { useMemo } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
@@ -36,6 +37,17 @@ export default function Exercises() {
 	return (
 		<View className="flex-1 bg-primary px-4">
 			<ComponentHeader text="Cviky" />
+			<View className="mx-2 mt-4 gap-2">
+				<View className="flex-row items-center gap-3">
+					<Dumbbell color="white" size={28} />
+					<Text className="font-bold text-white text-xl">Vaše</Text>
+					<Text className="-ml-1.5 font-bold text-white text-xl">cviky</Text>
+				</View>
+
+				<Text className="text-base text-muted">
+					Zde si můžete zobrazit a vytvořit nový cvik pro určinou svalovou partii!
+				</Text>
+			</View>
 		</View>
 	);
 }

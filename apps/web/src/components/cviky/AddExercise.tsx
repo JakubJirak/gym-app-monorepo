@@ -25,7 +25,7 @@ import type { Id } from "../../../../../packages/convex/convex/_generated/dataMo
 type DialogEditSet = {
 	handleAddExercise: (exerciseName: string, muscleGroupId: Id<"muscleGroups">) => void;
 	defaultName: string;
-}
+};
 
 export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
@@ -45,7 +45,9 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
 		}
 	};
 
-	if (!muscleGroups) return null;
+	if (!muscleGroups) {
+		return null;
+	}
 
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
@@ -87,8 +89,8 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
 									>
 										{value
 											? muscleGroups.find(
-													(muscleGroup) => muscleGroup._id === value
-												)?.name
+												(muscleGroup) => muscleGroup._id === value
+											)?.name
 											: "Vyber část těla..."}
 										<ChevronsUpDown className="opacity-50" />
 									</Button>

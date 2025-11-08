@@ -68,7 +68,7 @@ export default function TrainingById() {
 					}
 				/>
 			</View>
-			<TrainingFooter id={workout._id} />
+      <TrainingFooter id={workout._id} exercises={workout.exercises.length} />
 		</>
 	);
 }

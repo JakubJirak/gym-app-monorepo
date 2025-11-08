@@ -26,9 +26,15 @@ export const TrainingIdContext = createContext<string | string[] | undefined>(un
 
 export default function TrainingIdLayout() {
 	const { id } = useLocalSearchParams();
-	const workout = useQuery(api.workouts.getWorkoutById, {
-		workoutId: id as Id<"workouts">,
-	});
+	let workout;
+
+	try {
+		workout = useQuery(api.workouts.getWorkoutById, {
+			workoutId: id as Id<"workouts">,
+		});
+	} catch (e) {
+		workout = null;
+	}
 
 	if (!workout) {
 		return null;
@@ -64,8 +70,6 @@ export default function TrainingIdLayout() {
 					<MaterialTopTabs.Screen name="index" options={{ title: "Cviky" }} />
 					<MaterialTopTabs.Screen name="stats" options={{ title: "Stats" }} />
 				</MaterialTopTabs>
-
-				{/*<TrainingFooter id={training.id} />*/}
 			</View>
 		</TrainingIdContext.Provider>
 	);

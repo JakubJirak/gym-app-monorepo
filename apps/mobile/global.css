@@ -4,10 +4,12 @@
 @theme {
     --color-primary: #050402;
     --color-secondary: #0f0f0f;
-    --color-border: #ff944d;
+    --color-border: #1f1f1f;
     --color-accent: #ed782b;
     --color-muted: #8c8c8c;
     --color-inactive: #4d4d4d;
     --color-darker: #0a0a0a;
     --color-modalPicker: #525252;
+    --color-disabled: #47230b;
+    --color-destructive: #6e0b0b;
 }
