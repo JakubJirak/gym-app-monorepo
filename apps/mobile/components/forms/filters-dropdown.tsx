@@ -261,7 +261,7 @@ export default function FilterDropdown({
 						/>
 					) : null}
 
-					<Text className={`${selected ? "text-white" : "text-muted"} text-base`}>
+					<Text className={`${selected ? "text-text" : "text-muted"} text-base`}>
 						{selected ? selected.name : "Vyberte filtr..."}
 					</Text>
 				</View>
@@ -310,7 +310,7 @@ export default function FilterDropdown({
 																marginRight: 12,
 															}}
 														/>
-														<Text className="text-base text-white">
+														<Text className="text-base text-text">
 															{opt.name}
 														</Text>
 													</View>

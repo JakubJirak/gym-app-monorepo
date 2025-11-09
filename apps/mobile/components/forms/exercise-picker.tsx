@@ -11,10 +11,10 @@ type Exercise = {
 	name: string;
 };
 
-interface ExercisePickerProps {
+type ExercisePickerProps = {
 	selectedId?: string | null;
 	onSelect: (id: string) => void;
-}
+};
 
 export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 	const [internalSelectedId, setInternalSelectedId] = useState<string | null>(null);
@@ -27,7 +27,9 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 
 	const filtered = useMemo(() => {
 		const q = query.trim().toLowerCase();
-		if (!q) return exercises;
+		if (!q) {
+			return exercises;
+		}
 		return exercises?.filter((e) => (e.name || "").toLowerCase().includes(q));
 	}, [query, exercises]);
 
@@ -43,7 +45,7 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 		const selected = item._id === chosenId;
 		return (
 			<TouchableOpacity
-				className={`flex-row items-center justify-between rounded-md px-2 py-3 ${selected ? "bg-secondary" : ""}`}
+				className={`flex-row items-center justify-between rounded-md px-2 py-3 ${selected && "bg-secondary"}`}
 				onPress={() => handleSelect(item)}
 			>
 				<Text className={`text-base text-white ${selected && "font-bold"}`}>{item.name}</Text>
@@ -60,7 +62,7 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 				onPress={() => setModalVisible(true)}
 			>
 				<View>
-					<Text className={`${chosenExercise ? "text-white" : "text-gray-400"} text-base`}>
+					<Text className={`${chosenExercise ? "text-white" : "text-muted"} text-base`}>
 						{chosenExercise ? chosenExercise.name : "Vyberte cvik..."}
 					</Text>
 				</View>
@@ -84,12 +86,12 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 				swipeDirection={["down"]}
 				useNativeDriver
 			>
-				<View className="h-[80%] rounded-t-2xl bg-darker p-4">
+				<View className="h-[80%] rounded-t-xl bg-darker p-4">
 					<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />
 					<View className="mb-3 flex-row items-center justify-between">
 						<View className="flex-1">
 							<TextInput
-								className="rounded-xl bg-secondary px-4 py-3 text-base text-white"
+								className="rounded-xl bg-secondary px-4 py-3 text-base text-text"
 								clearButtonMode="while-editing"
 								onChangeText={setQuery}
 								placeholder="Hledej cvik..."
@@ -104,8 +106,8 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 						keyboardShouldPersistTaps="handled"
 						keyExtractor={(item) => item._id}
 						ListEmptyComponent={() => (
-							<View className="items-center py-8">
-								<Text className="text-gray-400">Žádné cviky</Text>
+							<View className="items-center py-4">
+								<Text className="text-base text-muted">Žádné cviky</Text>
 							</View>
 						)}
 						renderItem={renderItem}

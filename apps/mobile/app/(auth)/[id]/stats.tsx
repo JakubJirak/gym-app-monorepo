@@ -52,18 +52,18 @@ export default function Stats() {
 		<View className="flex-1 bg-primary px-4 pt-6">
 			<View className="mb-6 flex-row items-center gap-3">
 				<ChartColumnIncreasing color="white" />
-				<Text className="font-bold text-2xl text-white">Celkové statistiky</Text>
+				<Text className="font-bold text-2xl text-text">Celkové statistiky</Text>
 			</View>
 
 			<View className="flex-row gap-6">
 				<View className="w-[47%] items-center justify-between gap-2 rounded-2xl bg-secondary py-4 text-center">
 					<Dumbbell color="white" />
-					<Text className="mt-1 font-bold text-2xl text-white">{allExercises}</Text>
+					<Text className="mt-1 font-bold text-2xl text-text">{allExercises}</Text>
 					<Text className="text-muted">Cviky</Text>
 				</View>
 				<View className="w-[47%] items-center justify-between gap-2 rounded-2xl bg-secondary py-4 text-center">
 					<TrendingUp color="white" />
-					<Text className="mt-1 font-bold text-2xl text-white">{allSets}</Text>
+					<Text className="mt-1 font-bold text-2xl text-text">{allSets}</Text>
 					<Text className="text-muted">Série</Text>
 				</View>
 			</View>
@@ -71,12 +71,12 @@ export default function Stats() {
 			<View className="mt-6 flex-row gap-6">
 				<View className="w-[47%] items-center justify-between gap-2 rounded-2xl bg-secondary py-4 text-center">
 					<Weight color="white" />
-					<Text className="mt-1 font-bold text-2xl text-white">{totalWeight.toFixed(0)}kg</Text>
+					<Text className="mt-1 font-bold text-2xl text-text">{totalWeight.toFixed(0)}kg</Text>
 					<Text className="text-muted">Váha</Text>
 				</View>
 				<View className="w-[47%] items-center justify-between gap-2 rounded-2xl bg-secondary py-4 text-center">
 					<Repeat color="white" />
-					<Text className="mt-1 font-bold text-2xl text-white">{allReps}</Text>
+					<Text className="mt-1 font-bold text-2xl text-text">{allReps}</Text>
 					<Text className="text-muted">Opakování</Text>
 				</View>
 			</View>

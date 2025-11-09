@@ -8,11 +8,11 @@ export default function Index() {
 
 	return (
 		<View className="flex-1 bg-primary px-4">
-			<Text className="text-white">
+			<Text className="text-text">
 				domovska obrazovka, souhrny, posledni treninky, nejake statistiky...
 			</Text>
 			<TouchableOpacity onPress={logOut}>
-				<Text className="text-white">Log Out</Text>
+				<Text className="text-text">Log Out</Text>
 			</TouchableOpacity>
 		</View>
 	);

@@ -56,26 +56,26 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
-			<View className="h-[75%] rounded-t-lg bg-darker p-4">
+			<View className="h-[75%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
-				<Text className="mt-2 mb-6 text-center font-bold text-white text-xl">Nový trénink</Text>
+				<Text className="mt-2 mb-6 text-center font-bold text-text text-xl">Nový trénink</Text>
 				<View className="gap-4">
 					<View>
-						<Text className="mb-2 font-semibold text-lg text-white">Název tréninku</Text>
+						<Text className="mb-2 font-semibold text-lg text-text">Název tréninku</Text>
 						<TextInput
-							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-white"
-							cursorColorClassName="accent-white"
+							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
+							cursorColorClassName="accent-text"
 							onChangeText={setName}
 							value={name}
 						/>
 					</View>
 					<View>
-						<Text className="mb-2 font-semibold text-lg text-white">Datum</Text>
+						<Text className="mb-2 font-semibold text-lg text-text">Datum</Text>
 						<DatePicker date={date} setDate={setDate} />
 					</View>
 					<View>
-						<Text className="mb-2 font-semibold text-lg text-white">Filtr</Text>
+						<Text className="mb-2 font-semibold text-lg text-text">Filtr</Text>
 						<FilterDropdown onChange={setFilterId} value={filterId} variant="modal" />
 					</View>
 				</View>
@@ -86,7 +86,7 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 					onPress={createTraining}
 					style={{ backgroundColor: isDisabled ? COLORS.disabled : COLORS.accent }}
 				>
-					<Text className="text-center font-bold text-white text-xl">Vytvořit trénink</Text>
+					<Text className="text-center font-bold text-text text-xl">Vytvořit trénink</Text>
 				</Pressable>
 			</View>
 		</Modal>

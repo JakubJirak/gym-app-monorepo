@@ -27,7 +27,7 @@ export default function DatePicker({ date, setDate }: { date: Date; setDate: (da
 				onPress={showDatepicker}
 			>
 				<Calendar color={COLORS.muted} size={20} />
-				<Text className="text-base text-white">{formatDate(date, "dd.MM.yyyy")}</Text>
+				<Text className="text-base text-text">{formatDate(date, "dd.MM.yyyy")}</Text>
 			</Pressable>
 			{show && (
 				<DateTimePicker

@@ -36,13 +36,13 @@ export default function DeleteTrainingModal({ sheetVisible, setSheetVisible, tra
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
-			<View className="h-[33%] rounded-t-lg bg-darker p-4">
+			<View className="h-[33%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1 items-center justify-between">
 					<View className="mt-2 flex-row items-center gap-2">
 						<Ionicons color="white" name="trash-outline" size={24} />
-						<Text className="font-bold text-2xl text-white">Smazat trénink</Text>
+						<Text className="font-bold text-2xl text-text">Smazat trénink</Text>
 					</View>
 
 					<Text className="text-center text-muted">
@@ -55,14 +55,14 @@ export default function DeleteTrainingModal({ sheetVisible, setSheetVisible, tra
 							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
 							onPress={closeSheet}
 						>
-							<Text className="p-2 text-lg text-white">Zrušit</Text>
+							<Text className="p-2 text-lg text-text">Zrušit</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							className="flex w-[60%] flex-row items-center justify-center rounded-xl bg-destructive"
 							onPress={handleDeleteTraining}
 						>
 							<Ionicons color="white" name="trash-outline" size={20} />
-							<Text className="p-2 font-semibold text-lg text-white">Smazat trénink</Text>
+							<Text className="p-2 font-semibold text-lg text-text">Smazat trénink</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

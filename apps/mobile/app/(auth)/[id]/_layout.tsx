@@ -32,6 +32,7 @@ export default function TrainingIdLayout() {
 		workout = useQuery(api.workouts.getWorkoutById, {
 			workoutId: id as Id<"workouts">,
 		});
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (e) {
 		workout = null;
 	}

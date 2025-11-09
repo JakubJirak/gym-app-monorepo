@@ -25,7 +25,7 @@ export default function ProfileLink({ href, icon, text }: ProfileLinkProps) {
 		>
 			<View className="flex flex-row items-center gap-6">
 				<Ionicons color={COLORS.accent} name={icon} size={28} />
-				<Text className="flex-1 text-white text-xl tracking-wider">{text}</Text>
+				<Text className="flex-1 text-text text-xl tracking-wider">{text}</Text>
 				<View className="">
 					<Ionicons color={COLORS.muted} name="chevron-forward" size={20} />
 				</View>

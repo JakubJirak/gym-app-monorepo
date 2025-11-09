@@ -30,7 +30,7 @@ export default function SignIn() {
 		<>
 			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
 			<TouchableOpacity className="flex-1 bg-primary" onPress={handleSignIn}>
-				<Text className="text-white">signin</Text>
+				<Text className="text-text">signin</Text>
 			</TouchableOpacity>
 			<SafeAreaView edges={["bottom"]} style={{ backgroundColor: COLORS.primary }} />
 		</>

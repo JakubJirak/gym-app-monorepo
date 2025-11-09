@@ -10,7 +10,7 @@ export default function ComponentHeader({ text }: { text: string }) {
 			<TouchableOpacity className="w-8" onPress={() => router.back()}>
 				<Ionicons color="white" name="chevron-back" size={28} />
 			</TouchableOpacity>
-			<Text className="flex-1 font-semibold text-2xl text-white">{text}</Text>
+			<Text className="flex-1 font-semibold text-2xl text-text">{text}</Text>
 		</View>
 	);
 }

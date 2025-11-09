@@ -45,13 +45,13 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
-			<View className="h-[40%] rounded-t-lg bg-darker p-4">
+			<View className="h-[40%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1 items-center justify-between">
 					<View className="mt-2 flex-row items-center gap-2">
 						<Ionicons color="white" name="add-outline" size={32} />
-						<Text className="font-bold text-2xl text-white">Přidat cvik</Text>
+						<Text className="font-bold text-2xl text-text">Přidat cvik</Text>
 					</View>
 
 					<ExercisePicker onSelect={(id) => setSelectedId(id)} selectedId={selectedId} />
@@ -61,7 +61,7 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
 							onPress={closeSheet}
 						>
-							<Text className="p-2 text-lg text-white">Zrušit</Text>
+							<Text className="p-2 text-lg text-text">Zrušit</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
@@ -73,7 +73,7 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 							}}
 						>
 							<Ionicons color="white" name="add" size={28} />
-							<Text className="p-2 font-semibold text-lg text-white">Přidat cvik</Text>
+							<Text className="p-2 font-semibold text-lg text-text">Přidat cvik</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

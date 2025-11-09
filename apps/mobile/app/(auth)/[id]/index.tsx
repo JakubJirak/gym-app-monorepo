@@ -39,7 +39,7 @@ export default function TrainingById() {
 								</Text>
 							</View>
 							<Text
-								className={"rounded-xl border px-2.5 py-1.5 text-base text-white"}
+								className={"rounded-xl border px-2.5 py-1.5 text-base text-text"}
 								style={{
 									borderColor: `${workout?.filter?.color}CC`,
 									color: "white",

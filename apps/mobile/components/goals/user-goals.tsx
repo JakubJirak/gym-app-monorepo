@@ -23,7 +23,7 @@ export default function UserGoals({
 		<View className="mt-12 gap-4">
 			<View className="mb-0 flex flex-row items-center gap-3 font-bold text-lg">
 				<Target color="white" size={24} />
-				<Text className="font-bold text-white text-xl">Vaše PR cíle</Text>
+				<Text className="font-bold text-text text-xl">Vaše PR cíle</Text>
 			</View>
 			<View className="gap-6">
 				<Goal goal={Number(userGoals.squat)} name="Squat" pr={squatPR} />

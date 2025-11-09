@@ -42,7 +42,7 @@ export default function MenuModal({
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
-			<View className="h-[35%] rounded-t-lg bg-darker p-4">
+			<View className="h-[35%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1 justify-center gap-4">
@@ -51,7 +51,7 @@ export default function MenuModal({
 						onPress={selectNewTraining}
 					>
 						<Ionicons color={COLORS.accent} name="add-circle-outline" size={40} />
-						<Text className="font-semibold text-white text-xl">Nový trénink</Text>
+						<Text className="font-semibold text-text text-xl">Nový trénink</Text>
 					</Pressable>
 
 					<Pressable
@@ -59,7 +59,7 @@ export default function MenuModal({
 						onPress={selectRutina}
 					>
 						<Layers color={COLORS.accent} size={36} />
-						<Text className="font-semibold text-white text-xl">Podle rutiny</Text>
+						<Text className="font-semibold text-text text-xl">Podle rutiny</Text>
 					</Pressable>
 				</View>
 			</View>

@@ -10,14 +10,18 @@ export default function Categories() {
 	}
 
 	return (
-		<ScrollView contentContainerClassName="gap-2 mb-3" horizontal showsHorizontalScrollIndicator={false}>
+		<ScrollView
+			contentContainerClassName="gap-2 h-13 pb-3 mb-3"
+			horizontal
+			showsHorizontalScrollIndicator={false}
+		>
 			{categories.map((category) => (
 				<TouchableOpacity
 					className="flex items-center justify-center rounded-full border bg-secondary px-3 py-1.5 text-center"
 					key={category._id}
 					style={{ borderColor: `${category.color}CC` }}
 				>
-					<Text className="text-lg text-white">{category.name}</Text>
+					<Text className="text-lg text-text">{category.name}</Text>
 				</TouchableOpacity>
 			))}
 		</ScrollView>

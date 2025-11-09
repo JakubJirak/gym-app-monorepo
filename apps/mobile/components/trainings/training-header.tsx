@@ -10,7 +10,7 @@ export default function TrainingHeader({ text }: { text: string }) {
 			<TouchableOpacity className="w-8" onPress={() => router.back()}>
 				<Ionicons color="white" name="chevron-back" size={28} />
 			</TouchableOpacity>
-			<Text className="ml-4 flex-1 font-semibold text-2xl text-white">{text}</Text>
+			<Text className="ml-4 flex-1 font-semibold text-2xl text-text">{text}</Text>
 			{/*<TouchableOpacity className="w-8">
 				<Ionicons name="ellipsis-vertical" size={24} color="white" />
 			</TouchableOpacity>*/}

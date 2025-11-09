@@ -34,7 +34,7 @@ export default function Edit() {
 						</View>
 
 						<View className="gap-1">
-							<Text className="text-center font-bold text-3xl text-white">
+							<Text className="text-center font-bold text-3xl text-text">
 								{session.user.name}
 							</Text>
 							<Text className="text-center text-lg text-muted">Powerlifter</Text>
@@ -46,11 +46,11 @@ export default function Edit() {
 					{userWeight && (
 						<Link href="/(auth)/(tabs)/profile/edit/vaha" style={{ width: "100%" }}>
 							<View className="my-3 w-full gap-2">
-								<Text className="font-semibold text-lg text-white tracking-wide">
+								<Text className="font-semibold text-lg text-text tracking-wide">
 									Váha
 								</Text>
-								<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
-									<Text className="text-lg text-white">{userWeight.weight}kg</Text>
+								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
+									<Text className="text-lg text-text">{userWeight.weight}kg</Text>
 								</View>
 							</View>
 						</Link>
@@ -58,31 +58,31 @@ export default function Edit() {
 
 					<Link href="/(auth)/(tabs)/profile/edit/jmeno" style={{ width: "100%" }}>
 						<View className="my-3 w-full gap-2">
-							<Text className="font-semibold text-lg text-white tracking-wide">Jméno</Text>
-							<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
-								<Text className="text-lg text-white">{session.user.name}</Text>
+							<Text className="font-semibold text-lg text-text tracking-wide">Jméno</Text>
+							<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
+								<Text className="text-lg text-text">{session.user.name}</Text>
 							</View>
 						</View>
 					</Link>
 
 					<Link href="/(auth)/(tabs)/profile/edit/zamereni" style={{ width: "100%" }}>
 						<View className="my-3 w-full gap-2">
-							<Text className="font-semibold text-lg text-white tracking-wide">
+							<Text className="font-semibold text-lg text-text tracking-wide">
 								Zaměření
 							</Text>
-							<View className="h-15 rounded-2xl bg-secondary p-4 caret-white">
-								<Text className="text-lg text-white">79.00</Text>
+							<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
+								<Text className="text-lg text-text">79.00</Text>
 							</View>
 						</View>
 					</Link>
 				</View>
 
 				{/*<View className="gap-2 my-3 pb-4">
-				<Text className="text-white font-semibold tracking-wide text-lg">
+				<Text className="text-text font-semibold tracking-wide text-lg">
 					Email
 				</Text>
 				<TextInput
-					className="bg-secondary rounded-2xl caret-white p-4 text-white text-lg"
+					className="bg-secondary rounded-2xl caret-text p-4 text-text text-lg"
 					defaultValue="test@test.com"
 					inputMode="email"
 				/>

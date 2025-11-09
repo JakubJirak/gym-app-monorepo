@@ -51,7 +51,7 @@ export default function ProfileHeader({ text }: { text: string }) {
 					<Ionicons color="white" name="person-outline" size={20} />
 				</View>
 
-				<Text className="ml-4 flex-1 font-semibold text-2xl text-white">{text}</Text>
+				<Text className="ml-4 flex-1 font-semibold text-2xl text-text">{text}</Text>
 
 				<TouchableOpacity accessibilityLabel="Otevřít menu" className="w-8" onPress={toggleMenu}>
 					<Ionicons color="white" name="menu" size={24} />
@@ -73,7 +73,7 @@ export default function ProfileHeader({ text }: { text: string }) {
 						}}
 					>
 						<Ionicons color={COLORS.accent} name="settings-outline" size={20} />
-						<Text className="text-lg text-white">Nastavení</Text>
+						<Text className="text-lg text-text">Nastavení</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
@@ -84,7 +84,7 @@ export default function ProfileHeader({ text }: { text: string }) {
 						}}
 					>
 						<Ionicons color={COLORS.accent} name="options-outline" size={20} />
-						<Text className="text-lg text-white">Upravit profil</Text>
+						<Text className="text-lg text-text">Upravit profil</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
@@ -95,7 +95,7 @@ export default function ProfileHeader({ text }: { text: string }) {
 						}}
 					>
 						<Ionicons color={COLORS.accent} name="information-circle-outline" size={20} />
-						<Text className="text-lg text-white">O aplikaci</Text>
+						<Text className="text-lg text-text">O aplikaci</Text>
 					</TouchableOpacity>
 				</Animated.View>
 			</Modal>

@@ -18,8 +18,8 @@ export default function Filtry() {
 			<View className="mx-2 mt-4 gap-2">
 				<View className="flex-row items-center gap-3">
 					<TableProperties color="white" size={24} />
-					<Text className="font-bold text-white text-xl">Vaše</Text>
-					<Text className="-ml-1.5 font-bold text-white text-xl">filtry</Text>
+					<Text className="font-bold text-text text-xl">Vaše</Text>
+					<Text className="-ml-1.5 font-bold text-text text-xl">filtry</Text>
 				</View>
 
 				<Text className="text-base text-muted">

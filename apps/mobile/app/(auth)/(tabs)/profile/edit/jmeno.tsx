@@ -7,12 +7,12 @@ export default function Jmeno() {
 			<View className="gap-5">
 				<ComponentHeader text="Změna jména" />
 				<TextInput
-					className="w-full rounded-2xl bg-secondary p-4 text-lg text-white caret-white"
+					className="w-full rounded-2xl bg-secondary p-4 text-lg text-text caret-text"
 					defaultValue="username"
 				/>
 			</View>
 			<Pressable className="mt-auto mb-4 rounded-2xl bg-accent py-3">
-				<Text className="text-center font-medium text-2xl text-white">Uložit</Text>
+				<Text className="text-center font-medium text-2xl text-text">Uložit</Text>
 			</Pressable>
 		</View>
 	);

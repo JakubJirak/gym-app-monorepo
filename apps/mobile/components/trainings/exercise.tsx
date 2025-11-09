@@ -19,7 +19,7 @@ export default function Exercise({ name, muscleGroup, sets, note }: ExerciseProp
 	return (
 		<View className="py-4">
 			<View className="mb-2 flex-row items-center">
-				<Text className="flex-1 font-semibold text-white text-xl">{name}</Text>
+				<Text className="flex-1 font-semibold text-text text-xl">{name}</Text>
 				<Text className="rounded-xl border border-inactive px-2 py-1 font-light text-muted">
 					{muscleGroup}
 				</Text>

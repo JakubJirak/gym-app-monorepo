@@ -24,7 +24,7 @@ export default function Profile() {
 				<View className="mt-2 mb-6 flex-row items-center gap-6">
 					<View className="h-[90px] w-[90px] rounded-full bg-gray-700" />
 					<View className="gap-1">
-						<Text className="font-semibold text-3xl text-white">{session.user.name}</Text>
+						<Text className="font-semibold text-3xl text-text">{session.user.name}</Text>
 						<Text className="text-muted text-xl">Powerlifter</Text>
 					</View>
 				</View>
@@ -35,7 +35,7 @@ export default function Profile() {
 							<Ionicons color={COLORS.muted} name="calendar-clear-outline" size={20} />
 							<Text className="text-lg text-muted">Tréninky</Text>
 						</View>
-						<Text className="text-lg text-white tracking-wider">
+						<Text className="text-lg text-text tracking-wider">
 							{workouts ? workouts.length : 0}
 						</Text>
 					</View>
@@ -45,7 +45,7 @@ export default function Profile() {
 							<Weight color={COLORS.muted} size={20} />
 							<Text className="text-lg text-muted">Váha</Text>
 						</View>
-						<Text className="text-lg text-white tracking-wider">{userWeight?.weight}kg</Text>
+						<Text className="text-lg text-text tracking-wider">{userWeight?.weight}kg</Text>
 					</View>
 				</View>
 

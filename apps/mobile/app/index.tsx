@@ -17,10 +17,10 @@ export default function Index() {
 			<Text className="text-white">loaded: {isLoading ? "ne" : "ano"}</Text>
 			<Text className="text-white">auth: {isAuthenticated ? "ano" : "ne"}</Text>*/}
 			<Link href="/sign-in">
-				<Text className="text-white">sign in</Text>
+				<Text className="text-text">sign in</Text>
 			</Link>
 			<Link href="/sign-up">
-				<Text className="text-white">sign up</Text>
+				<Text className="text-text">sign up</Text>
 			</Link>
 		</View>
 	);

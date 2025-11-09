@@ -37,7 +37,7 @@ export default function Vaha() {
 				<ComponentHeader text="Změna váhy (kg)" />
 				<TextInput
 					autoFocus
-					className="w-full rounded-2xl bg-secondary p-4 text-lg text-white caret-white"
+					className="w-full rounded-2xl bg-secondary p-4 text-lg text-text caret-text"
 					defaultValue={userWeight ? String(userWeight.weight) : ""}
 					keyboardType="numeric"
 					onChangeText={(text) => setWeight(text)}
@@ -48,7 +48,7 @@ export default function Vaha() {
 				/>
 			</View>
 			<Pressable className="mt-auto mb-4 rounded-2xl bg-accent py-3" onPress={handleEdit}>
-				<Text className="text-center font-medium text-2xl text-white">Uložit</Text>
+				<Text className="text-center font-medium text-2xl text-text">Uložit</Text>
 			</Pressable>
 		</View>
 	);

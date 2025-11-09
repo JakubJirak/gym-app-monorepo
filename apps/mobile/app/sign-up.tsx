@@ -31,7 +31,7 @@ export default function SignUp() {
 		<>
 			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
 			<TouchableOpacity className="flex-1 bg-primary" onPress={handleSignUp}>
-				<Text className="text-white">signup</Text>
+				<Text className="text-text">signup</Text>
 			</TouchableOpacity>
 			<SafeAreaView edges={["bottom"]} style={{ backgroundColor: COLORS.primary }} />
 		</>
