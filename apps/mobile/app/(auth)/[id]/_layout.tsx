@@ -26,14 +26,16 @@ export const TrainingIdContext = createContext<string | string[] | undefined>(un
 
 export default function TrainingIdLayout() {
 	const { id } = useLocalSearchParams();
+	// biome-ignore lint/suspicious/noImplicitAnyLet: valid
+	// biome-ignore lint/suspicious/noEvolvingTypes: valid
 	let workout;
 
 	try {
+		// biome-ignore lint/correctness/useHookAtTopLevel: zabezpeceni proti spatnemu id
 		workout = useQuery(api.workouts.getWorkoutById, {
 			workoutId: id as Id<"workouts">,
 		});
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	} catch (e) {
+	} catch (_) {
 		workout = null;
 	}
 
@@ -45,7 +47,7 @@ export default function TrainingIdLayout() {
 		<TrainingIdContext.Provider value={id}>
 			<View className="flex-1">
 				<View className="px-4">
-					<TrainingHeader text={workout.name} />
+					<TrainingHeader text={workout.name} trainingId={id as string} />
 				</View>
 
 				<MaterialTopTabs

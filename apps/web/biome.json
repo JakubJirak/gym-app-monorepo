@@ -12,7 +12,8 @@
       "src/*",
       ".vscode/*",
       "index.html",
-      "vite.config.js"
+      "vite.config.js",
+      "!src/routeeTree.gen.ts"
     ]
   },
   "formatter": {

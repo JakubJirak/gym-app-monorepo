@@ -269,3 +269,19 @@ export const deleteWorkout = mutation({
 		await ctx.db.delete(args.workoutId);
 	},
 });
+
+export const editWorkout = mutation({
+	args: {
+		workoutId: v.id("workouts"),
+		name: v.string(),
+		workoutDate: v.string(),
+		filterId: v.id("filters"),
+	},
+	handler: async (ctx, args) => {
+		await ctx.db.patch(args.workoutId, {
+			name: args.name,
+			workoutDate: args.workoutDate,
+			filterId: args.filterId,
+		});
+	},
+});

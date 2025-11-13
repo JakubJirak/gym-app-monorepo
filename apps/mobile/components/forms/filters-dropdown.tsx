@@ -1,6 +1,6 @@
 import { useQuery } from "convex/react";
 import { Check, ChevronDown } from "lucide-react-native";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	Animated,
 	Dimensions,
@@ -22,6 +22,8 @@ import { api } from "../../../../packages/convex/convex/_generated/api";
 
 export type Option = {
 	_id: string;
+	name: string;
+	color: string;
 };
 
 type Props = {
@@ -30,6 +32,7 @@ type Props = {
 	maxHeight?: number;
 	popupOffset?: number;
 	variant: "darker" | "modal";
+	defaultValue?: string;
 };
 
 const DEFAULT_MAX_HEIGHT = 240;
@@ -41,6 +44,7 @@ export default function FilterDropdown({
 	maxHeight = DEFAULT_MAX_HEIGHT,
 	popupOffset = 6,
 	variant,
+	defaultValue,
 }: Props) {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -58,6 +62,31 @@ export default function FilterDropdown({
 	const animRotate = useRef(new Animated.Value(0)).current;
 
 	const windowHeight = Dimensions.get("window").height;
+
+	// Ref to ensure we only apply the same default once
+	const defaultAppliedRef = useRef<string | null>(null);
+
+	// If defaultValue is provided and nothing is currently selected (value is falsy),
+	// wait until options are loaded and when the default is present call onChange(defaultValue).
+	useEffect(() => {
+		if (!defaultValue) {
+			return;
+		}
+		// If the consumer already provided a value, don't override it.
+		if (value) {
+			return;
+		}
+		// If we've already applied this defaultValue, don't apply again.
+		if (defaultAppliedRef.current === defaultValue) {
+			return;
+		}
+
+		if (options ? options.some((o: Option) => o._id === defaultValue) : null) {
+			onChange(defaultValue);
+			defaultAppliedRef.current = defaultValue;
+		}
+		// dependencies: options, defaultValue, value, onChange
+	}, [options, defaultValue, value, onChange]);
 
 	function measureInput(): Promise<{ x: number; y: number; width: number; height: number } | null> {
 		return new Promise((resolve) => {
@@ -213,7 +242,7 @@ export default function FilterDropdown({
 		}
 	}
 
-	const selected = options.find((o) => o._id === value);
+	const selected = options.find((o: Option) => o._id === value);
 
 	const rotate = animRotate.interpolate({
 		inputRange: [0, 1],
@@ -290,7 +319,7 @@ export default function FilterDropdown({
 									style={{ maxHeight: dropdownHeight }}
 								>
 									<View onLayout={onContentLayout}>
-										{options.map((opt) => {
+										{options.map((opt: Option) => {
 											const isSelected = value === opt._id;
 											return (
 												<TouchableOpacity

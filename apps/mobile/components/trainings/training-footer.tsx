@@ -2,10 +2,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
+import { COLORS } from "@/constants/COLORS";
 import AddExerciseModal from "./modals/add-exercise";
 import DeleteTrainingModal from "./modals/delete-training";
 
-export default function TrainingFooter({ id, exercises }: { id: string; exercises: number }) {
+type TrainingFooterProps = {
+	id: string;
+	exercises: number;
+	isEdit: boolean;
+	setIsEdit: (isEdit: boolean) => void;
+};
+
+export default function TrainingFooter({ id, exercises, isEdit, setIsEdit }: TrainingFooterProps) {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [addExerciseModal, setAddExerciseModal] = useState(false);
 
@@ -21,8 +29,8 @@ export default function TrainingFooter({ id, exercises }: { id: string; exercise
 			<TouchableOpacity className="flex w-1/4 items-center pt-2" onPress={() => setAddExerciseModal(true)}>
 				<Ionicons color="white" name="add-outline" size={32} />
 			</TouchableOpacity>
-			<TouchableOpacity className="flex w-1/4 items-center pt-2">
-				<Pencil color="white" size={22} />
+			<TouchableOpacity className="flex w-1/4 items-center pt-2" onPress={() => setIsEdit(!isEdit)}>
+				<Pencil color={isEdit ? COLORS.accent : "white"} size={22} />
 			</TouchableOpacity>
 			<TouchableOpacity className="flex w-1/4 items-center pt-2" onPress={() => setDeleteModal(true)}>
 				<Ionicons color="white" name="trash-outline" size={24} />
@@ -30,7 +38,7 @@ export default function TrainingFooter({ id, exercises }: { id: string; exercise
 
 			<DeleteTrainingModal setSheetVisible={setDeleteModal} sheetVisible={deleteModal} trainingId={id} />
 			<AddExerciseModal
-				exercises={exercises}
+				exercises={exercises} // order of the new exercise
 				setSheetVisible={setAddExerciseModal}
 				sheetVisible={addExerciseModal}
 				trainingId={id}

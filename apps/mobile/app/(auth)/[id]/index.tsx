@@ -3,16 +3,17 @@ import { useQuery } from "convex/react";
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import Exercise from "@/components/trainings/exercise";
 import TrainingFooter from "@/components/trainings/training-footer";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
-//import {api} from "@packages/convex"
 
 export default function TrainingById() {
 	const { id } = useLocalSearchParams();
+	const [isEdit, setIsEdit] = useState(false);
 	const workout = useQuery(api.workouts.getWorkoutById, {
 		workoutId: id as Id<"workouts">,
 	});
@@ -59,6 +60,8 @@ export default function TrainingById() {
 					renderItem={({ item }) =>
 						item.exercise ? (
 							<Exercise
+								_id={item._id}
+								isEdit={isEdit}
 								muscleGroup={item.exercise.muscleGroup}
 								name={item.exercise.name}
 								note={item.note}
@@ -68,7 +71,12 @@ export default function TrainingById() {
 					}
 				/>
 			</View>
-      <TrainingFooter id={workout._id} exercises={workout.exercises.length} />
+			<TrainingFooter
+				exercises={workout.exercises.length}
+				id={workout._id}
+				isEdit={isEdit}
+				setIsEdit={setIsEdit}
+			/>
 		</>
 	);
 }

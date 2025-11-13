@@ -16,7 +16,7 @@ export default function PowerliftingStats({
 	const total = squatPR + benchPR + deadliftPR;
 
 	return (
-		<View className="mt-6">
+		<View className="mt-6 px-2">
 			<View className="mb-6 flex flex-row items-center gap-3 font-bold text-lg">
 				<Trophy color="white" size={24} />
 				<Text className="font-bold text-text text-xl">Powerlifting PR</Text>

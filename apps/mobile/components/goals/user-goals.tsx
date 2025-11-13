@@ -20,7 +20,7 @@ export default function UserGoals({
 	}
 
 	return (
-		<View className="mt-12 gap-4">
+		<View className="mt-12 gap-4 px-2">
 			<View className="mb-0 flex flex-row items-center gap-3 font-bold text-lg">
 				<Target color="white" size={24} />
 				<Text className="font-bold text-text text-xl">Vaše PR cíle</Text>
