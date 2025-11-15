@@ -1,38 +1,46 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
-import { Plus } from "lucide-react-native";
+import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import { api } from "../../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
-type AddSetProps = {
+type EditSetProps = {
 	visible: boolean;
 	setVisible: (visible: boolean) => void;
-	workoutExerciseId: string;
-	closeParent: () => void;
-	setsLength: number | undefined;
+	setId: string;
+	defaultWeight: number;
+	defaultReps: number;
 };
 
-export default function AddSetModal({ visible, setVisible, workoutExerciseId, closeParent, setsLength }: AddSetProps) {
+export default function EditSetModal({ visible, setVisible, setId, defaultReps, defaultWeight }: EditSetProps) {
 	const closeSheet = () => setVisible(false);
-	const [weight, setWeight] = useState("");
-	const [reps, setReps] = useState("");
-	const addSet = useMutation(api.workoutExercises.addSet);
+	const [weight, setWeight] = useState(String(defaultWeight));
+	const [reps, setReps] = useState(String(defaultReps));
+	const editSet = useMutation(api.workoutExercises.editSet);
+	const deleteSet = useMutation(api.workoutExercises.deleteSet);
 
-	const disabled = weight === "" || reps === "";
+	const disabled =
+		weight === "" || reps === "" || (Number(weight) === defaultWeight && Number(reps) === defaultReps);
 
 	const handleAddSet = () => {
-		if (weight !== "" && reps !== "") {
-			addSet({
-				workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
-				weight: Number(weight),
-				reps: Number(reps),
-				order: setsLength ? setsLength : 0,
-			});
-		}
-		closeParent();
+		editSet({
+			setId: setId as Id<"sets">,
+			weight: Number(weight),
+			reps: Number(reps),
+		});
+		closeSheet();
+		setWeight("");
+		setReps("");
+	};
+
+	const handleDeleteSet = () => {
+		deleteSet({
+			setId: setId as Id<"sets">,
+		});
 		closeSheet();
 		setWeight("");
 		setReps("");
@@ -56,8 +64,8 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 
 				<View className="flex-1">
 					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
-						<Plus color="white" size={24} />
-						<Text className="font-semibold text-text text-xl">Přidat sérii</Text>
+						<Pencil color="white" size={20} />
+						<Text className="font-semibold text-text text-xl">Upravit sérii</Text>
 					</View>
 
 					<View className="mt-2 gap-4">
@@ -88,21 +96,28 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 
 					<View className="mt-8 mb-6 flex-row">
 						<TouchableOpacity
-							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
+							className="mr-3 flex w-[15%] items-center justify-center rounded-xl bg-destructive"
+							onPress={handleDeleteSet}
+						>
+							<Ionicons color="white" name="trash-outline" size={24} />
+						</TouchableOpacity>
+						<TouchableOpacity
+							className="mr-3 flex w-[25%] items-center justify-center rounded-xl border border-border"
 							onPress={closeSheet}
 						>
 							<Text className="p-2 text-lg text-text">Zrušit</Text>
 						</TouchableOpacity>
+
 						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
+							className="flex w-[52%] flex-row items-center justify-center rounded-xl"
 							disabled={disabled}
 							onPress={handleAddSet}
 							style={{
 								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
 							}}
 						>
-							<Plus color="white" size={20} />
-							<Text className="p-2 font-semibold text-lg text-text">Přidat sérii</Text>
+							<Pencil color="white" size={18} />
+							<Text className="p-2 font-semibold text-lg text-text">Upravit sérii</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

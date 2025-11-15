@@ -46,7 +46,13 @@ export default function Exercise({ _id, name, muscleGroup, sets, note, isEdit }:
 				data={sets}
 				keyExtractor={(item) => item._id}
 				renderItem={({ item }) => (
-					<ExerciseSet order={item.order} reps={item.reps} weight={item.weight} />
+					<ExerciseSet
+						isEdit={isEdit}
+						order={item.order}
+						reps={item.reps}
+						setId={item._id}
+						weight={item.weight}
+					/>
 				)}
 			/>
 			{note && <Text className="mt-2 text-muted">{note}</Text>}

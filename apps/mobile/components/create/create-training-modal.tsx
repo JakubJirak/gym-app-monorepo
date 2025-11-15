@@ -66,6 +66,7 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 						<TextInput
 							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 							cursorColorClassName="accent-text"
+							maxLength={50}
 							onChangeText={setName}
 							value={name}
 						/>

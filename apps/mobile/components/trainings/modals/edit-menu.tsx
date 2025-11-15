@@ -5,6 +5,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import AddSetModal from "./edit-menu-modals/add-set";
+import EditExerciseModal from "./edit-menu-modals/edit-exercise";
+import EditNoteModal from "./edit-menu-modals/edit-note";
 
 type EditMenuProps = {
 	sheetVisible: boolean;
@@ -15,6 +17,8 @@ type EditMenuProps = {
 
 export default function EditMenuModal({ sheetVisible, setSheetVisible, exerciseId, setsLength }: EditMenuProps) {
 	const [set, setSet] = useState(false);
+	const [edit, setEdit] = useState(false);
+	const [note, setNote] = useState(false);
 	const closeSheet = () => setSheetVisible(false);
 
 	return (
@@ -33,7 +37,7 @@ export default function EditMenuModal({ sheetVisible, setSheetVisible, exerciseI
 			<View className="h-[63%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
-				<View className="mt-3 flex-1 gap-5">
+				<View className="mt-3 flex-1 gap-4">
 					<TouchableOpacity
 						className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[25%]"
 						onPress={() => setSet(true)}
@@ -41,11 +45,17 @@ export default function EditMenuModal({ sheetVisible, setSheetVisible, exerciseI
 						<Plus color={COLORS.accent} size={24} />
 						<Text className="text-lg text-white">Přidat sérii</Text>
 					</TouchableOpacity>
-					<TouchableOpacity className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[25%]">
+					<TouchableOpacity
+						className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[25%]"
+						onPress={() => setEdit(true)}
+					>
 						<Pencil color={COLORS.accent} size={20} />
 						<Text className="text-lg text-white">Změnit cvik</Text>
 					</TouchableOpacity>
-					<TouchableOpacity className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[25%]">
+					<TouchableOpacity
+						className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[25%]"
+						onPress={() => setNote(true)}
+					>
 						<NotebookPen color={COLORS.accent} size={20} />
 						<Text className="text-lg text-white">Upravit poznámku</Text>
 					</TouchableOpacity>
@@ -63,12 +73,27 @@ export default function EditMenuModal({ sheetVisible, setSheetVisible, exerciseI
 					</TouchableOpacity>
 				</View>
 			</View>
+
 			<AddSetModal
 				closeParent={closeSheet}
-				exerciseId={exerciseId}
 				setsLength={setsLength}
 				setVisible={setSet}
 				visible={set}
+				workoutExerciseId={exerciseId}
+			/>
+
+			<EditExerciseModal
+				closeParent={closeSheet}
+				setVisible={setEdit}
+				visible={edit}
+				workoutExerciseId={exerciseId}
+			/>
+
+			<EditNoteModal
+				closeParent={closeSheet}
+				setVisible={setNote}
+				visible={note}
+				workoutExerciseId={exerciseId}
 			/>
 		</Modal>
 	);
