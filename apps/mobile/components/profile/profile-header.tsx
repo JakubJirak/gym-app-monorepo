@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { Animated, Easing, Modal, Pressable, Text, TouchableOpacity, View, type ViewStyle } from "react-native";
 import { COLORS } from "@/constants/COLORS";
+import { authClient } from "@/src/lib/auth-client";
 
 export default function ProfileHeader({ text }: { text: string }) {
 	const [visible, setVisible] = useState(false);
@@ -62,7 +63,7 @@ export default function ProfileHeader({ text }: { text: string }) {
 				<Pressable className="flex-1" onPress={() => closeMenu()} />
 
 				<Animated.View
-					className="z-50 min-w-40 overflow-hidden rounded-xl bg-secondary px-2 py-2 shadow-md"
+					className="z-50 min-w-40 overflow-hidden rounded-xl bg-darker px-2 py-2 shadow-md"
 					style={[animatedStyle, { position: "absolute", top: 12, right: 12 }]}
 				>
 					<TouchableOpacity
@@ -83,19 +84,30 @@ export default function ProfileHeader({ text }: { text: string }) {
 							closeMenu();
 						}}
 					>
-						<Ionicons color={COLORS.accent} name="options-outline" size={20} />
+						<Ionicons color={COLORS.accent} name="options-outline" size={21} />
 						<Text className="text-lg text-text">Upravit profil</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						className="flex flex-row items-center gap-3 px-3 py-3"
+						className="flex flex-row items-center gap-2.5 px-3 py-3"
 						onPress={() => {
 							router.navigate("/profile/about");
 							closeMenu();
 						}}
 					>
-						<Ionicons color={COLORS.accent} name="information-circle-outline" size={20} />
+						<Ionicons color={COLORS.accent} name="information-circle-outline" size={22} />
 						<Text className="text-lg text-text">O aplikaci</Text>
+					</TouchableOpacity>
+
+					<View className="my-1 h-px bg-border" />
+					<TouchableOpacity
+						className="flex flex-row items-center gap-2.5 px-3 py-3"
+						onPress={() => {
+						  authClient.signOut();
+						}}
+					>
+						<Ionicons color={COLORS.accent} name="log-out-outline" size={22} />
+						<Text className="text-lg text-text">Odhlásit se</Text>
 					</TouchableOpacity>
 				</Animated.View>
 			</Modal>

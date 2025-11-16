@@ -2,18 +2,12 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { authClient } from "@/src/lib/auth-client";
 
 export default function Index() {
-	const logOut = () => {
-		authClient.signOut();
-	};
 
 	return (
 		<View className="flex-1 bg-primary px-4">
 			<Text className="text-text">
-				domovska obrazovka, souhrny, posledni treninky, nejake statistiky...
+				uvitani, posledni treninky, typy a triky, nejake statistiky...
 			</Text>
-			<TouchableOpacity onPress={logOut}>
-				<Text className="text-text">Log Out</Text>
-			</TouchableOpacity>
 		</View>
 	);
 }
