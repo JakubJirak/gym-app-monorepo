@@ -5,6 +5,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import AddSetModal from "./edit-menu-modals/add-set";
+import DeleteWorkoutExerciseModal from "./edit-menu-modals/delete-exercise";
 import EditExerciseModal from "./edit-menu-modals/edit-exercise";
 import EditNoteModal from "./edit-menu-modals/edit-note";
 
@@ -19,6 +20,7 @@ export default function EditMenuModal({ sheetVisible, setSheetVisible, exerciseI
 	const [set, setSet] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const [note, setNote] = useState(false);
+	const [remove, setRemove] = useState(false);
 	const closeSheet = () => setSheetVisible(false);
 
 	return (
@@ -59,15 +61,18 @@ export default function EditMenuModal({ sheetVisible, setSheetVisible, exerciseI
 						<NotebookPen color={COLORS.accent} size={20} />
 						<Text className="text-lg text-white">Upravit poznámku</Text>
 					</TouchableOpacity>
-					<TouchableOpacity className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[25%]">
+					<TouchableOpacity className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[23%]">
 						<ChevronUp color={COLORS.accent} size={28} />
 						<Text className="text-lg text-white">Posunout nahoru</Text>
 					</TouchableOpacity>
-					<TouchableOpacity className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[25%]">
+					<TouchableOpacity className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[23%]">
 						<ChevronDown color={COLORS.accent} size={28} />
 						<Text className="text-lg text-white">Posunout dolů</Text>
 					</TouchableOpacity>
-					<TouchableOpacity className="w-full flex-row items-center gap-2 rounded-xl bg-destructive px-3 py-2.5 pl-[25%]">
+					<TouchableOpacity
+						className="w-full flex-row items-center gap-2 rounded-xl bg-destructive px-3 py-2.5 pl-[24%]"
+						onPress={() => setRemove(true)}
+					>
 						<Ionicons color="white" name="trash-outline" size={24} />
 						<Text className="text-lg text-white">Odstranit cvik</Text>
 					</TouchableOpacity>
@@ -93,6 +98,13 @@ export default function EditMenuModal({ sheetVisible, setSheetVisible, exerciseI
 				closeParent={closeSheet}
 				setVisible={setNote}
 				visible={note}
+				workoutExerciseId={exerciseId}
+			/>
+
+			<DeleteWorkoutExerciseModal
+				closeParent={closeSheet}
+				setVisible={setRemove}
+				visible={remove}
 				workoutExerciseId={exerciseId}
 			/>
 		</Modal>
