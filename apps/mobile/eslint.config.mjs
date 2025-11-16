@@ -23,7 +23,7 @@ export default [
 			},
 		},
 		rules: {
-			"indent": ["error", "tab"]
+			"indent": ["error", "space"]
 		},
 	},
 ];

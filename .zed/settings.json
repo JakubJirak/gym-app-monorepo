@@ -5,7 +5,7 @@
     "JavaScript": {
       "formatter": {
         "language_server": {
-          "name": "eslint"
+          "name": "biome"
         }
       },
       "code_actions_on_format": {

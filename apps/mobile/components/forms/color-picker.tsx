@@ -1,5 +1,5 @@
-/** biome-ignore-all lint/style/useTemplate: <explanation> */
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
+/** biome-ignore-all lint/style/useTemplate: more readable */
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: its grid */
 import { Pencil } from "lucide-react-native";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { type GestureResponderEvent, type LayoutChangeEvent, Text, TouchableOpacity, View } from "react-native";
@@ -113,9 +113,8 @@ export default function ColorPickerBottomSheet({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: want to run only once
 	useLayoutEffect(() => {
-		// biome-ignore lint/nursery/noUnusedExpressions: <explanation>
-		// biome-ignore lint/complexity/useOptionalChain: <explanation>
-		onColorChange && onColorChange(selectedHex);
+		// biome-ignore lint/nursery/noUnusedExpressions: only once
+		onColorChange ? onColorChange(selectedHex) : null;
 	}, []);
 
 	const onLayout = (e: LayoutChangeEvent) => {
@@ -133,13 +132,11 @@ export default function ColorPickerBottomSheet({
 			}
 			const cx = Math.min(columns - 1, Math.max(0, Math.floor((locationX / w) * columns)));
 			const ry = Math.min(rows - 1, Math.max(0, Math.floor((locationY / h) * rows)));
-			// biome-ignore lint/complexity/useOptionalChain: <explanation>
-			const hex = grid[ry] && grid[ry][cx];
+			const hex = grid[ry] ? grid[ry][cx] : null;
 			if (hex) {
 				setSelectedHex(hex);
-				// biome-ignore lint/nursery/noUnusedExpressions: <explanation>
-				// biome-ignore lint/complexity/useOptionalChain: <explanation>
-				onColorChange && onColorChange(hex);
+				// biome-ignore lint/nursery/noUnusedExpressions: only once
+				onColorChange ? onColorChange(hex) : null;
 			}
 		},
 		[columns, rows, grid, onColorChange]
@@ -151,9 +148,8 @@ export default function ColorPickerBottomSheet({
 	const close = () => setVisible(false);
 
 	const confirm = () => {
-		// biome-ignore lint/nursery/noUnusedExpressions: <explanation>
-		// biome-ignore lint/complexity/useOptionalChain: <explanation>
-		onColorChange && onColorChange(selectedHex);
+		// biome-ignore lint/nursery/noUnusedExpressions: only once
+		onColorChange ? onColorChange(selectedHex) : null;
 		setVisible(false);
 	};
 

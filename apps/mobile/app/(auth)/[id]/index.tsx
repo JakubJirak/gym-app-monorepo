@@ -60,12 +60,15 @@ export default function TrainingById() {
 					renderItem={({ item }) =>
 						item.exercise ? (
 							<Exercise
+							  trainingId={workout._id}
 								_id={item._id}
 								isEdit={isEdit}
 								muscleGroup={item.exercise.muscleGroup}
 								name={item.exercise.name}
 								note={item.note}
 								sets={item.sets}
+								exercisesLength={workout.exercises.length}
+								order={item.order}
 							/>
 						) : null
 					}
