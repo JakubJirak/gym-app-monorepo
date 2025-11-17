@@ -1,18 +1,42 @@
-import { Link } from "expo-router";
-import { Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS } from "@/constants/COLORS";
 
 export default function Index() {
+	const router = useRouter();
 
 	return (
-		<View
-		  className="flex-1 items-center justify-center bg-primary px-4"
-		>
-			<Link href="/sign-in">
-				<Text className="text-text">sign in</Text>
-			</Link>
-			<Link href="/sign-up">
-				<Text className="text-text">sign up</Text>
-			</Link>
-		</View>
+		<>
+			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
+			<View className="flex-1 justify-between bg-primary px-6 py-8">
+				<View className="mt-20 gap-3">
+					<Text className="text-center font-bold text-5xl text-white">Vítejte v aplikaci</Text>
+					<Text className="text-center font-bold text-5xl text-white">GYM TRACKER!</Text>
+					<Text className="mt-4 text-center text-lg text-muted">
+						Sledujte svůj pokrok a dosahujte svých fitness cílů
+					</Text>
+				</View>
+
+				<View className="mb-8 gap-4">
+					<TouchableOpacity
+						activeOpacity={0.8}
+						className="rounded-xl bg-accent px-6 py-4"
+						onPress={() => router.push("/sign-in")}
+					>
+						<Text className="text-center font-semibold text-lg text-white">Přihlásit se</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						activeOpacity={0.8}
+						className="rounded-xl border-2 border-accent bg-secondary px-6 py-4"
+						onPress={() => router.push("/sign-up")}
+					>
+						<Text className="text-center font-semibold text-lg text-white">Registrovat se</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+			<SafeAreaView edges={["bottom"]} style={{ backgroundColor: COLORS.primary }} />
+		</>
 	);
 }

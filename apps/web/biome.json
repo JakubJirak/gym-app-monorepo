@@ -8,13 +8,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": [
-      "src/*",
-      ".vscode/*",
-      "index.html",
-      "vite.config.js",
-      "!src/routeeTree.gen.ts"
-    ]
+    "includes": ["src/*", ".vscode/*", "index.html", "vite.config.js"]
   },
   "formatter": {
     "enabled": true,
@@ -23,14 +17,21 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": "on",
+        "useSortedAttributes": "on"
       }
     }
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "style": {
+        "noMagicNumbers": "off"
+      },
+      "suspicious": {
+        "noConsole": "off"
+      }
     }
   },
   "javascript": {

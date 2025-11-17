@@ -17,13 +17,13 @@
     "TypeScript": {
       "formatter": {
         "language_server": {
-          "name": "biome"
+          "name": "eslint"
         }
       },
       "code_actions_on_format": {
         "source.fixAll": true,
         "source.fixAll.eslint": true,
-        "source.organizeImports.biome": true
+        "source.organizeImports.eslint": true
       }
     },
     "TSX": {

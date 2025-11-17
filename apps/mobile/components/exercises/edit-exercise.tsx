@@ -1,5 +1,5 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
+import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
@@ -54,9 +54,9 @@ export default function EditExerciseModal({
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1 justify-between">
-					<View className="mt-2 flex-row items-center gap-2 self-center">
-						<Ionicons color="white" name="add-outline" size={32} />
-						<Text className="font-bold text-2xl text-text">Přidat cvik</Text>
+					<View className="mt-2 flex-row items-center gap-3 self-center">
+						<Pencil color="white" size={22} />
+						<Text className="font-bold text-2xl text-text">Upravit cvik</Text>
 					</View>
 
 					<View>
@@ -89,8 +89,8 @@ export default function EditExerciseModal({
 								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
 							}}
 						>
-							<Ionicons color="white" name="add" size={28} />
-							<Text className="p-2 font-semibold text-lg text-text">Přidat cvik</Text>
+							<Pencil color="white" size={16} />
+							<Text className="p-2 font-semibold text-lg text-text">Upravit cvik</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

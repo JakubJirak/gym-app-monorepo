@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
 
 export const getWorkoutExerciseById = query({
 	args: {
@@ -109,53 +108,51 @@ export const deleteWorkoutExercise = mutation({
 });
 
 export const moveUp = mutation({
-  args: {
-    workoutExerciseId: v.id("workoutExercises"),
-    workoutId: v.id("workouts"),
-    order: v.number()
-  },
-  handler: async (ctx, args) => {
-    if (args.order === 0) {
-      return;
-    }
+	args: {
+		workoutExerciseId: v.id("workoutExercises"),
+		workoutId: v.id("workouts"),
+		order: v.number(),
+	},
+	handler: async (ctx, args) => {
+		if (args.order === 0) {
+			return;
+		}
 
-    const workoutExercises = await ctx.db.query("workoutExercises")
-      .withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
-      .collect();
+		const workoutExercises = await ctx.db
+			.query("workoutExercises")
+			.withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
+			.collect();
 
-    const prevExercise = workoutExercises.find(
-      (we) => we.order === args.order - 1
-    );
+		const prevExercise = workoutExercises.find((we) => we.order === args.order - 1);
 
-    if (!prevExercise) {
-      return;
-    }
+		if (!prevExercise) {
+			return;
+		}
 
-    await ctx.db.patch(args.workoutExerciseId, { order: args.order - 1 });
-    await ctx.db.patch(prevExercise._id, { order: args.order });
-  }
+		await ctx.db.patch(args.workoutExerciseId, { order: args.order - 1 });
+		await ctx.db.patch(prevExercise._id, { order: args.order });
+	},
 });
 
 export const moveDown = mutation({
-  args: {
-    workoutExerciseId: v.id("workoutExercises"),
-    workoutId: v.id("workouts"),
-    order: v.number()
-  },
-  handler: async (ctx, args) => {
-    const workoutExercises = await ctx.db.query("workoutExercises")
-      .withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
-      .collect();
+	args: {
+		workoutExerciseId: v.id("workoutExercises"),
+		workoutId: v.id("workouts"),
+		order: v.number(),
+	},
+	handler: async (ctx, args) => {
+		const workoutExercises = await ctx.db
+			.query("workoutExercises")
+			.withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
+			.collect();
 
-    const nextExercise = workoutExercises.find(
-      (we) => we.order === args.order + 1
-    );
+		const nextExercise = workoutExercises.find((we) => we.order === args.order + 1);
 
-    if (!nextExercise) {
-      return;
-    }
+		if (!nextExercise) {
+			return;
+		}
 
-    await ctx.db.patch(args.workoutExerciseId, { order: args.order + 1 });
-    await ctx.db.patch(nextExercise._id, { order: args.order });
-  }
+		await ctx.db.patch(args.workoutExerciseId, { order: args.order + 1 });
+		await ctx.db.patch(nextExercise._id, { order: args.order });
+	},
 });

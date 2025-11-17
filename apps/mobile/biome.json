@@ -8,12 +8,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": [
-      "src/*",
-      ".vscode/*",
-      "index.html",
-      "vite.config.js"
-    ]
+    "includes": ["src/*", ".vscode/*", "index.html", "vite.config.js"]
   },
   "formatter": {
     "enabled": true,
@@ -22,7 +17,8 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": "on",
+        "useSortedAttributes": "on"
       }
     }
   },
