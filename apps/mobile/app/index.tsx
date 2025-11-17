@@ -2,20 +2,11 @@ import { Link } from "expo-router";
 import { Text, View } from "react-native";
 
 export default function Index() {
-	// const { data: session } = authClient.useSession();
-	// const { isAuthenticated, isLoading } = useConvexAuth();
 
 	return (
 		<View
-			style={{
-				flex: 1,
-				justifyContent: "center",
-				alignItems: "center",
-			}}
+		  className="flex-1 items-center justify-center bg-primary px-4"
 		>
-			{/*<Text className="text-white">Welcome, {session?.user.name}</Text>
-			<Text className="text-white">loaded: {isLoading ? "ne" : "ano"}</Text>
-			<Text className="text-white">auth: {isAuthenticated ? "ano" : "ne"}</Text>*/}
 			<Link href="/sign-in">
 				<Text className="text-text">sign in</Text>
 			</Link>
