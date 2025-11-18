@@ -57,8 +57,8 @@ export default defineSchema({
 		weight: v.string(),
 	}).index("by_userId", ["userId"]),
 
-	userFocus: defineTable({
+	userDescription: defineTable({
 		userId: v.string(),
-		weight: v.string(),
+		description: v.string(),
 	}).index("by_userId", ["userId"]),
 });

@@ -12,6 +12,7 @@ export default function Profile() {
 	const { data: session } = authClient.useSession();
 	const userWeight = useQuery(api.userWeights.getUserWeight);
 	const workouts = useQuery(api.workouts.getUserWorkouts);
+	const desc = useQuery(api.description.getUserDescription);
 
 	if (!session) {
 		return null;
@@ -25,7 +26,7 @@ export default function Profile() {
 					<View className="h-[90px] w-[90px] rounded-full bg-gray-700" />
 					<View className="gap-1">
 						<Text className="font-semibold text-3xl text-text">{session.user.name}</Text>
-						<Text className="text-muted text-xl">Powerlifter</Text>
+						{desc && <Text className="text-muted text-xl">{desc.description}</Text>}
 					</View>
 				</View>
 
@@ -45,7 +46,11 @@ export default function Profile() {
 							<Weight color={COLORS.muted} size={20} />
 							<Text className="text-lg text-muted">Váha</Text>
 						</View>
-						<Text className="text-lg text-text tracking-wider">{userWeight?.weight}kg</Text>
+						<Text className="text-lg text-text tracking-wider">
+							{userWeight === undefined && ""}
+							{userWeight && `${userWeight.weight} kg`}
+							{!userWeight && "Nenastaveno"}
+						</Text>
 					</View>
 				</View>
 

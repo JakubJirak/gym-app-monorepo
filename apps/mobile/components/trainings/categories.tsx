@@ -11,7 +11,7 @@ export default function Categories() {
 
 	return (
 		<ScrollView
-			contentContainerClassName="gap-2 h-13 pb-3 mb-3"
+			contentContainerClassName="gap-2 h-13 mt-3  pb-3 mb-3"
 			horizontal
 			showsHorizontalScrollIndicator={false}
 		>

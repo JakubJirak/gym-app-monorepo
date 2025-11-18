@@ -92,8 +92,11 @@ export const deleteSet = mutation({
 export const deleteWorkoutExercise = mutation({
 	args: {
 		workoutExerciseId: v.id("workoutExercises"),
+		workoutId: v.id("workouts"),
+		order: v.number(),
 	},
 	handler: async (ctx, args) => {
+		// Delete all sets for this workoutExercise
 		const sets = await ctx.db
 			.query("sets")
 			.withIndex("by_workoutExerciseId", (q) => q.eq("workoutExerciseId", args.workoutExerciseId))
@@ -103,7 +106,20 @@ export const deleteWorkoutExercise = mutation({
 			await ctx.db.delete(set._id);
 		}
 
+		// Delete the workoutExercise itself
 		await ctx.db.delete(args.workoutExerciseId);
+
+		// Reorder remaining exercises
+		const workoutExercises = await ctx.db
+			.query("workoutExercises")
+			.withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
+			.collect();
+
+		for (const we of workoutExercises) {
+			if (we.order > args.order) {
+				await ctx.db.patch(we._id, { order: we.order - 1 });
+			}
+		}
 	},
 });
 

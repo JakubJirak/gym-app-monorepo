@@ -55,7 +55,11 @@ export default function SignIn() {
 	return (
 		<>
 			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
-			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				className="flex-1"
+				keyboardVerticalOffset={40}
+			>
 				<View className="flex-1 bg-primary px-6 py-8">
 					<View className="gap-6">
 						<Text className="text-center font-bold text-4xl text-white">Přihlášení</Text>

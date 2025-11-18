@@ -10,6 +10,8 @@ type DeleteWorkoutExerciseProps = {
 	setVisible: (visible: boolean) => void;
 	workoutExerciseId: string;
 	closeParent: () => void;
+	trainingId: string;
+	order: number;
 };
 
 export default function DeleteWorkoutExerciseModal({
@@ -17,6 +19,8 @@ export default function DeleteWorkoutExerciseModal({
 	setVisible,
 	workoutExerciseId,
 	closeParent,
+	trainingId,
+	order,
 }: DeleteWorkoutExerciseProps) {
 	const closeSheet = () => setVisible(false);
 	const deleteWorkoutExercise = useMutation(api.workoutExercises.deleteWorkoutExercise);
@@ -24,6 +28,8 @@ export default function DeleteWorkoutExerciseModal({
 	const handleDeleteExercise = () => {
 		deleteWorkoutExercise({
 			workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
+			workoutId: trainingId as Id<"workouts">,
+			order,
 		});
 		closeSheet();
 		closeParent();

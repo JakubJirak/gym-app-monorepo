@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
-import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import { COLORS } from "@/constants/COLORS";
@@ -62,8 +62,8 @@ export default function SignUp() {
 		<>
 			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
 			<KeyboardAvoidingView
-				behavior="padding"
-				className="flex-1 bg-primary px-6"
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				className="flex-1"
 				keyboardVerticalOffset={40}
 			>
 				<ScrollView className="bg-primary py-8">

@@ -10,6 +10,7 @@ import { api } from "../../../../../../../packages/convex/convex/_generated/api"
 export default function Edit() {
 	const { data: session } = authClient.useSession();
 	const userWeight = useQuery(api.userWeights.getUserWeight);
+	const desc = useQuery(api.description.getUserDescription);
 
 	if (!session) {
 		return null;
@@ -37,13 +38,13 @@ export default function Edit() {
 							<Text className="text-center font-bold text-3xl text-text">
 								{session.user.name}
 							</Text>
-							<Text className="text-center text-lg text-muted">Powerlifter</Text>
+							<Text className="text-center text-lg text-muted">{desc?.description}</Text>
 						</View>
 					</View>
 				</View>
 
 				<View className="gap-4">
-					{userWeight && (
+					{userWeight ? (
 						<Link href="/(auth)/(tabs)/profile/edit/vaha" style={{ width: "100%" }}>
 							<View className="my-3 w-full gap-2">
 								<Text className="font-semibold text-lg text-text tracking-wide">
@@ -51,6 +52,17 @@ export default function Edit() {
 								</Text>
 								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
 									<Text className="text-lg text-text">{userWeight.weight}kg</Text>
+								</View>
+							</View>
+						</Link>
+					) : (
+						<Link href="/(auth)/(tabs)/profile/edit/vahaset" style={{ width: "100%" }}>
+							<View className="my-3 w-full gap-2">
+								<Text className="font-semibold text-lg text-text tracking-wide">
+									Váha
+								</Text>
+								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
+									<Text className="text-lg text-text">Nastavte váhu</Text>
 								</View>
 							</View>
 						</Link>
@@ -65,28 +77,30 @@ export default function Edit() {
 						</View>
 					</Link>
 
-					<Link href="/(auth)/(tabs)/profile/edit/zamereni" style={{ width: "100%" }}>
-						<View className="my-3 w-full gap-2">
-							<Text className="font-semibold text-lg text-text tracking-wide">
-								Zaměření
-							</Text>
-							<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
-								<Text className="text-lg text-text">79.00</Text>
+					{desc ? (
+						<Link href="/(auth)/(tabs)/profile/edit/popis" style={{ width: "100%" }}>
+							<View className="my-3 w-full gap-2">
+								<Text className="font-semibold text-lg text-text tracking-wide">
+									Popis
+								</Text>
+								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
+									<Text className="text-lg text-text">{desc?.description}</Text>
+								</View>
 							</View>
-						</View>
-					</Link>
+						</Link>
+					) : (
+						<Link href="/(auth)/(tabs)/profile/edit/popisset" style={{ width: "100%" }}>
+							<View className="my-3 w-full gap-2">
+								<Text className="font-semibold text-lg text-text tracking-wide">
+									Popis
+								</Text>
+								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
+									<Text className="text-lg text-text">Nenastaveno</Text>
+								</View>
+							</View>
+						</Link>
+					)}
 				</View>
-
-				{/*<View className="gap-2 my-3 pb-4">
-				<Text className="text-text font-semibold tracking-wide text-lg">
-					Email
-				</Text>
-				<TextInput
-					className="bg-secondary rounded-2xl caret-text p-4 text-text text-lg"
-					defaultValue="test@test.com"
-					inputMode="email"
-				/>
-			</View>*/}
 			</ScrollView>
 		</KeyboardAvoidingView>
 	);

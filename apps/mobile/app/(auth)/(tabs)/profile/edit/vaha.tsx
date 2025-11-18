@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Pressable, Text, TextInput, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
@@ -27,12 +27,12 @@ export default function Vaha() {
 				weightId: userWeight._id,
 				changeWeight: trimmed,
 			});
-			router.back();
+			router.push("/(auth)/(tabs)/profile");
 		}
 	};
 
 	return (
-		<View className="flex-1 bg-primary px-4">
+		<KeyboardAvoidingView behavior="padding" className="flex-1 bg-primary px-6" keyboardVerticalOffset={60}>
 			<View className="gap-5">
 				<ComponentHeader text="Změna váhy (kg)" />
 				<TextInput
@@ -50,6 +50,6 @@ export default function Vaha() {
 			<Pressable className="mt-auto mb-4 rounded-2xl bg-accent py-3" onPress={handleEdit}>
 				<Text className="text-center font-medium text-2xl text-text">Uložit</Text>
 			</Pressable>
-		</View>
+		</KeyboardAvoidingView>
 	);
 }

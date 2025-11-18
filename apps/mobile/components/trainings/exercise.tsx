@@ -10,9 +10,9 @@ type ExerciseProps = {
 	muscleGroup: string | null;
 	note: string | undefined;
 	isEdit: boolean;
-  exercisesLength: number;
-  order: number;
-  trainingId: string;
+	exercisesLength: number;
+	order: number;
+	trainingId: string;
 	sets:
 		| {
 				_id: string;
@@ -23,14 +23,26 @@ type ExerciseProps = {
 		| null;
 };
 
-export default function Exercise({ _id, name, muscleGroup, sets, note, isEdit, exercisesLength, order, trainingId }: ExerciseProps) {
-  const [editMenu, setEditMenu] = useState(false);
+export default function Exercise({
+	_id,
+	name,
+	muscleGroup,
+	sets,
+	note,
+	isEdit,
+	exercisesLength,
+	order,
+	trainingId,
+}: ExerciseProps) {
+	const [editMenu, setEditMenu] = useState(false);
 
 	return (
 		<View className="py-4">
 			<View className="mb-2 flex-row items-center">
 				<View className="flex-1 flex-row items-center">
-				  <Text className="flex font-semibold text-text text-xl">{name}</Text>
+					<Text className="flex font-semibold text-text text-xl">
+						{name} {order}
+					</Text>
 					{isEdit && (
 						<TouchableOpacity
 							className="ml-2 rounded-full bg-secondary p-1.5"
@@ -41,7 +53,7 @@ export default function Exercise({ _id, name, muscleGroup, sets, note, isEdit, e
 					)}
 				</View>
 
-				<Text className="rounded-xl border text-xs border-inactive px-2 py-1 font-light text-muted">
+				<Text className="rounded-xl border border-inactive px-2 py-1 font-light text-muted text-xs">
 					{muscleGroup}
 				</Text>
 			</View>
@@ -61,12 +73,12 @@ export default function Exercise({ _id, name, muscleGroup, sets, note, isEdit, e
 			{note && <Text className="mt-2 text-muted">{note}</Text>}
 			<EditMenuModal
 				exerciseId={_id}
-				setSheetVisible={setEditMenu}
-				setsLength={sets?.length}
-				sheetVisible={editMenu}
 				isFirst={order === 0}
 				isLast={order === exercisesLength - 1}
 				order={order}
+				setSheetVisible={setEditMenu}
+				setsLength={sets?.length}
+				sheetVisible={editMenu}
 				trainingId={trainingId}
 			/>
 		</View>
