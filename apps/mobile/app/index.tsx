@@ -18,21 +18,19 @@ export default function Index() {
 					</Text>
 				</View>
 
-				<View className="mb-8 gap-4">
+				<View className="mb-16 gap-4">
 					<TouchableOpacity
-						activeOpacity={0.8}
 						className="rounded-xl bg-accent px-6 py-4"
 						onPress={() => router.push("/sign-in")}
 					>
-						<Text className="text-center font-semibold text-lg text-white">Přihlásit se</Text>
+						<Text className="text-center font-semibold text-white text-xl">Přihlásit se</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						activeOpacity={0.8}
-						className="rounded-xl border-2 border-accent bg-secondary px-6 py-4"
+						className="rounded-xl border border-accent bg-secondary px-6 py-4"
 						onPress={() => router.push("/sign-up")}
 					>
-						<Text className="text-center font-semibold text-lg text-white">Registrovat se</Text>
+						<Text className="text-center font-semibold text-white text-xl">Registrovat se</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
