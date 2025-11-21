@@ -11,11 +11,12 @@ import MuscleGroupDropdown from "../forms/muscle-group-dropdown";
 type AddNewExerciseProps = {
 	sheetVisible: boolean;
 	setSheetVisible: (visible: boolean) => void;
+	defaultName?: string;
 };
 
-export default function AddNewExerciseModal({ sheetVisible, setSheetVisible }: AddNewExerciseProps) {
+export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, defaultName }: AddNewExerciseProps) {
 	const closeSheet = () => setSheetVisible(false);
-	const [name, setName] = useState("");
+	const [name, setName] = useState(defaultName ?? "");
 	const [muscleGroupId, setMuscleGroupId] = useState<string | undefined>(undefined);
 	const addExercise = useMutation(api.exercises.addExercise);
 

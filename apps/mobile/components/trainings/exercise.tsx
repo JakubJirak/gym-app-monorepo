@@ -40,9 +40,7 @@ export default function Exercise({
 		<View className="py-4">
 			<View className="mb-2 flex-row items-center">
 				<View className="flex-1 flex-row items-center">
-					<Text className="flex font-semibold text-text text-xl">
-						{name} {order}
-					</Text>
+					<Text className="flex font-semibold text-text text-xl">{name}</Text>
 					{isEdit && (
 						<TouchableOpacity
 							className="ml-2 rounded-full bg-secondary p-1.5"

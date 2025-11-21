@@ -1,10 +1,11 @@
 import { useQuery } from "convex/react";
-import { Check, ChevronDown } from "lucide-react-native";
+import { Check, ChevronDown, Plus } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import { FlatList, Keyboard, type ListRenderItem, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
+import AddNewExerciseModal from "../exercises/add-new-exercise";
 
 type Exercise = {
 	_id: string;
@@ -105,11 +106,7 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 						data={filtered}
 						keyboardShouldPersistTaps="handled"
 						keyExtractor={(item) => item._id}
-						ListEmptyComponent={() => (
-							<View className="items-center py-4">
-								<Text className="text-base text-muted">Žádné cviky</Text>
-							</View>
-						)}
+						ListEmptyComponent={() => <EmptyComponent input={query} />}
 						renderItem={renderItem}
 						showsVerticalScrollIndicator={false}
 					/>
@@ -118,3 +115,23 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 		</>
 	);
 }
+
+const EmptyComponent = ({ input }: { input: string }) => {
+	const [sheetVisible, setSheetVisible] = useState(false);
+	return (
+		<View className="items-center py-4">
+			<TouchableOpacity
+				className="flex flex-row items-center gap-2 rounded-xl bg-secondary px-4 py-3"
+				onPress={() => setSheetVisible(true)}
+			>
+				<Plus color="white" size={24} />
+				<Text className="text-lg text-text">Přidat nový cvik</Text>
+			</TouchableOpacity>
+			<AddNewExerciseModal
+				defaultName={input}
+				setSheetVisible={setSheetVisible}
+				sheetVisible={sheetVisible}
+			/>
+		</View>
+	);
+};
