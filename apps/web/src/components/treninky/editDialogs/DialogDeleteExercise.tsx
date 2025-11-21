@@ -16,17 +16,21 @@ import { Button } from "@/components/ui/button.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface DialogDeleteTraining {
+type DialogDeleteTraining = {
 	exerciseId: string;
 	setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
-}
+	workoutId: string;
+	order: number;
+};
 
-const DialogDeleteTraining = ({ exerciseId, setOpenParent }: DialogDeleteTraining) => {
+const DialogDeleteTraining = ({ exerciseId, setOpenParent, workoutId, order }: DialogDeleteTraining) => {
 	const deleteWorkoutExercise = useMutation(api.workoutExercises.deleteWorkoutExercise);
 
 	function handleDeleteExercise(id: string) {
 		deleteWorkoutExercise({
 			workoutExerciseId: id as Id<"workoutExercises">,
+			workoutId: workoutId as Id<"workouts">,
+			order,
 		});
 	}
 

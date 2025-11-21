@@ -1,7 +1,12 @@
-const Category = ({ name, color }: { name: string; color: string }) => (
-	<div className="flex h-6 items-center gap-4">
-		<div className={"h-full w-1 rounded-xl"} style={{ backgroundColor: color }} />
+import { EditFilter } from "./EditFilter";
+
+const Category = ({ name, color, id }: { name: string; color: string; id: string }) => (
+	<div className="flex items-center gap-4 rounded-xl bg-secondary px-3 py-2.5">
+		<div className={"size-4 rounded-xl"} style={{ backgroundColor: color }} />
 		<p className="text-lg">{name}</p>
+		<div className="ml-auto">
+			<EditFilter defColor={color} defName={name} filterId={id} />
+		</div>
 	</div>
 );
 

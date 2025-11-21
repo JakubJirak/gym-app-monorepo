@@ -1,22 +1,21 @@
-import * as React from "react";
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
+import React, { useEffect, useState } from "react";
+import type { ExerciseSelect } from "utils/training-types";
 import { AddExercise } from "@/components/cviky/AddExercise.tsx";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { useEffect, useState } from "react";
-import { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { convexQuery } from "@convex-dev/react-query";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
-import { useMutation } from "convex/react";
-import { ExerciseSelect } from "utils/training-types";
+import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
-interface ExerciseComboboxProps {
+type ExerciseComboboxProps = {
 	selectedStatus: ExerciseSelect | null;
 	setSelectedStatus: (status: ExerciseSelect | null) => void;
 	exerciseId: string;
 	selectExercise?: (exerciseId: string, selected: ExerciseSelect) => void;
-}
+};
 
 export function ExerciseCombobox({
 	selectedStatus,
@@ -26,28 +25,28 @@ export function ExerciseCombobox({
 }: ExerciseComboboxProps) {
 	const [open, setOpen] = React.useState(false);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	// biome-ignore lint/correctness/useExhaustiveDependencies: only once
 	useEffect(() => {
-		if (selectedStatus && selectExercise) selectExercise(exerciseId, selectedStatus);
+		if (selectedStatus && selectExercise) {
+			selectExercise(exerciseId, selectedStatus);
+		}
 	}, [selectedStatus]);
 
 	return (
-		<>
-			<Drawer open={open} onOpenChange={setOpen}>
-				<DrawerTrigger asChild>
-					<Button variant="outline" className="w-full justify-start" autoFocus>
-						{selectedStatus ? <>{selectedStatus.name}</> : <>Vyber cvik</>}
-					</Button>
-				</DrawerTrigger>
-				<DrawerTitle className="hidden">title</DrawerTitle>
-				<DrawerDescription className="hidden">description</DrawerDescription>
-				<DrawerContent className="h-[70vh] max-h-[50vh]">
-					<div className="h-full overflow-auto max-w-[500px] lg:min-w-[500px] lg:mx-auto">
-						<StatusList setOpen={setOpen} setSelectedStatus={setSelectedStatus} />
-					</div>
-				</DrawerContent>
-			</Drawer>
-		</>
+		<Drawer onOpenChange={setOpen} open={open}>
+			<DrawerTrigger asChild>
+				<Button autoFocus className="w-full justify-start" variant="outline">
+					{selectedStatus ? <p>{selectedStatus.name}</p> : <>Vyber cvik</>}
+				</Button>
+			</DrawerTrigger>
+			<DrawerTitle className="hidden">title</DrawerTitle>
+			<DrawerDescription className="hidden">description</DrawerDescription>
+			<DrawerContent className="h-[70vh] max-h-[50vh]">
+				<div className="h-full max-w-[500px] overflow-auto lg:mx-auto lg:min-w-[500px]">
+					<StatusList setOpen={setOpen} setSelectedStatus={setSelectedStatus} />
+				</div>
+			</DrawerContent>
+		</Drawer>
 	);
 }
 
@@ -69,32 +68,34 @@ function StatusList({
 		});
 	};
 
-	if (!exercises) return null;
+	if (!exercises) {
+		return null;
+	}
 
 	return (
 		<Command className="w-full">
 			<CommandInput
-				placeholder="Vyhledej cvik..."
 				autoFocus
-				value={searchVal}
 				onValueChange={(e) => setSearchVal(e)}
+				placeholder="Vyhledej cvik..."
+				value={searchVal}
 			/>
 			<CommandList className="max-h-[55vh]">
-				<CommandEmpty className="p-4 text-muted-foreground text-sm text-center">
-					<AddExercise handleAddExercise={handleAddExercise} defaultName={searchVal} />
+				<CommandEmpty className="p-4 text-center text-muted-foreground text-sm">
+					<AddExercise defaultName={searchVal} handleAddExercise={handleAddExercise} />
 				</CommandEmpty>
 				<CommandGroup>
 					{exercises.map((status) => (
 						<CommandItem
-							className="text-base p-2"
+							className="p-2 text-base"
 							key={status.name}
-							value={status.name}
 							onSelect={(value) => {
 								setSelectedStatus(
-									exercises.find((priority) => priority.name === value) || null,
+									exercises.find((priority) => priority.name === value) || null
 								);
 								setOpen(false);
 							}}
+							value={status.name}
 						>
 							{status.name}
 						</CommandItem>

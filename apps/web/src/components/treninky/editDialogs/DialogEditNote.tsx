@@ -17,12 +17,12 @@ import { Input } from "@/components/ui/input.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface DialogEditSet {
+type DialogEditNote = {
 	exerciseId: string;
 	setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
-export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditSet) {
+export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditNote) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [note, setNote] = useState<string>("");
 	const editNote = useMutation(api.workoutExercises.editNote);

@@ -18,12 +18,12 @@ import {
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface DialogEditSet {
+type DialogEditExercise = {
 	exerciseId: string;
 	setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
-export function DialogEditExercise({ exerciseId, setOpenParent }: DialogEditSet) {
+export function DialogEditExercise({ exerciseId, setOpenParent }: DialogEditExercise) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [selectedStatusesEx, setSelectedStatusesEx] = useState<ExerciseSelect | null>(null);
 	const editExercise = useMutation(api.workoutExercises.editExercise);

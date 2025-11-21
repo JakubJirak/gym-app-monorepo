@@ -20,8 +20,8 @@ const DialogDeleteTraining = ({ id }: { id: string }) => {
 	const deleteTraining = useMutation(api.workouts.deleteWorkout);
 	const router = useRouter();
 
-	const handleDeleteTraining = (id: string) => {
-		deleteTraining({ workoutId: id as Id<"workouts"> });
+	const handleDeleteTraining = (idTr: string) => {
+		deleteTraining({ workoutId: idTr as Id<"workouts"> });
 		router.navigate({ to: "/treninky" });
 	};
 

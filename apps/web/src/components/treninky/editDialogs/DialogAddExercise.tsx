@@ -18,21 +18,21 @@ import {
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface DialogEditSet {
+type DialogEditSet = {
 	trainingId: string;
 	order: number;
-}
+};
 
 export function DialogAddExercise({ trainingId, order }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [selectedStatuses, setSelectedStatuses] = useState<ExerciseSelect | null>(null);
 	const addWorkoutExercise = useMutation(api.workoutExercises.addWorkoutExercise);
 
-	function handleAddExercise(trainingId: string, order: number) {
+	function handleAddExercise(tId: string, o: number) {
 		addWorkoutExercise({
-			workoutId: trainingId as Id<"workouts">,
+			workoutId: tId as Id<"workouts">,
 			exerciseId: selectedStatuses?._id as Id<"exercises">,
-			order,
+			order: o,
 		});
 	}
 

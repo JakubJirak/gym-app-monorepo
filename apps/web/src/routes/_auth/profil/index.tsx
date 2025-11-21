@@ -1,9 +1,10 @@
+import { createFileRoute } from "@tanstack/react-router";
 import Header from "@/components/Header.tsx";
 import UserAccInfo from "@/components/profil/UserAccInfo";
-import { Separator } from "@/components/ui/separator";
-import { createFileRoute } from "@tanstack/react-router";
-import UserWeightInput from "@/components/profil/UserWeightInput";
 import UserSetGoals from "@/components/profil/UserSetGoals";
+import UserWeightInput from "@/components/profil/UserWeightInput";
+import UserDescription from "@/components/profil/userDescription";
+import { Separator } from "@/components/ui/separator";
 
 export const Route = createFileRoute("/_auth/profil/")({
 	component: RouteComponent,
@@ -50,8 +51,11 @@ function RouteComponent() {
 	return (
 		<>
 			<Header page="PROFIL" />
-			<div className="max-w-[500px] w-[90%] mx-auto space-y-4 pb-8">
+			<div className="mx-auto w-[90%] max-w-[500px] space-y-4 pb-8">
+				<Separator />
 				<UserAccInfo />
+				<Separator />
+				<UserDescription />
 				<Separator />
 				<UserWeightInput />
 				<Separator />

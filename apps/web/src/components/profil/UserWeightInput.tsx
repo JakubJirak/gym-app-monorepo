@@ -33,9 +33,11 @@ const UserWeightInput = () => {
 		}
 	};
 
-	if (!session) return null;
+	if (!session) {
+		return null;
+	}
 
-	if (!weightData)
+	if (!weightData) {
 		return (
 			<div className="p-2">
 				<form className="flex items-center gap-2" onSubmit={handleAddWeight}>
@@ -56,44 +58,43 @@ const UserWeightInput = () => {
 				</form>
 			</div>
 		);
+	}
 
 	return (
-		<>
-			<div className="p-2">
-				{changeWeight ? (
-					<form className="flex items-center gap-2" onSubmit={handleChangeWeight}>
-						<p>Vaše váha (kg):</p>
-						<Input
-							autoFocus
-							className="max-w-[70px]"
-							max="500"
-							min="10"
-							onChange={(e) => setWeight(e.target.value)}
-							required
-							step="0.01"
-							type="number"
-							value={weight}
-						/>
-						<Button className="ml-auto" size="icon" type="submit">
-							<Check />
-						</Button>
-					</form>
-				) : (
-					<div className="flex items-center gap-2">
-						<p>Vaše váha:</p>
-						<p>{weightData.weight}kg</p>
-						<Button
-							className="ml-auto"
-							onClick={() => setChangeWeight(true)}
-							size="icon"
-							type="button"
-						>
-							<Pencil />
-						</Button>
-					</div>
-				)}
-			</div>
-		</>
+		<div className="p-2">
+			{changeWeight ? (
+				<form className="flex items-center gap-2" onSubmit={handleChangeWeight}>
+					<p>Vaše váha (kg):</p>
+					<Input
+						autoFocus
+						className="max-w-[70px]"
+						max="500"
+						min="10"
+						onChange={(e) => setWeight(e.target.value)}
+						required
+						step="0.01"
+						type="number"
+						value={weight}
+					/>
+					<Button className="ml-auto" size="icon" type="submit">
+						<Check />
+					</Button>
+				</form>
+			) : (
+				<div className="flex items-center gap-2">
+					<p>Vaše váha:</p>
+					<p>{weightData.weight}kg</p>
+					<Button
+						className="ml-auto"
+						onClick={() => setChangeWeight(true)}
+						size="icon"
+						type="button"
+					>
+						<Pencil />
+					</Button>
+				</div>
+			)}
+		</div>
 	);
 };
 

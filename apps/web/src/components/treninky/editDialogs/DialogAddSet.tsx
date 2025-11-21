@@ -18,11 +18,11 @@ import { Label } from "@/components/ui/label.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface DialogEditSet {
+type DialogEditSet = {
 	order: number;
 	exerciseId: string;
 	setOpenParent: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
 export function DialogAddSet({ order, exerciseId, setOpenParent }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
@@ -30,12 +30,12 @@ export function DialogAddSet({ order, exerciseId, setOpenParent }: DialogEditSet
 	const [addSetReps, setAddSetReps] = useState<string>("");
 	const addSet = useMutation(api.workoutExercises.addSet);
 
-	function handleAddSet(exerciseId: string, order: number, addSetWeight: string, addSetReps: string) {
+	function handleAddSet(eId: string, o: number, addSWt: string, addSR: string) {
 		addSet({
-			workoutExerciseId: exerciseId as Id<"workoutExercises">,
-			weight: Number(addSetWeight),
-			reps: Number(addSetReps),
-			order,
+			workoutExerciseId: eId as Id<"workoutExercises">,
+			weight: Number(addSWt),
+			reps: Number(addSR),
+			order: o,
 		});
 	}
 

@@ -19,11 +19,11 @@ import { Label } from "@/components/ui/label.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface DialogEditSet {
+type DialogEditSet = {
 	repsBefore: string | null;
 	weightBefore: string | null;
 	setId: string;
-}
+};
 
 export function DialogEditSet({ repsBefore, weightBefore, setId }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
@@ -52,7 +52,9 @@ export function DialogEditSet({ repsBefore, weightBefore, setId }: DialogEditSet
 		setOpen(false);
 	};
 
-	if (!(repsBefore && weightBefore)) return null;
+	if (!(repsBefore && weightBefore)) {
+		return null;
+	}
 
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>

@@ -4,7 +4,9 @@ import { authClient } from "@/lib/auth-client.ts";
 const UserAccInfo = () => {
 	const { data: session } = authClient.useSession();
 
-	if (!session) return null;
+	if (!session) {
+		return null;
+	}
 	const createdDate = new Date(session.user.createdAt).toLocaleDateString();
 
 	return (
