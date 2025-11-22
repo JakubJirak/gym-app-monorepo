@@ -1,14 +1,14 @@
+import { useForm } from "@tanstack/react-form";
+import { linkOptions, useRouter } from "@tanstack/react-router";
+import type React from "react";
+import { useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { authClient } from "@/lib/auth-client.ts";
 import { cn } from "@/lib/utils.ts";
-import { useForm } from "@tanstack/react-form";
-import { linkOptions, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
-import type React from "react";
-import { z } from "zod";
 
 const registerSchema = z
 	.object({
@@ -51,13 +51,13 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 					onError: (ctx) => {
 						setError(ctx.error.message);
 					},
-				},
+				}
 			);
 		},
 	});
 
 	return (
-		<div className={cn("flex flex-col w-[min(480px,90%)] gap-6 m", className)} {...props}>
+		<div className={cn("m flex w-[min(480px,90%)] flex-col gap-6", className)} {...props}>
 			<Card>
 				<CardHeader>
 					<CardTitle className="text-center text-xl md:text-2xl">Vytvořit účet</CardTitle>
@@ -80,13 +80,13 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 										<Input
 											id={field.name}
 											name={field.name}
-											value={field.state.value}
 											onChange={(e) => field.handleChange(e.target.value)}
-											type="text"
 											required
+											type="text"
+											value={field.state.value}
 										/>
 										{field.state.meta.isTouched && !field.state.meta.isValid ? (
-											<p className="text-sm text-destructive-foreground">
+											<p className="text-destructive-foreground text-sm">
 												{field.state.meta.errors[0]?.message}
 											</p>
 										) : null}
@@ -102,13 +102,13 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 										<Input
 											id={field.name}
 											name={field.name}
-											value={field.state.value}
 											onChange={(e) => field.handleChange(e.target.value)}
-											type="text"
 											required
+											type="text"
+											value={field.state.value}
 										/>
 										{field.state.meta.isTouched && !field.state.meta.isValid ? (
-											<p className="text-sm text-destructive-foreground">
+											<p className="text-destructive-foreground text-sm">
 												{field.state.meta.errors[0]?.message}
 											</p>
 										) : null}
@@ -124,13 +124,13 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 										<Input
 											id={field.name}
 											name={field.name}
-											value={field.state.value}
 											onChange={(e) => field.handleChange(e.target.value)}
-											type="password"
 											required
+											type="password"
+											value={field.state.value}
 										/>
 										{field.state.meta.isTouched && !field.state.meta.isValid ? (
-											<p className="text-sm text-destructive-foreground">
+											<p className="text-destructive-foreground text-sm">
 												{field.state.meta.errors[0]?.message}
 											</p>
 										) : null}
@@ -146,13 +146,13 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 										<Input
 											id={field.name}
 											name={field.name}
-											value={field.state.value}
 											onChange={(e) => field.handleChange(e.target.value)}
-											type="password"
 											required
+											type="password"
+											value={field.state.value}
 										/>
 										{field.state.meta.isTouched && !field.state.meta.isValid ? (
-											<p className="text-sm text-destructive-foreground">
+											<p className="text-destructive-foreground text-sm">
 												{field.state.meta.errors[0]?.message}
 											</p>
 										) : null}
@@ -164,9 +164,9 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 								{([canSubmit, isSubmitting]) => (
 									<div className="flex flex-col gap-2">
 										<Button
-											type="submit"
-											className="w-full text-base cursor-pointer"
+											className="w-full cursor-pointer text-base"
 											disabled={!canSubmit}
+											type="submit"
 										>
 											{isSubmitting ? "Vytváření účtu..." : "Vytvořit účet"}
 										</Button>
@@ -175,12 +175,12 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
 							</form.Subscribe>
 						</div>
 						<div className="mt-4 text-center text-sm">
-							<a href="/login" className="underline underline-offset-4">
+							<a className="underline underline-offset-4" href="/login">
 								Zpět na přihlášení
 							</a>
 						</div>
 					</form>
-					{error !== "" && <p className="text-center mt-5 text-destructive-foreground">{error}</p>}
+					{error !== "" && <p className="mt-5 text-center text-destructive-foreground">{error}</p>}
 				</CardContent>
 			</Card>
 		</div>

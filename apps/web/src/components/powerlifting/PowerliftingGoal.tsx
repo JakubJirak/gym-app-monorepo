@@ -1,10 +1,10 @@
 import { Progress } from "@/components/ui/progress.tsx";
 
-interface PowerliftingGoalProps {
+type PowerliftingGoalProps = {
 	title: string;
 	goal: string;
 	value: number;
-}
+};
 
 const PowerliftingGoal = ({ title, goal, value }: PowerliftingGoalProps) => (
 	<div>

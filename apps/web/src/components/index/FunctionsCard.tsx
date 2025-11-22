@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 
-interface Props {
+type Props = {
 	title: string;
 	text: string;
-}
+};
 
 const FunctionsCard = ({ title, text }: Props) => (
 	<Card>

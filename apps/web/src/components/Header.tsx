@@ -4,15 +4,15 @@ import { MdLogout } from "react-icons/md";
 import { Button } from "@/components/ui/button.tsx";
 import { authClient } from "@/lib/auth-client.ts";
 
-interface HeaderProps {
+type HeaderProps = {
 	page: string;
-}
+};
 
 const Header = ({ page }: HeaderProps) => {
 	const { data: session } = authClient.useSession();
 	const navigate = useNavigate();
 
-	if (!session)
+	if (!session) {
 		return (
 			<p className="mt-10 text-center text-lg">
 				Pro přístup se musíš{" "}
@@ -21,6 +21,7 @@ const Header = ({ page }: HeaderProps) => {
 				</Link>
 			</p>
 		);
+	}
 
 	const handleSignOut = async () => {
 		await authClient.signOut({

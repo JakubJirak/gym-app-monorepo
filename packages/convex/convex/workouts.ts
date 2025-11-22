@@ -149,6 +149,7 @@ export const getWorkoutById = query({
 						: null,
 					note: we.note,
 					order: we.order,
+					workoutId: we.workoutId,
 					sets: sortedSets.map((set) => ({
 						_id: set._id,
 						reps: set.reps,

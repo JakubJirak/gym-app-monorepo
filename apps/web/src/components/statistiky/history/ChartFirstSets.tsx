@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card.tsx";
 import { type ChartConfig, ChartContainer, ChartTooltip } from "@/components/ui/chart.tsx";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-interface chartProps {
+type chartProps = {
 	historySets:
 		| ({
 				id: Id<"workouts">;
@@ -17,7 +17,7 @@ interface chartProps {
 				}[];
 		  } | null)[]
 		| undefined;
-}
+};
 
 const ChartFirstSets = ({ historySets }: chartProps) => {
 	const sortedHistorySets = [...(historySets ?? [])]
@@ -30,12 +30,16 @@ const ChartFirstSets = ({ historySets }: chartProps) => {
 
 	const chartData = sortedHistorySets
 		.map((set) => {
-			if (!set) return null;
+			if (!set) {
+				return null;
+			}
 
 			const weights = set.sets.map((s) => Number(s.weight)).filter((w) => !Number.isNaN(w));
 
 			const maxWeight = weights.length ? Math.max(...weights) : null;
-			if (maxWeight === null) return null;
+			if (maxWeight === null) {
+				return null;
+			}
 
 			const maxWeightSets = set.sets.filter((s) => Number(s.weight) === maxWeight);
 

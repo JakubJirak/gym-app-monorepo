@@ -23,7 +23,7 @@ type Exercise = {
 		weight: number;
 		order: number;
 	}[];
-	workoutId: string;
+	workoutId: Id<"workouts">;
 };
 
 type TrainingLiProps = {
@@ -31,7 +31,6 @@ type TrainingLiProps = {
 	toggleEdit: boolean;
 	index: number;
 	len: number;
-	workoutId: string;
 };
 
 const TrainingLi = ({ exercise, toggleEdit, index, len }: TrainingLiProps) => (

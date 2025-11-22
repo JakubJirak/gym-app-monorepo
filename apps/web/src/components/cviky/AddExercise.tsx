@@ -1,5 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
@@ -23,15 +24,15 @@ import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
 type DialogEditSet = {
-	handleAddExercise: (exerciseName: string, muscleGroupId: Id<"muscleGroups">) => void;
 	defaultName: string;
 };
 
-export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
+export function AddExercise({ defaultName }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [popOpen, setPopOpen] = useState<boolean>(false);
 	const [exName, setExName] = useState(defaultName);
 	const [value, setValue] = useState("");
+	const addExercise = useMutation(api.exercises.addExercise);
 
 	const { data: muscleGroups } = useSuspenseQuery(convexQuery(api.muscleGroups.getAllMuscleGroups, {}));
 
@@ -39,7 +40,10 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
 		e.preventDefault();
 		e.stopPropagation();
 		if (value !== "") {
-			handleAddExercise(exName, value as Id<"muscleGroups">);
+			addExercise({
+				name: exName,
+				muscleGroupId: value as Id<"muscleGroups">,
+			});
 			setOpen(false);
 			setValue("");
 		}
@@ -89,8 +93,8 @@ export function AddExercise({ handleAddExercise, defaultName }: DialogEditSet) {
 									>
 										{value
 											? muscleGroups.find(
-												(muscleGroup) => muscleGroup._id === value
-											)?.name
+													(muscleGroup) => muscleGroup._id === value
+												)?.name
 											: "Vyber část těla..."}
 										<ChevronsUpDown className="opacity-50" />
 									</Button>

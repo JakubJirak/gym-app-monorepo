@@ -1,6 +1,5 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useMutation } from "convex/react";
 import React, { useEffect, useState } from "react";
 import type { ExerciseSelect } from "utils/training-types";
 import { AddExercise } from "@/components/cviky/AddExercise.tsx";
@@ -8,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
 type ExerciseComboboxProps = {
 	selectedStatus: ExerciseSelect | null;
@@ -59,14 +57,6 @@ function StatusList({
 }) {
 	const [searchVal, setSearchVal] = useState<string>("");
 	const { data: exercises } = useSuspenseQuery(convexQuery(api.exercises.getAllExercises, {}));
-	const addExercise = useMutation(api.exercises.addExercise);
-
-	const handleAddExercise = (exerciseName: string, muscleGroupId: Id<"muscleGroups">) => {
-		addExercise({
-			name: exerciseName,
-			muscleGroupId,
-		});
-	};
 
 	if (!exercises) {
 		return null;
@@ -82,7 +72,7 @@ function StatusList({
 			/>
 			<CommandList className="max-h-[55vh]">
 				<CommandEmpty className="p-4 text-center text-muted-foreground text-sm">
-					<AddExercise defaultName={searchVal} handleAddExercise={handleAddExercise} />
+					<AddExercise defaultName={searchVal} />
 				</CommandEmpty>
 				<CommandGroup>
 					{exercises.map((status) => (

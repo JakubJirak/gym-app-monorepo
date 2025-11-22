@@ -112,7 +112,6 @@ const TrainingsList = () => {
 													key={exercise._id}
 													len={training.exercises.length}
 													toggleEdit={toggleEdit}
-													workoutId={exercise.workoutId}
 												/>
 											))}
 											<div className="mt-4 space-y-2">

@@ -5,17 +5,19 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 
-interface PowerflitingStatsType {
+type PowerflitingStatsType = {
 	benchPR: number;
 	deadliftPR: number;
 	squatPR: number;
-}
+};
 
 const PowerliftingStats = ({ benchPR, squatPR, deadliftPR }: PowerflitingStatsType) => {
 	const { data: weightData } = useSuspenseQuery(convexQuery(api.userWeights.getUserWeight, {}));
 	const total = squatPR + deadliftPR + benchPR;
 
-	if (total === 0) return null;
+	if (total === 0) {
+		return null;
+	}
 
 	return (
 		<div className="-mt-2 p-2">

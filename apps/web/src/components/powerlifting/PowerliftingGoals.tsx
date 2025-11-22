@@ -4,16 +4,18 @@ import { Target } from "lucide-react";
 import PowerliftingGoal from "@/components/powerlifting/PowerliftingGoal.tsx";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 
-interface PowerflitingStatsType {
+type PowerliftingGoalsType = {
 	benchPR: number;
 	deadliftPR: number;
 	squatPR: number;
-}
+};
 
-const PowerliftingGoals = ({ benchPR, squatPR, deadliftPR }: PowerflitingStatsType) => {
+const PowerliftingGoals = ({ benchPR, squatPR, deadliftPR }: PowerliftingGoalsType) => {
 	const { data: goals } = useSuspenseQuery(convexQuery(api.userGoals.getUserGoals, {}));
 
-	if (!goals) return null;
+	if (!goals) {
+		return null;
+	}
 
 	return (
 		<div className="p-4">

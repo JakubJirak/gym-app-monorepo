@@ -20,7 +20,9 @@ const TrainingInfo = ({ trainingId }: { trainingId: string }) => {
 		})
 	);
 
-	if (!training) return null;
+	if (!training) {
+		return null;
+	}
 
 	return (
 		<div>

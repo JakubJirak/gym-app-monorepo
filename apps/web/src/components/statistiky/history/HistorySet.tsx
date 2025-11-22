@@ -1,6 +1,6 @@
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
-type sets =
+type setsType =
 	| {
 			_id: Id<"sets">;
 			reps: number;
@@ -9,13 +9,15 @@ type sets =
 	  }[]
 	| undefined;
 
-interface HistorySetProps {
+type HistorySetProps = {
 	date?: string;
-	sets?: sets;
-}
+	sets?: setsType;
+};
 
 const HistorySet = ({ date, sets }: HistorySetProps) => {
-	if (!(date && sets)) return <p>Pro tento cvik nemate zadnou serii</p>;
+	if (!(date && sets)) {
+		return <p>Pro tento cvik nemate zadnou serii</p>;
+	}
 
 	const d = new Date(date);
 

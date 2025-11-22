@@ -8,7 +8,9 @@ const MuscleGroupStats = () => {
 	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
 
 	const muscleGroupCount = useMemo(() => {
-		if (!trainings) return {};
+		if (!trainings) {
+			return {};
+		}
 		const count = trainings
 			.flatMap((t) => t.exercises)
 			.reduce<Record<string, number>>((acc, cvik) => {
