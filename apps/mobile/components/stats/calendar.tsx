@@ -40,9 +40,10 @@ LocaleConfig.defaultLocale = "cz";
 
 type StatsCalendarProps = {
 	setCurrentDate?: Dispatch<SetStateAction<string>>;
+	variant?: "selectable" | "nonselectable";
 };
 
-export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
+export default function StatsCalendar({ setCurrentDate, variant = "selectable" }: StatsCalendarProps) {
 	const TODAY = toLocalISODateString(new Date());
 	const [selected, setSelected] = useState(TODAY);
 	const trainings = useQuery(api.workouts.getUserWorkouts);
@@ -50,6 +51,9 @@ export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
 	const trainingDates = trainings?.flatMap((workout) => workout.workoutDate);
 
 	const onDayPress = (day: Day) => {
+		if (variant === "nonselectable") {
+			return;
+		}
 		setSelected(day.dateString);
 		if (setCurrentDate) {
 			setCurrentDate(day.dateString);
@@ -58,6 +62,7 @@ export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
 
 	return (
 		<View>
+			{/** biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fine */}
 			{(() => {
 				const markedDates: Record<string, object> = {};
 				const accentLowOpacity = `${COLORS.accent}99`;
@@ -68,7 +73,10 @@ export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
 					markedDates[date] = {
 						customStyles: {
 							container: {
-								backgroundColor: date === selected ? COLORS.accent : accentLowOpacity,
+								backgroundColor:
+									variant === "selectable" && date === selected
+										? COLORS.accent
+										: accentLowOpacity,
 								borderRadius: 8,
 								justifyContent: "center",
 								alignItems: "center",
@@ -77,7 +85,8 @@ export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
 							},
 							text: {
 								color: "white",
-								fontWeight: date === selected ? "bold" : "normal",
+								fontWeight:
+									variant === "selectable" && date === selected ? "bold" : "normal",
 								textAlign: "center",
 								textAlignVertical: "center",
 							},
@@ -85,7 +94,7 @@ export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
 					};
 				}
 				// Always mark the selected date, even if not a training date
-				if (!markedDates[selected]) {
+				if (variant === "selectable" && !markedDates[selected]) {
 					markedDates[selected] = {
 						customStyles: {
 							container: {
@@ -113,11 +122,11 @@ export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
 							if (!date) {
 								return null;
 							}
-							const isSelected = date.dateString === selected;
+							const isSelected = variant === "selectable" && date.dateString === selected;
 							const isMarked = Boolean(markedDates[date.dateString]);
 							const isTraining = trainingDates?.includes(date.dateString);
 							const isToday = date.dateString === TODAY;
-							let backgroundColor = COLORS.darker;
+							let backgroundColor = COLORS.secondary;
 							if (isSelected) {
 								backgroundColor = COLORS.accent;
 							} else if (isTraining) {
@@ -134,7 +143,7 @@ export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
 							return (
 								<Pressable
 									onPress={() => {
-										if (state !== "disabled") {
+										if (variant === "selectable" && state !== "disabled") {
 											onDayPress({
 												dateString: date.dateString,
 												day: date.day,
@@ -175,21 +184,21 @@ export default function StatsCalendar({ setCurrentDate }: StatsCalendarProps) {
 						onDayPress={onDayPress}
 						renderArrow={(direction) =>
 							direction === "left" ? (
-								<ChevronLeft color={COLORS.accent} size={24} />
+								<ChevronLeft color="white" size={24} />
 							) : (
-								<ChevronRight color={COLORS.accent} size={24} />
+								<ChevronRight color="white" size={24} />
 							)
 						}
 						style={{
-							backgroundColor: COLORS.darker,
-							borderRadius: 8,
+							backgroundColor: COLORS.secondary,
+							borderRadius: 12,
 							paddingHorizontal: 0,
 							paddingVertical: 0,
 							margin: 0,
 						}}
 						theme={{
-							backgroundColor: COLORS.darker,
-							calendarBackground: COLORS.darker,
+							backgroundColor: COLORS.secondary,
+							calendarBackground: COLORS.secondary,
 							textSectionTitleColor: "white",
 							textSectionTitleDisabledColor: "#888",
 							selectedDayBackgroundColor: COLORS.accent,

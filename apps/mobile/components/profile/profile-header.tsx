@@ -49,7 +49,7 @@ export default function ProfileHeader({ text }: { text: string }) {
 		<View className="mt-2 pr-2 pb-4">
 			<View className="relative flex-row items-center">
 				<View className="w-8">
-					<Ionicons color="white" name="person-outline" size={20} />
+					<Ionicons color={COLORS.accent} name="person-outline" size={20} />
 				</View>
 
 				<Text className="ml-4 flex-1 font-semibold text-2xl text-text">{text}</Text>
@@ -103,7 +103,7 @@ export default function ProfileHeader({ text }: { text: string }) {
 					<TouchableOpacity
 						className="flex flex-row items-center gap-2.5 px-3 py-3"
 						onPress={() => {
-						  authClient.signOut();
+							authClient.signOut();
 						}}
 					>
 						<Ionicons color={COLORS.accent} name="log-out-outline" size={22} />

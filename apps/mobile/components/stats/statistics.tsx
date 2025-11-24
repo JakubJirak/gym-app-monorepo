@@ -1,0 +1,89 @@
+import { Calendar, Repeat, TrendingUp, Weight } from "lucide-react-native";
+import { useMemo } from "react";
+import { Text, View } from "react-native";
+import { COLORS } from "@/constants/COLORS";
+import type { api } from "../../../../packages/convex/convex/_generated/api";
+
+type StatisticsProps = {
+	trainings: typeof api.workouts.getUserWorkouts._returnType;
+};
+
+export default function Statistics({ trainings }: StatisticsProps) {
+	const allSets = useMemo(
+		() =>
+			trainings?.reduce(
+				(acc, training) =>
+					acc + training.exercises.reduce((exAcc, exercise) => exAcc + exercise.sets.length, 0),
+				0
+			),
+		[trainings]
+	);
+
+	const allWeight = useMemo(
+		() =>
+			trainings?.reduce(
+				(acc, training) =>
+					acc +
+					training.exercises.reduce(
+						(exAcc, exercise) =>
+							exAcc +
+							exercise.sets.reduce(
+								(setAcc, set) => setAcc + Number(set.weight ?? 0) * (set.reps ?? 0),
+								0
+							),
+						0
+					),
+				0
+			),
+		[trainings]
+	);
+
+	const allReps = useMemo(
+		() =>
+			trainings?.reduce(
+				(acc, training) =>
+					acc +
+					training.exercises.reduce(
+						(exAcc, exercise) =>
+							exAcc +
+							exercise.sets.reduce((setAcc, set) => setAcc + Number(set.reps ?? 0), 0),
+						0
+					),
+				0
+			),
+		[trainings]
+	);
+
+	const totalWeight = (Number(allWeight) / 1000).toFixed(1);
+
+	if (!trainings) {
+		return null;
+	}
+
+	return (
+		<View className="p-1">
+			<View className="flex-row flex-wrap justify-between gap-y-4">
+				<View className="w-[48%] flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center">
+					<Calendar color={COLORS.accent} size={24} />
+					<Text className="mt-1 font-bold text-2xl text-text">{trainings?.length}</Text>
+					<Text className="text-muted">Tréninky</Text>
+				</View>
+				<View className="w-[48%] flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center">
+					<TrendingUp color={COLORS.accent} size={24} />
+					<Text className="mt-1 font-bold text-2xl text-text">{allSets}</Text>
+					<Text className="text-muted">Série</Text>
+				</View>
+				<View className="w-[48%] flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center">
+					<Weight color={COLORS.accent} size={24} />
+					<Text className="mt-1 font-bold text-2xl text-text">{totalWeight}t</Text>
+					<Text className="text-muted">Váha</Text>
+				</View>
+				<View className="w-[48%] flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center">
+					<Repeat color={COLORS.accent} size={24} />
+					<Text className="mt-1 font-bold text-2xl text-text">{allReps}</Text>
+					<Text className="text-muted">Opakovaní</Text>
+				</View>
+			</View>
+		</View>
+	);
+}

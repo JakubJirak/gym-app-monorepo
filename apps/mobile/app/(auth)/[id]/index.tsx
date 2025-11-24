@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import Exercise from "@/components/trainings/exercise";
 import TrainingFooter from "@/components/trainings/training-footer";
 import { COLORS } from "@/constants/COLORS";
@@ -17,6 +17,14 @@ export default function TrainingById() {
 	const workout = useQuery(api.workouts.getWorkoutById, {
 		workoutId: id as Id<"workouts">,
 	});
+
+	if (workout === undefined) {
+		return (
+			<View className="flex-1 items-center justify-center bg-primary">
+				<ActivityIndicator color={COLORS.accent} size="large" />
+			</View>
+		);
+	}
 
 	if (!workout) {
 		return null;
@@ -60,15 +68,15 @@ export default function TrainingById() {
 					renderItem={({ item }) =>
 						item.exercise ? (
 							<Exercise
-							  trainingId={workout._id}
 								_id={item._id}
+								exercisesLength={workout.exercises.length}
 								isEdit={isEdit}
 								muscleGroup={item.exercise.muscleGroup}
 								name={item.exercise.name}
 								note={item.note}
-								sets={item.sets}
-								exercisesLength={workout.exercises.length}
 								order={item.order}
+								sets={item.sets}
+								trainingId={workout._id}
 							/>
 						) : null
 					}

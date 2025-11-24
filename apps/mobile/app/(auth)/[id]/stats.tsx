@@ -1,7 +1,8 @@
 import { useQuery } from "convex/react";
 import { ChartColumnIncreasing, Dumbbell, Repeat, TrendingUp, Weight } from "lucide-react-native";
 import { useContext, useMemo } from "react";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
+import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 import { TrainingIdContext } from "./_layout";
@@ -43,6 +44,14 @@ export default function Stats() {
 	);
 
 	const allExercises = workout?.exercises?.length ?? 0;
+
+	if (workout === undefined) {
+		return (
+			<View className="flex-1 items-center justify-center bg-primary">
+				<ActivityIndicator color={COLORS.accent} size="large" />
+			</View>
+		);
+	}
 
 	if (!workout) {
 		return null;

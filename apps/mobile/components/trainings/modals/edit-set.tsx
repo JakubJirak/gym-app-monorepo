@@ -68,8 +68,8 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 						<Text className="font-semibold text-text text-xl">Upravit sérii</Text>
 					</View>
 
-					<View className="mt-2 gap-4">
-						<View>
+					<View className="mt-2 flex-row gap-4">
+						<View className="flex-1">
 							<Text className="mb-2 font-semibold text-lg text-text">Váha</Text>
 							<TextInput
 								autoFocus
@@ -81,8 +81,8 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 								value={weight}
 							/>
 						</View>
-						<View>
-							<Text className="mb-2 font-semibold text-lg text-text">Počet opakování</Text>
+						<View className="flex-1">
+							<Text className="mb-2 font-semibold text-lg text-text">Opakování</Text>
 							<TextInput
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
