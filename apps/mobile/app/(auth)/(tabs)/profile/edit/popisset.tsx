@@ -26,6 +26,7 @@ export default function PopisSet() {
 				<TextInput
 					autoFocus
 					className="w-full rounded-2xl bg-secondary p-4 text-lg text-text caret-text"
+					maxLength={20}
 					onChangeText={(text) => setPopis(text)}
 					onSubmitEditing={handleAdd}
 					returnKeyType="done"

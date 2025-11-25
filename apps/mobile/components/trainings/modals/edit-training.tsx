@@ -39,7 +39,6 @@ export default function EditTrainingModal({
 		(name === defaultName && filterId === defaultFilterId && toLocalISODateString(date) === defaultDate);
 
 	const handleEditTraining = () => {
-	
 		editWorkout({
 			workoutId: trainingId as Id<"workouts">,
 			name,
@@ -77,6 +76,7 @@ export default function EditTrainingModal({
 							<TextInput
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
+								maxLength={20}
 								onChangeText={setName}
 								value={name}
 							/>

@@ -1,10 +1,11 @@
 import { useQuery } from "convex/react";
 import { Plus } from "lucide-react-native";
 import { useMemo, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import AddNewExerciseModal from "@/components/exercises/add-new-exercise";
 import Exercise from "@/components/exercises/exercise";
+import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 type ExerciseType = {
@@ -39,7 +40,15 @@ export default function Exercises() {
 
 	const sortedExercisesByLength = Object.fromEntries(sortedExercisesEntries);
 
-	if (!exercises || exercises === undefined) {
+	if (exercises === undefined) {
+		return (
+			<View className="flex-1 items-center justify-center bg-primary">
+				<ActivityIndicator color={COLORS.accent} size="large" />
+			</View>
+		);
+	}
+
+	if (!exercises) {
 		return null;
 	}
 

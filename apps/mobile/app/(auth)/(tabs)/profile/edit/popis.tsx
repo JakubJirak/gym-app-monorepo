@@ -34,6 +34,7 @@ export default function Popis() {
 					autoFocus
 					className="w-full rounded-2xl bg-secondary p-4 text-lg text-text caret-text"
 					defaultValue={userDescription ? userDescription.description : ""}
+					maxLength={20}
 					onChangeText={setDescription}
 					onSubmitEditing={handleEdit}
 					returnKeyType="done"

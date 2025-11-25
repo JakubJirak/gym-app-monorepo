@@ -68,14 +68,14 @@ export default function Edit() {
 						</Link>
 					)}
 
-					<Link href="/(auth)/(tabs)/profile/edit/jmeno" style={{ width: "100%" }}>
+					{/* <Link href="/(auth)/(tabs)/profile/edit/jmeno" style={{ width: "100%" }}>
 						<View className="my-3 w-full gap-2">
 							<Text className="font-semibold text-lg text-text tracking-wide">Jméno</Text>
 							<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
 								<Text className="text-lg text-text">{session.user.name}</Text>
 							</View>
 						</View>
-					</Link>
+					</Link> */}
 
 					{desc ? (
 						<Link href="/(auth)/(tabs)/profile/edit/popis" style={{ width: "100%" }}>

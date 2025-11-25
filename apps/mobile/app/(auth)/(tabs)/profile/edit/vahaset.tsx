@@ -27,6 +27,7 @@ export default function VahaSet() {
 					autoFocus
 					className="w-full rounded-2xl bg-secondary p-4 text-lg text-text caret-text"
 					keyboardType="numeric"
+					maxLength={5}
 					onChangeText={(text) => setWeight(text)}
 					onSubmitEditing={handleAdd}
 					returnKeyType="done"
