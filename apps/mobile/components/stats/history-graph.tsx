@@ -66,7 +66,7 @@ export default function HistoryGraph({ historySets }: HistoryGraphProps) {
 
 	return (
 		<View className="mx-4 rounded-xl bg-secondary">
-			<ScrollView className="py-4" horizontal showsHorizontalScrollIndicator={false}>
+			<ScrollView className="pt-6 pb-4" horizontal showsHorizontalScrollIndicator={false}>
 				<LineChart
 					areaChart
 					color={COLORS.accent}
