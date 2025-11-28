@@ -21,7 +21,7 @@ export default function Categories() {
 					key={category._id}
 					style={{ borderColor: `${category.color}CC` }}
 				>
-					<Text className="text-lg text-text">{category.name}</Text>
+					<Text className="text-base text-text">{category.name}</Text>
 				</TouchableOpacity>
 			))}
 		</ScrollView>

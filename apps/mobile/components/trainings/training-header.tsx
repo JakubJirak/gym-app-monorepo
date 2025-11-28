@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 import EditTrainingModal from "./modals/edit-training";
@@ -16,9 +17,9 @@ export default function TrainingHeader({ text, trainingId }: { text: string; tra
 	return (
 		<View className="mt-2 flex-row items-center pr-2 pb-4">
 			<TouchableOpacity className="w-8" onPress={() => router.back()}>
-				<Ionicons color="white" name="chevron-back" size={28} />
+				<Ionicons color={COLORS.accent} name="chevron-back" size={28} />
 			</TouchableOpacity>
-			<Text className="ml-4 flex-1 font-semibold text-2xl text-text">{text}</Text>
+			<Text className="ml-2 flex-1 font-semibold text-text text-xl">{text}</Text>
 			<TouchableOpacity className="w-8" onPress={() => setOpenEdit(true)}>
 				<Pencil color="white" size={22} />
 			</TouchableOpacity>

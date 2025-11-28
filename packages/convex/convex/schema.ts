@@ -61,4 +61,9 @@ export default defineSchema({
 		userId: v.string(),
 		description: v.string(),
 	}).index("by_userId", ["userId"]),
+
+	tips: defineTable({
+		content: v.string(),
+		link: v.string(),
+	}),
 });

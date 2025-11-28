@@ -44,8 +44,8 @@ export default function Stats() {
 						<View className="w-full flex-row items-center gap-3">
 							<History color={COLORS.accent} size={24} />
 							<Text className="font-bold text-white text-xl">Historie cviků</Text>
-							<View className="ml-auto">
-								<ChevronRight color={COLORS.accent} size={26} />
+							<View className="mb-1 ml-auto">
+								<ChevronRight color={COLORS.muted} size={20} />
 							</View>
 						</View>
 					</Link>
@@ -69,8 +69,8 @@ export default function Stats() {
 						<View className="justify w-full flex-row items-center gap-3">
 							<Calendar color={COLORS.accent} size={24} />
 							<Text className="font-bold text-white text-xl">Kalendář tréninků</Text>
-							<View className="ml-auto">
-								<ChevronRight color={COLORS.accent} size={26} />
+							<View className="mb-1 ml-auto">
+								<ChevronRight color={COLORS.muted} size={20} />
 							</View>
 						</View>
 					</Link>
@@ -82,8 +82,8 @@ export default function Stats() {
 						<View className="w-full flex-row items-center gap-3">
 							<Trophy color={COLORS.accent} size={24} />
 							<Text className="font-bold text-white text-xl">Powerlifting PR</Text>
-							<View className="ml-auto">
-								<ChevronRight color={COLORS.accent} size={26} />
+							<View className="mb-1 ml-auto">
+								<ChevronRight color={COLORS.muted} size={20} />
 							</View>
 						</View>
 					</Link>

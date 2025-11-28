@@ -54,7 +54,7 @@ export default function Exercises() {
 
 	return (
 		<View className="flex-1 bg-primary px-3">
-			<ComponentHeader text="Cviky" />
+			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Cviky" />
 			<TouchableOpacity
 				className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-2"
 				onPress={() => setAddExercise(true)}

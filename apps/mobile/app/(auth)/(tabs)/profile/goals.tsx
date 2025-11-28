@@ -48,7 +48,7 @@ export default function Goals() {
 
 	return (
 		<View className="flex-1 bg-primary px-4">
-			<ComponentHeader text="Váhy a cíle" />
+			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Váhy a cíle" />
 			{userGoals ? (
 				<TouchableOpacity
 					className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-3.5"

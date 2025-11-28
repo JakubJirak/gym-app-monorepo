@@ -76,7 +76,7 @@ export default function EditTrainingModal({
 							<TextInput
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
-								maxLength={20}
+								maxLength={50}
 								onChangeText={setName}
 								value={name}
 							/>

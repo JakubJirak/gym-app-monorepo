@@ -18,7 +18,7 @@ export default function Edit() {
 
 	return (
 		<KeyboardAvoidingView behavior="padding" className="flex-1 bg-primary px-4" keyboardVerticalOffset={60}>
-			<ComponentHeader text="Upravit profil" />
+			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Upravit profil" />
 			<ScrollView
 				style={{
 					flex: 1,

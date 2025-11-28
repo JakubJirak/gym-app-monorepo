@@ -36,8 +36,8 @@ export default function Training({ id, name, date, filter }: TrainingProps) {
 						opacity: 0.8,
 					}}
 				/>
-				<View className="flex-1 gap-3">
-					<Text className="font-semibold text-text text-xl">{name}</Text>
+				<View className="flex-1 gap-1">
+					<Text className="font-semibold text-lg text-text">{name}</Text>
 					<View className="flex-row items-center gap-2">
 						<Ionicons color={COLORS.muted} name="calendar-outline" size={20} />
 						<Text className="text-muted">{format(new Date(date), "PPPP", { locale: cs })}</Text>

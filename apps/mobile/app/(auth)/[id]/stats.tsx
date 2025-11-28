@@ -60,7 +60,7 @@ export default function Stats() {
 	return (
 		<View className="flex-1 bg-primary px-4 pt-6">
 			<View className="mb-6 flex-row items-center gap-3">
-				<ChartColumnIncreasing color="white" />
+				<ChartColumnIncreasing color={COLORS.accent} />
 				<Text className="font-bold text-2xl text-text">Celkové statistiky</Text>
 			</View>
 

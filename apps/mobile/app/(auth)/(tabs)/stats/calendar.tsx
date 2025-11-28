@@ -15,7 +15,7 @@ export default function CalendarSite() {
 
 	return (
 		<View className="flex-1 bg-primary px-4">
-			<ComponentHeader text="Kalendář tréninků" />
+			<ComponentHeader fallbackRoute="/(auth)/(tabs)/stats" text="Kalendář tréninků" />
 			<FlatList
 				data={filtered}
 				ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}

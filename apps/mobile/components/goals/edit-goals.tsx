@@ -1,5 +1,5 @@
 import { useMutation } from "convex/react";
-import { Pencil, Target } from "lucide-react-native";
+import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
@@ -59,7 +59,7 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 
 				<View className="flex-1">
 					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
-						<Target color="white" size={24} />
+						<Pencil color="white" size={20} />
 						<Text className="font-semibold text-text text-xl">Upravit cíle</Text>
 					</View>
 

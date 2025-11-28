@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react";
-import { Check, ChevronDown } from "lucide-react-native";
+import { Check, ChevronDown, Plus } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import {
 	Animated,
@@ -17,6 +17,7 @@ import {
 	View,
 	type ViewStyle,
 } from "react-native";
+import AddFilterModal from "@/components/filters/add-filter";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 
@@ -52,6 +53,7 @@ export default function FilterDropdown({
 	const [contentNaturalHeight, setContentNaturalHeight] = useState<number>(0);
 	const [dropdownHeight, setDropdownHeight] = useState<number>(Math.min(maxHeight, DEFAULT_MAX_HEIGHT));
 	const [openAbove, setOpenAbove] = useState<boolean>(false);
+	const [addFilterVisible, setAddFilterVisible] = useState(false);
 
 	const options = useQuery(api.filters.getAllFilters) || [];
 
@@ -319,40 +321,61 @@ export default function FilterDropdown({
 									style={{ maxHeight: dropdownHeight }}
 								>
 									<View onLayout={onContentLayout}>
-										{options.map((opt: Option) => {
-											const isSelected = value === opt._id;
-											return (
+										{options.length === 0 ? (
+											<View className="items-center gap-3 p-4">
+												<Text className="text-center text-muted">
+													Nemáte žádné filtry
+												</Text>
 												<TouchableOpacity
 													activeOpacity={0.8}
-													className={`${isSelected && "bg-secondary"} flex-row items-center justify-between p-3`}
-													key={opt._id}
-													onPress={() => handleSelect(opt)}
+													className="flex-row items-center gap-2 rounded-lg bg-accent px-4 py-2"
+													onPress={() => {
+														closeDropdown();
+														setAddFilterVisible(true);
+													}}
 												>
-													<View className="flex-row items-center">
-														<View
-															style={{
-																width: 16,
-																height: 16,
-																borderRadius: 10,
-																backgroundColor:
-																	opt.color,
-																marginRight: 12,
-															}}
-														/>
-														<Text className="text-base text-text">
-															{opt.name}
-														</Text>
-													</View>
-
-													{isSelected ? (
-														<Check
-															color={COLORS.muted}
-															size={20}
-														/>
-													) : null}
+													<Plus color="white" size={20} />
+													<Text className="font-semibold text-text">
+														Přidat filtr
+													</Text>
 												</TouchableOpacity>
-											);
-										})}
+											</View>
+										) : (
+											options.map((opt: Option) => {
+												const isSelected = value === opt._id;
+												return (
+													<TouchableOpacity
+														activeOpacity={0.8}
+														className={`${isSelected && "bg-secondary"} flex-row items-center justify-between p-3`}
+														key={opt._id}
+														onPress={() => handleSelect(opt)}
+													>
+														<View className="flex-row items-center">
+															<View
+																style={{
+																	width: 16,
+																	height: 16,
+																	borderRadius: 10,
+																	backgroundColor:
+																		opt.color,
+																	marginRight: 12,
+																}}
+															/>
+															<Text className="text-base text-text">
+																{opt.name}
+															</Text>
+														</View>
+
+														{isSelected ? (
+															<Check
+																color={COLORS.muted}
+																size={20}
+															/>
+														) : null}
+													</TouchableOpacity>
+												);
+											})
+										)}
 									</View>
 								</ScrollView>
 							</View>
@@ -360,6 +383,8 @@ export default function FilterDropdown({
 					</View>
 				</TouchableWithoutFeedback>
 			</Modal>
+
+			<AddFilterModal setSheetVisible={setAddFilterVisible} sheetVisible={addFilterVisible} />
 		</>
 	);
 }

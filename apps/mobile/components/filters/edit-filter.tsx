@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
 import { useState } from "react";
@@ -61,7 +60,7 @@ export default function EditFilterModal({
 
 				<View className="flex-1 justify-between">
 					<View className="mt-2 flex-row items-center gap-2 self-center">
-						<Ionicons color="white" name="add-outline" size={32} />
+						<Pencil color="white" size={20} />
 						<Text className="font-bold text-2xl text-text">Upravit filtr</Text>
 					</View>
 
