@@ -1,7 +1,8 @@
 import { useQuery } from "convex/react";
 import { ChartColumnIncreasing, Dumbbell, Repeat, TrendingUp, Weight } from "lucide-react-native";
 import { useContext, useMemo } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import StatsGraph from "@/components/training/stats-graph";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
@@ -58,10 +59,10 @@ export default function Stats() {
 	}
 
 	return (
-		<View className="flex-1 bg-primary px-4 pt-6">
+		<ScrollView className="flex-1 bg-primary px-4 pt-6 pb-8">
 			<View className="mb-6 flex-row items-center gap-3">
 				<ChartColumnIncreasing color={COLORS.accent} />
-				<Text className="font-bold text-2xl text-text">Celkové statistiky</Text>
+				<Text className="font-bold text-text text-xl">Celkové statistiky</Text>
 			</View>
 
 			<View className="flex-row gap-6">
@@ -89,6 +90,10 @@ export default function Stats() {
 					<Text className="text-muted">Opakování</Text>
 				</View>
 			</View>
-		</View>
+
+			<View className="pb-10">
+				<StatsGraph exercises={workout.exercises} />
+			</View>
+		</ScrollView>
 	);
 }

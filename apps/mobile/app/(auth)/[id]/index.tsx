@@ -38,32 +38,38 @@ export default function TrainingById() {
 					ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 					keyExtractor={(item) => item._id}
 					ListHeaderComponent={() => (
-						<View className="mt-3 flex-row items-center pb-4">
-							<View className="flex-1 flex-row gap-2">
-								<Ionicons color={COLORS.muted} name="calendar-outline" size={20} />
-								<Text className="text-muted">
-									{format(new Date(workout.workoutDate), "PPPP", {
-										locale: cs,
-									})}
+						<>
+							<View className="mt-3 flex-row items-center pb-4">
+								<View className="flex-1 flex-row gap-2">
+									<Ionicons
+										color={COLORS.muted}
+										name="calendar-outline"
+										size={20}
+									/>
+									<Text className="text-muted">
+										{format(new Date(workout.workoutDate), "PPPP", {
+											locale: cs,
+										})}
+									</Text>
+								</View>
+								<Text
+									className={"rounded-xl border px-2.5 py-1.5 text-base text-text"}
+									style={{
+										borderColor: `${workout?.filter?.color}CC`,
+										color: "white",
+										borderRadius: 1200,
+										paddingHorizontal: 10,
+										paddingVertical: 4,
+										borderWidth: 1,
+										opacity: 0.9,
+										fontSize: 14,
+										fontWeight: "300",
+									}}
+								>
+									{workout.filter?.name}
 								</Text>
 							</View>
-							<Text
-								className={"rounded-xl border px-2.5 py-1.5 text-base text-text"}
-								style={{
-									borderColor: `${workout?.filter?.color}CC`,
-									color: "white",
-									borderRadius: 1200,
-									paddingHorizontal: 10,
-									paddingVertical: 4,
-									borderWidth: 1,
-									opacity: 0.9,
-									fontSize: 14,
-									fontWeight: "300",
-								}}
-							>
-								{workout.filter?.name}
-							</Text>
-						</View>
+						</>
 					)}
 					renderItem={({ item }) =>
 						item.exercise ? (

@@ -5,6 +5,7 @@ import { formatDate } from "@/src/utils/date-utils";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import { ExercisePicker } from "../forms/exercise-picker";
 import HistoryExercise from "./history-exercise";
+import HistoryGraph from "./history-graph";
 
 export default function History() {
 	const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
@@ -44,6 +45,11 @@ export default function History() {
 		<View>
 			<Text>History Component</Text>
 			<ExercisePicker onSelect={setSelectedId} selectedId={selectedId} />
+			{selectedId && historySets && historySets.length > 0 && (
+				<View className="-mx-4 mt-4">
+					<HistoryGraph historySets={historySets} />
+				</View>
+			)}
 			<FlatList
 				className="mt-2"
 				data={historySets}
