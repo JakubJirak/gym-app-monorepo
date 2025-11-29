@@ -42,14 +42,8 @@ export default function History() {
 	}
 
 	return (
-		<View>
-			<Text>History Component</Text>
+		<View className="flex-1 gap-2">
 			<ExercisePicker onSelect={setSelectedId} selectedId={selectedId} />
-			{selectedId && historySets && historySets.length > 0 && (
-				<View className="-mx-4 mt-4">
-					<HistoryGraph historySets={historySets} />
-				</View>
-			)}
 			<FlatList
 				className="mt-2"
 				data={historySets}
@@ -60,6 +54,13 @@ export default function History() {
 						<Text className="text-base text-muted">Žádná historie k zobrazení</Text>
 					</View>
 				)}
+				ListHeaderComponent={
+					selectedId && historySets && historySets.length > 0 ? (
+						<View className="-mx-4 mb-2">
+							<HistoryGraph historySets={historySets} />
+						</View>
+					) : null
+				}
 				renderItem={({ item }) => <HistoryExercise name={item.name} sets={item.sets} />}
 			/>
 		</View>

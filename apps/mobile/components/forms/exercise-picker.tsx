@@ -39,6 +39,7 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 		if (selectedId === undefined) {
 			setInternalSelectedId(item._id);
 		}
+		setQuery("");
 		setModalVisible(false);
 	}
 

@@ -62,9 +62,11 @@ export default function StatsGraph({ exercises }: StatsGraphProps) {
 			</View>
 			<View className="items-center">
 				<PieChart
+					animationDuration={200}
 					data={pieData}
 					innerCircleColor={COLORS.secondary}
 					innerRadius={60}
+					isAnimated
 					radius={100}
 					showText
 					textColor="white"

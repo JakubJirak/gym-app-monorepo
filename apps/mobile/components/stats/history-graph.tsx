@@ -68,6 +68,7 @@ export default function HistoryGraph({ historySets }: HistoryGraphProps) {
 		<View className="mx-4 rounded-xl bg-secondary">
 			<ScrollView className="pt-6 pb-4" horizontal showsHorizontalScrollIndicator={false}>
 				<LineChart
+					animationDuration={400}
 					areaChart
 					color={COLORS.accent}
 					curved
@@ -75,11 +76,12 @@ export default function HistoryGraph({ historySets }: HistoryGraphProps) {
 					dataPointsColor={COLORS.accent}
 					dataPointsRadius={3.5}
 					endFillColor={COLORS.secondary}
-					endOpacity={0.1}
+					endOpacity={0.2}
 					height={200}
 					hideDataPoints={false}
 					hideYAxisText
 					initialSpacing={10}
+					isAnimated
 					maxValue={maxValue + yAxisPadding}
 					noOfSections={3}
 					rulesColor={COLORS.inactive}
@@ -89,8 +91,8 @@ export default function HistoryGraph({ historySets }: HistoryGraphProps) {
 					startOpacity={0.4}
 					textColor="#ffffff"
 					textFontSize={10}
-					textShiftX={-8}
-					textShiftY={-6}
+					textShiftX={-4}
+					textShiftY={0}
 					thickness={2}
 					verticalLinesColor={COLORS.inactive}
 					width={Math.max(chartData.length * 60, 300)}
