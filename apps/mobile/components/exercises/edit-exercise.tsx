@@ -67,9 +67,12 @@ export default function EditExerciseModal({
 							cursorColorClassName="accent-text"
 							maxLength={20}
 							onChangeText={setName}
-							onSubmitEditing={handleEditExercise}
+							onSubmitEditing={() => {
+								if (!disabled) {
+									handleEditExercise();
+								}
+							}}
 							returnKeyType="done"
-							submitBehavior="blurAndSubmit"
 							value={name}
 						/>
 					</View>

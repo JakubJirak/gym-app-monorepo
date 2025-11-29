@@ -62,6 +62,12 @@ export default function AddFilterModal({ sheetVisible, setSheetVisible }: AddFil
 								cursorColorClassName="accent-text"
 								maxLength={20}
 								onChangeText={setName}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleAddExercise();
+									}
+								}}
+								returnKeyType="done"
 								value={name}
 							/>
 						</View>

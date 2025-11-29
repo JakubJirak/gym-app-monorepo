@@ -63,6 +63,12 @@ export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, def
 								cursorColorClassName="accent-text"
 								maxLength={20}
 								onChangeText={setName}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleAddExercise();
+									}
+								}}
+								returnKeyType="done"
 								value={name}
 							/>
 						</View>

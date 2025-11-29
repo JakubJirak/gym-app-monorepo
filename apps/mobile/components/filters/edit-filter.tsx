@@ -73,6 +73,12 @@ export default function EditFilterModal({
 								cursorColorClassName="accent-text"
 								maxLength={20}
 								onChangeText={setName}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleAddExercise();
+									}
+								}}
+								returnKeyType="done"
 								value={name}
 							/>
 						</View>
