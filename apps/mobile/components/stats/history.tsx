@@ -42,7 +42,7 @@ export default function History() {
 	}
 
 	return (
-		<View className="flex-1 gap-2">
+		<View className="mt-2 flex-1 gap-2">
 			<ExercisePicker onSelect={setSelectedId} selectedId={selectedId} />
 			<FlatList
 				className="mt-2"
@@ -62,6 +62,7 @@ export default function History() {
 					) : null
 				}
 				renderItem={({ item }) => <HistoryExercise name={item.name} sets={item.sets} />}
+				showsVerticalScrollIndicator={false}
 			/>
 		</View>
 	);

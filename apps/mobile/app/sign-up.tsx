@@ -63,7 +63,7 @@ export default function SignUp() {
 			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
-				className="flex-1"
+				className="flex-1 px-4"
 				keyboardVerticalOffset={40}
 			>
 				<ScrollView className="bg-primary py-8">

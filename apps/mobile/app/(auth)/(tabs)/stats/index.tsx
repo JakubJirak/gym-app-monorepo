@@ -29,7 +29,11 @@ export default function Stats() {
 	}
 
 	return (
-		<ScrollView className="flex-1 bg-primary px-4">
+		<ScrollView
+			className="flex-1 bg-primary px-4"
+			removeClippedSubviews={true}
+			showsVerticalScrollIndicator={false}
+		>
 			<View className="gap-6 pb-8">
 				<View>
 					<View className="my-4 flex-row items-center gap-3">
@@ -40,7 +44,7 @@ export default function Stats() {
 				</View>
 
 				<View>
-					<Link className="mt-6 mb-4" href="/(auth)/(tabs)/stats/history">
+					<Link className="mt-6 mb-4" href="/stats/history">
 						<View className="w-full flex-row items-center gap-3">
 							<History color={COLORS.accent} size={24} />
 							<Text className="font-bold text-white text-xl">Historie cviků</Text>

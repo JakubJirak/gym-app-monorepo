@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import ColorSquarePicker from "@/components/forms/color-picker";
 import { COLORS } from "@/constants/COLORS";
@@ -18,6 +18,35 @@ export default function AddFilterModal({ sheetVisible, setSheetVisible }: AddFil
 	const [visible, setVisible] = useState(false);
 	const [color, setColor] = useState("#000000");
 	const addFilter = useMutation(api.filters.addFilter);
+	const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+	useEffect(() => {
+		const showListeners = [
+			Keyboard.addListener("keyboardWillShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+			Keyboard.addListener("keyboardDidShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+		];
+		const hideListeners = [
+			Keyboard.addListener("keyboardWillHide", () => {
+				setKeyboardHeight(0);
+			}),
+			Keyboard.addListener("keyboardDidHide", () => {
+				setKeyboardHeight(0);
+			}),
+		];
+
+		return () => {
+			for (const listener of showListeners) {
+				listener.remove();
+			}
+			for (const listener of hideListeners) {
+				listener.remove();
+			}
+		};
+	}, []);
 
 	const disabled = name === "";
 
@@ -40,7 +69,7 @@ export default function AddFilterModal({ sheetVisible, setSheetVisible }: AddFil
 			onBackdropPress={closeSheet}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
+			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
 		>

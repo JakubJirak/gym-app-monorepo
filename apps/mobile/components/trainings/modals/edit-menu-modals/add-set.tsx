@@ -1,6 +1,6 @@
 import { useMutation } from "convex/react";
 import { Plus } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
@@ -20,6 +20,35 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 	const [weight, setWeight] = useState("");
 	const [reps, setReps] = useState("");
 	const addSet = useMutation(api.workoutExercises.addSet);
+	const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+	useEffect(() => {
+		const showListeners = [
+			Keyboard.addListener("keyboardWillShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+			Keyboard.addListener("keyboardDidShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+		];
+		const hideListeners = [
+			Keyboard.addListener("keyboardWillHide", () => {
+				setKeyboardHeight(0);
+			}),
+			Keyboard.addListener("keyboardDidHide", () => {
+				setKeyboardHeight(0);
+			}),
+		];
+
+		return () => {
+			for (const listener of showListeners) {
+				listener.remove();
+			}
+			for (const listener of hideListeners) {
+				listener.remove();
+			}
+		};
+	}, []);
 
 	const disabled = weight === "" || reps === "";
 
@@ -47,11 +76,11 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 			onBackdropPress={closeSheet}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
+			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
-			<View className="h-[63%] rounded-t-xl bg-darker p-4">
+			<View className="h-[45%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1">

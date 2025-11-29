@@ -76,7 +76,7 @@ export default function Exercises() {
 			>
 				<Plus color="white" size={44} />
 			</TouchableOpacity>
-			<ScrollView>
+			<ScrollView showsVerticalScrollIndicator={false}>
 				<View className="mx-2 mt-4 gap-2 pb-20">
 					{/*<View className="flex-row items-center gap-3">
 						<Dumbbell color="white" size={28} />

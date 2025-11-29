@@ -41,6 +41,8 @@ export default function Trainings() {
 				renderItem={({ item }) => (
 					<Training date={item.workoutDate} filter={item.filter} id={item._id} name={item.name} />
 				)}
+				showsHorizontalScrollIndicator={false}
+				showsVerticalScrollIndicator={false}
 			/>
 		</View>
 	);

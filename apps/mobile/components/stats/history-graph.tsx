@@ -68,7 +68,6 @@ export default function HistoryGraph({ historySets }: HistoryGraphProps) {
 		<View className="mx-4 rounded-xl bg-secondary">
 			<ScrollView className="pt-6 pb-4" horizontal showsHorizontalScrollIndicator={false}>
 				<LineChart
-					animationDuration={400}
 					areaChart
 					color={COLORS.accent}
 					curved
@@ -81,7 +80,6 @@ export default function HistoryGraph({ historySets }: HistoryGraphProps) {
 					hideDataPoints={false}
 					hideYAxisText
 					initialSpacing={10}
-					isAnimated
 					maxValue={maxValue + yAxisPadding}
 					noOfSections={3}
 					rulesColor={COLORS.inactive}

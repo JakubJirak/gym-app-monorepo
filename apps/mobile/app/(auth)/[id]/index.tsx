@@ -86,6 +86,8 @@ export default function TrainingById() {
 							/>
 						) : null
 					}
+					showsHorizontalScrollIndicator={false}
+					showsVerticalScrollIndicator={false}
 				/>
 			</View>
 			<TrainingFooter

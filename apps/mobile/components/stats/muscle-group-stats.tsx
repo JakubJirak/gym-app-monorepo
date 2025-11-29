@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Text, View } from "react-native";
 import { RadarChart } from "react-native-gifted-charts";
 import { COLORS } from "@/constants/COLORS";
@@ -19,7 +19,7 @@ const MUSCLE_GROUP_COLORS = [
 	"#f43f5e",
 ];
 
-export default function MuscleGroupStats({ trainings }: MuscleGroupStatsProps) {
+const MuscleGroupStats = memo(function MuscleGroupStatsComponent({ trainings }: MuscleGroupStatsProps) {
 	const muscleGroupCount = useMemo(() => {
 		if (!trainings) {
 			return {};
@@ -57,8 +57,8 @@ export default function MuscleGroupStats({ trainings }: MuscleGroupStatsProps) {
 		strokeWidth: 2,
 		fill: COLORS.accent,
 		opacity: 0.5,
-		isAnimated: true,
-		animationDuration: 500,
+		isAnimated: false,
+		animationDuration: 0,
 	};
 
 	const gridConfig = { strokeWidth: 0, opacity: 0.3, fill: COLORS.primary, showGradient: false };
@@ -78,14 +78,12 @@ export default function MuscleGroupStats({ trainings }: MuscleGroupStatsProps) {
 		<View className="gap-4 rounded-xl bg-secondary">
 			<View className="items-center">
 				<RadarChart
-					animationDuration={500}
 					asterLinesConfig={asterLinesConfig}
 					chartSize={320}
 					data={chartData}
 					dataLabelsConfig={labelConfig}
 					dataLabelsPositionOffset={15}
 					gridConfig={gridConfig}
-					isAnimated
 					labelConfig={labelConfig}
 					labels={labels}
 					maxValue={maxValue * 1.2}
@@ -110,4 +108,6 @@ export default function MuscleGroupStats({ trainings }: MuscleGroupStatsProps) {
 			</View>
 		</View>
 	);
-}
+});
+
+export default MuscleGroupStats;

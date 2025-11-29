@@ -59,7 +59,7 @@ export default function Stats() {
 	}
 
 	return (
-		<ScrollView className="flex-1 bg-primary px-4 pt-6 pb-8">
+		<ScrollView className="flex-1 bg-primary px-4 pt-6 pb-8" showsVerticalScrollIndicator={false}>
 			<View className="mb-6 flex-row items-center gap-3">
 				<ChartColumnIncreasing color={COLORS.accent} />
 				<Text className="font-bold text-text text-xl">Celkové statistiky</Text>

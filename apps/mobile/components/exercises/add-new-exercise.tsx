@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
@@ -19,6 +19,35 @@ export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, def
 	const [name, setName] = useState(defaultName ?? "");
 	const [muscleGroupId, setMuscleGroupId] = useState<string | undefined>(undefined);
 	const addExercise = useMutation(api.exercises.addExercise);
+	const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+	useEffect(() => {
+		const showListeners = [
+			Keyboard.addListener("keyboardWillShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+			Keyboard.addListener("keyboardDidShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+		];
+		const hideListeners = [
+			Keyboard.addListener("keyboardWillHide", () => {
+				setKeyboardHeight(0);
+			}),
+			Keyboard.addListener("keyboardDidHide", () => {
+				setKeyboardHeight(0);
+			}),
+		];
+
+		return () => {
+			for (const listener of showListeners) {
+				listener.remove();
+			}
+			for (const listener of hideListeners) {
+				listener.remove();
+			}
+		};
+	}, []);
 
 	const disabled = name === "" || muscleGroupId === undefined;
 
@@ -41,7 +70,7 @@ export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, def
 			onBackdropPress={closeSheet}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
+			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
 		>

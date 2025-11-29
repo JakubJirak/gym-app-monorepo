@@ -53,6 +53,7 @@ export default function Filtry() {
 						usageCount={filterUsageCount[item._id] || 0}
 					/>
 				)}
+				showsHorizontalScrollIndicator={false}
 			/>
 			<AddFilterModal setSheetVisible={setAddFilter} sheetVisible={addFilter} />
 		</View>
