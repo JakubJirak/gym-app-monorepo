@@ -10,9 +10,10 @@ import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Filtry() {
 	const filtry = useQuery(api.filters.getAllFilters);
+	const workouts = useQuery(api.workouts.getUserWorkouts);
 	const [addFilter, setAddFilter] = useState(false);
 
-	if (filtry === undefined) {
+	if (filtry === undefined || workouts === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -20,9 +21,16 @@ export default function Filtry() {
 		);
 	}
 
-	if (!filtry) {
+	if (filtry === null || workouts === null) {
 		return null;
 	}
+
+	const filterUsageCount = workouts.reduce<Record<string, number>>((acc, workout) => {
+		if (workout.filter?._id) {
+			acc[workout.filter._id] = (acc[workout.filter._id] || 0) + 1;
+		}
+		return acc;
+	}, {});
 
 	return (
 		<View className="flex-1 bg-primary px-4">
@@ -37,7 +45,14 @@ export default function Filtry() {
 				className="mx-2 mt-4"
 				data={filtry}
 				keyExtractor={(item) => item._id}
-				renderItem={({ item }) => <Filter color={item.color} id={item._id} name={item.name} />}
+				renderItem={({ item }) => (
+					<Filter
+						color={item.color}
+						id={item._id}
+						name={item.name}
+						usageCount={filterUsageCount[item._id] || 0}
+					/>
+				)}
 			/>
 			<AddFilterModal setSheetVisible={setAddFilter} sheetVisible={addFilter} />
 		</View>

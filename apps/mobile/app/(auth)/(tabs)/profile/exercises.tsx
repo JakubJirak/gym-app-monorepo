@@ -20,7 +20,22 @@ type SortedExercises = {
 
 export default function Exercises() {
 	const exercises = useQuery(api.exercises.getAllExercises);
+	const workouts = useQuery(api.workouts.getUserWorkouts);
 	const [addExercise, setAddExercise] = useState(false);
+
+	const exerciseUsageCount = useMemo(() => {
+		if (!workouts) {
+			return {};
+		}
+		return workouts
+			.flatMap((workout) => workout.exercises)
+			.reduce<Record<string, number>>((acc, workoutExercise) => {
+				if (workoutExercise.exercise?._id) {
+					acc[workoutExercise.exercise._id] = (acc[workoutExercise.exercise._id] || 0) + 1;
+				}
+				return acc;
+			}, {});
+	}, [workouts]);
 
 	const sortedExercises = useMemo<SortedExercises>(
 		() =>
@@ -40,7 +55,7 @@ export default function Exercises() {
 
 	const sortedExercisesByLength = Object.fromEntries(sortedExercisesEntries);
 
-	if (exercises === undefined) {
+	if (exercises === undefined || workouts === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -48,7 +63,7 @@ export default function Exercises() {
 		);
 	}
 
-	if (!exercises) {
+	if (exercises === null || workouts === null) {
 		return null;
 	}
 
@@ -81,6 +96,7 @@ export default function Exercises() {
 									exerciseId={exercise._id}
 									key={exercise._id}
 									name={exercise.name}
+									usageCount={exerciseUsageCount[exercise._id] || 0}
 								/>
 							))}
 						</View>

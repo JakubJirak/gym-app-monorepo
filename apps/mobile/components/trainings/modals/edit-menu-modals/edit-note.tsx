@@ -27,8 +27,8 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 			workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
 			note,
 		});
-		closeParent();
 		closeSheet();
+		closeParent();
 	};
 
 	return (

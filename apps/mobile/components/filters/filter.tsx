@@ -3,13 +3,24 @@ import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import EditFilterModal from "./edit-filter";
 
-export default function Filter({ name, color, id }: { name: string; color: string; id: string }) {
+export default function Filter({
+	name,
+	color,
+	id,
+	usageCount,
+}: {
+	name: string;
+	color: string;
+	id: string;
+	usageCount: number;
+}) {
 	const [edit, setEdit] = useState(false);
 
 	return (
 		<View className="my-2 flex-row items-center gap-4 rounded-xl bg-secondary px-3">
 			<View style={{ backgroundColor: color, height: 16, width: 16, borderRadius: 100, marginLeft: 4 }} />
 			<Text className="flex-1 text-lg text-text">{name}</Text>
+			<Text className="text-base text-muted">{usageCount}x</Text>
 			<TouchableOpacity
 				className="ml-2 rounded-full bg-secondary px-1 py-3.5"
 				onPress={() => setEdit(true)}

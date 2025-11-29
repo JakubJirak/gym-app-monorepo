@@ -2,12 +2,25 @@ import { useQuery } from "convex/react";
 import { ScrollView, Text, TouchableOpacity } from "react-native";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 
-export default function Categories() {
+type CategoriesProps = {
+	selectedFilterId: string | undefined;
+	setSelectedFilterId: (id: string | undefined) => void;
+};
+
+export default function Categories({ selectedFilterId, setSelectedFilterId }: CategoriesProps) {
 	const categories = useQuery(api.filters.getAllFilters);
 
 	if (!categories || categories === undefined) {
 		return null;
 	}
+
+	const handlePress = (filterId: string) => {
+		if (selectedFilterId === filterId) {
+			setSelectedFilterId(undefined);
+		} else {
+			setSelectedFilterId(filterId);
+		}
+	};
 
 	return (
 		<ScrollView
@@ -15,15 +28,22 @@ export default function Categories() {
 			horizontal
 			showsHorizontalScrollIndicator={false}
 		>
-			{categories.map((category) => (
-				<TouchableOpacity
-					className="flex items-center justify-center rounded-full border bg-secondary px-3 py-1.5 text-center"
-					key={category._id}
-					style={{ borderColor: `${category.color}CC` }}
-				>
-					<Text className="text-base text-text">{category.name}</Text>
-				</TouchableOpacity>
-			))}
+			{categories.map((category) => {
+				const isSelected = selectedFilterId === category._id;
+				return (
+					<TouchableOpacity
+						className="flex items-center justify-center rounded-full border px-3 py-1.5 text-center"
+						key={category._id}
+						onPress={() => handlePress(category._id)}
+						style={{
+							borderColor: `${category.color}CC`,
+							backgroundColor: isSelected ? `${category.color}33` : "#0f0f0f",
+						}}
+					>
+						<Text className="text-base text-text">{category.name}</Text>
+					</TouchableOpacity>
+				);
+			})}
 		</ScrollView>
 	);
 }

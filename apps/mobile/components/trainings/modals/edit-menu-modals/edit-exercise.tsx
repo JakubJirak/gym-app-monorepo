@@ -26,8 +26,9 @@ export default function EditExerciseModal({ visible, setVisible, workoutExercise
 				workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
 				exerciseId: selectedId as Id<"exercises">,
 			});
-			closeParent();
 			setSelectedId(undefined);
+			closeSheet();
+			closeParent();
 		}
 	};
 

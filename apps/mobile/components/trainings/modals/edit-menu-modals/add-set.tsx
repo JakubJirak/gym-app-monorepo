@@ -1,7 +1,7 @@
 import { useMutation } from "convex/react";
 import { Plus } from "lucide-react-native";
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
@@ -31,11 +31,11 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 				reps: Number(reps),
 				order: setsLength ? setsLength : 0,
 			});
+			setWeight("");
+			setReps("");
 		}
-		closeParent();
 		closeSheet();
-		setWeight("");
-		setReps("");
+		closeParent();
 	};
 
 	return (
@@ -70,6 +70,12 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setWeight}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleAddSet();
+									}
+								}}
+								returnKeyType="done"
 								value={weight}
 							/>
 						</View>
@@ -81,6 +87,12 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setReps}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleAddSet();
+									}
+								}}
+								returnKeyType="done"
 								value={reps}
 							/>
 						</View>
@@ -96,7 +108,10 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 						<TouchableOpacity
 							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
 							disabled={disabled}
-							onPress={handleAddSet}
+							onPress={() => {
+								Keyboard.dismiss();
+								handleAddSet();
+							}}
 							style={{
 								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
 							}}
