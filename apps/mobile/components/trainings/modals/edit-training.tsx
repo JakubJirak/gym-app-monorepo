@@ -87,7 +87,7 @@ export default function EditTrainingModal({
 						</View>
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Filtr</Text>
-							<FilterDropdown onChange={setFilterId} value={filterId} variant="modal" />
+							<FilterDropdown onChange={setFilterId} value={filterId} />
 						</View>
 					</View>
 
