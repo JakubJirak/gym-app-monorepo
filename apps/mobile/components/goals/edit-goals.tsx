@@ -1,7 +1,7 @@
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
@@ -26,8 +26,37 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 		bench === "" ||
 		deadlift === "" ||
 		(squat === squatDef && bench === benchDef && deadlift === deadliftDef);
+	const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 	const updateUserGoals = useMutation(api.userGoals.updateUserGoals);
+
+	useEffect(() => {
+		const showListeners = [
+			Keyboard.addListener("keyboardWillShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+			Keyboard.addListener("keyboardDidShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+		];
+		const hideListeners = [
+			Keyboard.addListener("keyboardWillHide", () => {
+				setKeyboardHeight(0);
+			}),
+			Keyboard.addListener("keyboardDidHide", () => {
+				setKeyboardHeight(0);
+			}),
+		];
+
+		return () => {
+			for (const listener of showListeners) {
+				listener.remove();
+			}
+			for (const listener of hideListeners) {
+				listener.remove();
+			}
+		};
+	}, []);
 
 	const handleSave = () => {
 		if (squatDef || benchDef || deadliftDef) {
@@ -50,11 +79,15 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 			onBackdropPress={closeSheet}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
+			style={{
+				justifyContent: "flex-end",
+				margin: 0,
+				marginBottom: keyboardHeight,
+			}}
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
-			<View className="h-[70%] rounded-t-xl bg-darker p-4">
+			<View className="h-[90%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1">

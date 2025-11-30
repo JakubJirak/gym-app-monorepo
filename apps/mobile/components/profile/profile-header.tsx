@@ -29,8 +29,8 @@ export default function ProfileHeader({ text }: { text: string }) {
 			<Modal animationType="none" onRequestClose={closeMenu} transparent visible={visible}>
 				<Pressable className="flex-1" onPress={closeMenu} />
 
-				<View className="absolute top-12 right-12 z-50 min-w-40 overflow-hidden rounded-xl bg-darker px-2 py-2 shadow-md">
-					<TouchableOpacity
+				<View className="absolute top-12 right-4 z-50 min-w-40 overflow-hidden rounded-xl bg-darker px-2 py-2 shadow-md">
+					{/* <TouchableOpacity
 						className="flex flex-row items-center gap-3 px-3 py-3"
 						onPress={() => {
 							router.navigate("/profile/settings");
@@ -39,7 +39,7 @@ export default function ProfileHeader({ text }: { text: string }) {
 					>
 						<Ionicons color={COLORS.accent} name="settings-outline" size={20} />
 						<Text className="text-lg text-text">Nastavení</Text>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 
 					<TouchableOpacity
 						className="flex flex-row items-center gap-3 px-3 py-3"
