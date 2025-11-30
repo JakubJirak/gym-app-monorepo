@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
+import { useRouter } from "expo-router";
 import { Weight } from "lucide-react-native";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Links from "@/components/profile/links";
 import ProfileHeader from "@/components/profile/profile-header";
 import { COLORS } from "@/constants/COLORS";
@@ -13,6 +14,7 @@ export default function Profile() {
 	const userWeight = useQuery(api.userWeights.getUserWeight);
 	const workouts = useQuery(api.workouts.getUserWorkouts);
 	const desc = useQuery(api.description.getUserDescription);
+	const router = useRouter();
 
 	if (!session) {
 		return null;
@@ -31,7 +33,10 @@ export default function Profile() {
 				</View>
 
 				<View className="flex-row gap-5.5">
-					<View className="w-[47%] items-center gap-2 rounded-xl bg-secondary p-3">
+					<TouchableOpacity
+						className="w-[47%] items-center gap-2 rounded-xl bg-secondary p-3"
+						onPress={() => router.push("/trainings")}
+					>
 						<View className="flex-row items-center gap-2">
 							<Ionicons color={COLORS.muted} name="calendar-clear-outline" size={20} />
 							<Text className="text-lg text-muted">Tréninky</Text>
@@ -39,7 +44,7 @@ export default function Profile() {
 						<Text className="text-lg text-text tracking-wider">
 							{workouts ? workouts.length : 0}
 						</Text>
-					</View>
+					</TouchableOpacity>
 
 					<View className="w-[47%] items-center gap-2 rounded-xl bg-secondary p-3">
 						<View className="flex-row items-center gap-2">

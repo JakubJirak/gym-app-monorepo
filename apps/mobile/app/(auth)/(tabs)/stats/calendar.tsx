@@ -1,4 +1,5 @@
 import { useQuery } from "convex/react";
+import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
@@ -8,7 +9,9 @@ import { toLocalISODateString } from "@/src/utils/date-utils";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function CalendarSite() {
-	const [currentDate, setCurrentDate] = useState(toLocalISODateString(new Date()));
+	const params = useLocalSearchParams<{ selectedDate?: string }>();
+	const initialDate = params.selectedDate || toLocalISODateString(new Date());
+	const [currentDate, setCurrentDate] = useState(initialDate);
 	const trainings = useQuery(api.workouts.getUserWorkouts);
 
 	const filtered = trainings?.filter((workout) => workout.workoutDate === currentDate);
@@ -27,7 +30,7 @@ export default function CalendarSite() {
 				)}
 				ListHeaderComponent={() => (
 					<View className="mt-4">
-						<StatsCalendar setCurrentDate={setCurrentDate} />
+						<StatsCalendar initialDate={currentDate} setCurrentDate={setCurrentDate} />
 					</View>
 				)}
 				renderItem={({ item }) => (

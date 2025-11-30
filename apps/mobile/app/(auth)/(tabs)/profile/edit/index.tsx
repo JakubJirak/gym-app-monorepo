@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
 import { Link } from "expo-router";
 import { KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
@@ -29,9 +28,9 @@ export default function Edit() {
 					<View className="items-center gap-4">
 						<View>
 							<View className="relative h-[110px] w-[110px] rounded-full bg-gray-700" />
-							<View className="absolute right-0 bottom-0 size-10 items-center justify-center rounded-full bg-accent">
+							{/* <View className="absolute right-0 bottom-0 size-10 items-center justify-center rounded-full bg-accent">
 								<Ionicons color="white" name="pencil" size={20} />
-							</View>
+							</View> */}
 						</View>
 
 						<View className="gap-1">

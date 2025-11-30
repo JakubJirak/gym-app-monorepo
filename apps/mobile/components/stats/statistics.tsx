@@ -1,6 +1,7 @@
+import { useRouter } from "expo-router";
 import { Calendar, Repeat, TrendingUp, Weight } from "lucide-react-native";
 import { useMemo } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import type { api } from "../../../../packages/convex/convex/_generated/api";
 
 type StatisticsProps = {
@@ -8,6 +9,8 @@ type StatisticsProps = {
 };
 
 export default function Statistics({ trainings }: StatisticsProps) {
+	const router = useRouter();
+
 	const allSets = useMemo(
 		() =>
 			trainings?.reduce(
@@ -62,11 +65,14 @@ export default function Statistics({ trainings }: StatisticsProps) {
 	return (
 		<View className="p-1">
 			<View className="flex-row flex-wrap justify-between gap-y-4">
-				<View className="w-[48%] flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center">
+				<TouchableOpacity
+					className="w-[48%] flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center"
+					onPress={() => router.push("/(auth)/(tabs)/trainings")}
+				>
 					<Calendar color="white" size={24} />
 					<Text className="mt-1 font-bold text-2xl text-text">{trainings?.length}</Text>
 					<Text className="text-muted">Tréninky</Text>
-				</View>
+				</TouchableOpacity>
 				<View className="w-[48%] flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center">
 					<TrendingUp color="white" size={24} />
 					<Text className="mt-1 font-bold text-2xl text-text">{allSets}</Text>

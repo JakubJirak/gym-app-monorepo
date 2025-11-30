@@ -41,17 +41,27 @@ LocaleConfig.defaultLocale = "cz";
 type StatsCalendarProps = {
 	setCurrentDate?: Dispatch<SetStateAction<string>>;
 	variant?: "selectable" | "nonselectable";
+	onDatePress?: (dateString: string) => void;
+	initialDate?: string;
 };
 
-export default function StatsCalendar({ setCurrentDate, variant = "selectable" }: StatsCalendarProps) {
+export default function StatsCalendar({
+	setCurrentDate,
+	variant = "selectable",
+	onDatePress,
+	initialDate,
+}: StatsCalendarProps) {
 	const TODAY = toLocalISODateString(new Date());
-	const [selected, setSelected] = useState(TODAY);
+	const [selected, setSelected] = useState(initialDate || TODAY);
 	const trainings = useQuery(api.workouts.getUserWorkouts);
 
 	const trainingDates = trainings?.flatMap((workout) => workout.workoutDate);
 
 	const onDayPress = (day: Day) => {
 		if (variant === "nonselectable") {
+			if (onDatePress) {
+				onDatePress(day.dateString);
+			}
 			return;
 		}
 		setSelected(day.dateString);
@@ -143,7 +153,7 @@ export default function StatsCalendar({ setCurrentDate, variant = "selectable" }
 							return (
 								<Pressable
 									onPress={() => {
-										if (variant === "selectable" && state !== "disabled") {
+										if (state !== "disabled") {
 											onDayPress({
 												dateString: date.dateString,
 												day: date.day,

@@ -1,6 +1,7 @@
+import { useRouter } from "expo-router";
 import { Calendar, Repeat, TrendingUp, Weight } from "lucide-react-native";
 import { useMemo } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { toLocalISODateString } from "@/src/utils/date-utils";
 import type { api } from "../../../../packages/convex/convex/_generated/api";
@@ -10,6 +11,7 @@ type WeeklyStatsProps = {
 };
 
 export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
+	const router = useRouter();
 	const today = new Date();
 	const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
 	const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // Calculate offset to Monday
@@ -114,6 +116,7 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 					{weekDays.map((day) => {
 						const hasTraining = trainingDates.includes(day.dateString);
 						const isToday = day.dateString === toLocalISODateString(today);
+						const dayTraining = weekTrainings.find((t) => t.workoutDate === day.dateString);
 
 						const backgroundColor = hasTraining ? `${COLORS.accent}99` : COLORS.darker;
 
@@ -124,11 +127,23 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 							textColor = COLORS.accent;
 						}
 
+						const handlePress = () => {
+							if (dayTraining) {
+								router.push({
+									pathname: "/[id]",
+									params: { id: dayTraining._id },
+								});
+							}
+						};
+
 						return (
 							<View className="flex-1 items-center gap-1" key={day.dateString}>
 								<Text className="text-muted text-xs">{day.dayName}</Text>
-								<View
+								<TouchableOpacity
+									activeOpacity={hasTraining ? 0.7 : 1}
 									className="h-10 w-10 items-center justify-center rounded-lg"
+									disabled={!hasTraining}
+									onPress={handlePress}
 									style={{
 										backgroundColor,
 									}}
@@ -142,7 +157,7 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 									>
 										{day.dayNumber}
 									</Text>
-								</View>
+								</TouchableOpacity>
 							</View>
 						);
 					})}

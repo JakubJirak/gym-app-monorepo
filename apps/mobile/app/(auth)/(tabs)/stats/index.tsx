@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Calendar, ChartColumnIncreasing, ChevronRight, History, Trophy } from "lucide-react-native";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import StatsCalendar from "@/components/stats/calendar";
@@ -10,7 +10,15 @@ import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Stats() {
+	const router = useRouter();
 	const trainings = useQuery(api.workouts.getUserWorkouts);
+
+	const handleDatePress = (dateString: string) => {
+		router.push({
+			pathname: "/(auth)/(tabs)/stats/calendar",
+			params: { selectedDate: dateString },
+		});
+	};
 
 	if (trainings === undefined) {
 		return (
@@ -80,7 +88,7 @@ export default function Stats() {
 							</View>
 						</View>
 					</Link>
-					<StatsCalendar variant="nonselectable" />
+					<StatsCalendar onDatePress={handleDatePress} variant="nonselectable" />
 				</View>
 
 				<View>
