@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Layers } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
@@ -15,7 +14,7 @@ export default function MenuModal({
 	sheetVisible,
 	setSheetVisible,
 	setCreateModalVisible,
-	setTrainingRoutineModalVisible,
+	// setTrainingRoutineModalVisible,
 }: MenuModalProps) {
 	const closeSheet = () => setSheetVisible(false);
 
@@ -24,10 +23,10 @@ export default function MenuModal({
 		closeSheet();
 	};
 
-	const selectRutina = () => {
-		setTrainingRoutineModalVisible(true);
-		closeSheet();
-	};
+	// const selectRutina = () => {
+	// 	setTrainingRoutineModalVisible(true);
+	// 	closeSheet();
+	// };
 
 	return (
 		<Modal
@@ -54,13 +53,13 @@ export default function MenuModal({
 						<Text className="font-semibold text-text text-xl">Nový trénink</Text>
 					</Pressable>
 
-					<Pressable
+					{/* <Pressable
 						className="mx-4 flex flex-row items-center justify-center gap-4 rounded-2xl bg-secondary px-12 py-5"
 						onPress={selectRutina}
 					>
 						<Layers color={COLORS.accent} size={36} />
 						<Text className="font-semibold text-text text-xl">Podle rutiny</Text>
-					</Pressable>
+					</Pressable> */}
 				</View>
 			</View>
 		</Modal>

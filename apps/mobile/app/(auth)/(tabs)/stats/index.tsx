@@ -60,13 +60,15 @@ export default function Stats() {
 					</View>
 				</View>
 
-				<View>
-					<View className="my-4 flex-row items-center gap-3">
-						<ChartColumnIncreasing color={COLORS.accent} size={24} />
-						<Text className="font-bold text-text text-xl">Podle svalové partie</Text>
+				{trainings.length > 0 && (
+					<View>
+						<View className="my-4 flex-row items-center gap-3">
+							<ChartColumnIncreasing color={COLORS.accent} size={24} />
+							<Text className="font-bold text-text text-xl">Podle svalové partie</Text>
+						</View>
+						<MuscleGroupStats trainings={trainings} />
 					</View>
-					<MuscleGroupStats trainings={trainings} />
-				</View>
+				)}
 
 				<View>
 					<Link className="mt-6 mb-4" href="/(auth)/(tabs)/stats/calendar">

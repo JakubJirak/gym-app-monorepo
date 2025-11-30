@@ -20,7 +20,7 @@ export default function Profile() {
 
 	return (
 		<View className="flex-1 bg-primary px-4">
-			<ProfileHeader text="Username" />
+			<ProfileHeader text={session.user.name} />
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View className="mt-2 mb-6 flex-row items-center gap-6">
 					<View className="h-[90px] w-[90px] rounded-full bg-gray-700" />
@@ -46,7 +46,11 @@ export default function Profile() {
 							<Weight color={COLORS.muted} size={20} />
 							<Text className="text-lg text-muted">Váha</Text>
 						</View>
-						<Text className="text-lg text-text tracking-wider">
+						<Text
+							className={
+								userWeight ? "text-lg text-text tracking-wider" : "text-base text-muted"
+							}
+						>
 							{userWeight === undefined && ""}
 							{userWeight && `${userWeight.weight} kg`}
 							{!userWeight && "Nenastaveno"}

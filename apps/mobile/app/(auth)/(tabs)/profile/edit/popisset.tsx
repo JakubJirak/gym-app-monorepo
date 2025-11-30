@@ -22,7 +22,7 @@ export default function PopisSet() {
 	return (
 		<KeyboardAvoidingView behavior="padding" className="flex-1 bg-primary px-6" keyboardVerticalOffset={60}>
 			<View className="gap-5">
-				<ComponentHeader text="Nastavení váhy (kg)" />
+				<ComponentHeader text="Nastavení popisu" />
 				<TextInput
 					autoFocus
 					className="w-full rounded-2xl bg-secondary p-4 text-lg text-text caret-text"

@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
@@ -23,6 +23,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 	const editSet = useMutation(api.workoutExercises.editSet);
 	const deleteSet = useMutation(api.workoutExercises.deleteSet);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const inputRef = useRef<TextInput>(null);
 
 	useEffect(() => {
 		const showListeners = [
@@ -51,6 +52,14 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 			}
 		};
 	}, []);
+
+	useEffect(() => {
+		if (visible) {
+			setTimeout(() => {
+				inputRef.current?.focus();
+			}, 100);
+		}
+	}, [visible]);
 
 	const disabled =
 		weight === "" || reps === "" || (Number(weight) === defaultWeight && Number(reps) === defaultReps);
@@ -101,12 +110,12 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 						<View className="flex-1">
 							<Text className="mb-2 font-semibold text-lg text-text">Váha</Text>
 							<TextInput
-								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setWeight}
+								ref={inputRef}
 								value={weight}
 							/>
 						</View>

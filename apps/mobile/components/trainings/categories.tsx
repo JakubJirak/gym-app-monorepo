@@ -1,15 +1,13 @@
-import { useQuery } from "convex/react";
 import { ScrollView, Text, TouchableOpacity } from "react-native";
-import { api } from "../../../../packages/convex/convex/_generated/api";
+import type { api } from "../../../../packages/convex/convex/_generated/api";
 
 type CategoriesProps = {
 	selectedFilterId: string | undefined;
 	setSelectedFilterId: (id: string | undefined) => void;
+	categories: typeof api.filters.getAllFilters._returnType;
 };
 
-export default function Categories({ selectedFilterId, setSelectedFilterId }: CategoriesProps) {
-	const categories = useQuery(api.filters.getAllFilters);
-
+export default function Categories({ selectedFilterId, setSelectedFilterId, categories }: CategoriesProps) {
 	if (!categories || categories === undefined) {
 		return null;
 	}

@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import { COLORS } from "@/constants/COLORS";
@@ -62,11 +62,11 @@ export default function SignUp() {
 		<>
 			<SafeAreaView edges={["top"]} style={{ backgroundColor: COLORS.primary }} />
 			<KeyboardAvoidingView
-				behavior={Platform.OS === "ios" ? "padding" : "height"}
-				className="flex-1 px-4"
-				keyboardVerticalOffset={40}
+				behavior="padding"
+				className="flex-1 bg-primary px-6"
+				keyboardVerticalOffset={35}
 			>
-				<ScrollView className="bg-primary py-8">
+				<ScrollView className="bg-primary py-8" showsVerticalScrollIndicator={false}>
 					<View className="gap-6">
 						<Text className="mt-4 text-center font-bold text-4xl text-white">Registrace</Text>
 						<View className="gap-4">
@@ -145,8 +145,14 @@ export default function SignUp() {
 										<TextInput
 											className="rounded-xl bg-secondary px-4 py-3 text-base text-white"
 											onChangeText={field.handleChange}
+											onSubmitEditing={() => {
+												if (form.state.canSubmit) {
+													form.handleSubmit();
+												}
+											}}
 											placeholder="Zopakujte heslo"
 											placeholderTextColor={COLORS.muted}
+											returnKeyType="done"
 											secureTextEntry
 											value={field.state.value}
 										/>

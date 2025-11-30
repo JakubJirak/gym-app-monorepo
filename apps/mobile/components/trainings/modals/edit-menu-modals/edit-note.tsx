@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { NotebookPen } from "lucide-react-native";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
@@ -20,7 +20,45 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 		workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
 	});
 	const [note, setNote] = useState<string | undefined>(workoutExercise?.note);
+	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const inputRef = useRef<TextInput>(null);
 	const editNote = useMutation(api.workoutExercises.editNote);
+
+	useEffect(() => {
+		const showListeners = [
+			Keyboard.addListener("keyboardWillShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+			Keyboard.addListener("keyboardDidShow", (e) => {
+				setKeyboardHeight(e.endCoordinates.height);
+			}),
+		];
+		const hideListeners = [
+			Keyboard.addListener("keyboardWillHide", () => {
+				setKeyboardHeight(0);
+			}),
+			Keyboard.addListener("keyboardDidHide", () => {
+				setKeyboardHeight(0);
+			}),
+		];
+
+		return () => {
+			for (const listener of showListeners) {
+				listener.remove();
+			}
+			for (const listener of hideListeners) {
+				listener.remove();
+			}
+		};
+	}, []);
+
+	useEffect(() => {
+		if (visible) {
+			setTimeout(() => {
+				inputRef.current?.focus();
+			}, 100);
+		}
+	}, [visible]);
 
 	const handleEditNote = () => {
 		editNote({
@@ -40,7 +78,7 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 			onBackdropPress={closeSheet}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
+			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
@@ -57,12 +95,14 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Poznámka</Text>
 							<TextInput
-								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								defaultValue={workoutExercise?.note || ""}
 								maxLength={50}
 								onChangeText={setNote}
+								onSubmitEditing={handleEditNote}
+								ref={inputRef}
+								returnKeyType="done"
 								value={note}
 							/>
 						</View>

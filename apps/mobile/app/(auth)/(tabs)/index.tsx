@@ -1,5 +1,6 @@
 import { useQuery } from "convex/react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
+import EmptyTrainings from "@/components/home/empty-trainings";
 import LastTraining from "@/components/home/last-training";
 import Tip from "@/components/home/tip";
 import WeeklyStats from "@/components/home/weekly-stats";
@@ -28,7 +29,11 @@ export default function Index() {
 				<WelcomeMessage />
 				<WeeklyStats trainings={workouts} />
 				<Tip />
-				<LastTraining workoutId={workouts[0]._id} workoutName={workouts[0].name} />
+				{workouts.length > 0 ? (
+					<LastTraining workoutId={workouts[0]._id} workoutName={workouts[0].name} />
+				) : (
+					<EmptyTrainings />
+				)}
 			</View>
 		</ScrollView>
 	);

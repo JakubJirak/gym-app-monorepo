@@ -96,8 +96,14 @@ export default function SignIn() {
 										<TextInput
 											className="rounded-xl bg-secondary px-4 py-3 text-base text-white"
 											onChangeText={field.handleChange}
+											onSubmitEditing={() => {
+												if (form.state.canSubmit) {
+													form.handleSubmit();
+												}
+											}}
 											placeholder="Vaše heslo"
 											placeholderTextColor={COLORS.muted}
+											returnKeyType="done"
 											secureTextEntry
 											value={field.state.value}
 										/>

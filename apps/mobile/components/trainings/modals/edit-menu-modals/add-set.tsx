@@ -1,6 +1,6 @@
 import { useMutation } from "convex/react";
 import { Plus } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
@@ -21,6 +21,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 	const [reps, setReps] = useState("");
 	const addSet = useMutation(api.workoutExercises.addSet);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const inputRef = useRef<TextInput>(null);
 
 	useEffect(() => {
 		const showListeners = [
@@ -49,6 +50,14 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 			}
 		};
 	}, []);
+
+	useEffect(() => {
+		if (visible) {
+			setTimeout(() => {
+				inputRef.current?.focus();
+			}, 100);
+		}
+	}, [visible]);
 
 	const disabled = weight === "" || reps === "";
 
@@ -93,7 +102,6 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 						<View className="flex-1">
 							<Text className="mb-2 font-semibold text-lg text-text">Váha</Text>
 							<TextInput
-								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								keyboardType="numeric"
@@ -104,6 +112,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 										handleAddSet();
 									}
 								}}
+								ref={inputRef}
 								returnKeyType="done"
 								value={weight}
 							/>

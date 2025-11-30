@@ -61,7 +61,7 @@ export default function EditTrainingModal({
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
-			<View className="h-[70%] rounded-t-xl bg-darker p-4">
+			<View className="h-[75%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1">

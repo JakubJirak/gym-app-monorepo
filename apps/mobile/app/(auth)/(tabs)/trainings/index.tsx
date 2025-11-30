@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
 import { useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
@@ -8,9 +9,10 @@ import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Trainings() {
 	const workouts = useQuery(api.workouts.getUserWorkouts);
+	const categories = useQuery(api.filters.getAllFilters);
 	const [selectedFilterId, setSelectedFilterId] = useState<string | undefined>(undefined);
 
-	if (workouts === undefined) {
+	if (workouts === undefined || categories === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -26,7 +28,11 @@ export default function Trainings() {
 	return (
 		<View className="flex-1 bg-primary">
 			<View className="px-4">
-				<Categories selectedFilterId={selectedFilterId} setSelectedFilterId={setSelectedFilterId} />
+				<Categories
+					categories={categories}
+					selectedFilterId={selectedFilterId}
+					setSelectedFilterId={setSelectedFilterId}
+				/>
 			</View>
 			<FlatList
 				className="px-4"
@@ -34,8 +40,12 @@ export default function Trainings() {
 				ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 				keyExtractor={(item) => item._id}
 				ListEmptyComponent={() => (
-					<View className="items-center py-8">
+					<View className="items-center justify-center py-8">
 						<Text className="text-base text-muted">Žádné tréninky k zobrazení</Text>
+						<View className="mt-6 w-full flex-row items-center justify-center gap-2">
+							<Text className="text-base text-muted">Přidejte trénink pomocí tlačítka</Text>
+							<Ionicons color={COLORS.muted} name="add-circle-outline" size={24} />
+						</View>
 					</View>
 				)}
 				renderItem={({ item }) => (
