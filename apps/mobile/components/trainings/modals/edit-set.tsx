@@ -23,23 +23,32 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 	const editSet = useMutation(api.workoutExercises.editSet);
 	const deleteSet = useMutation(api.workoutExercises.deleteSet);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const [isClosing, setIsClosing] = useState(false);
 	const inputRef = useRef<TextInput>(null);
 
 	useEffect(() => {
 		const showListeners = [
 			Keyboard.addListener("keyboardWillShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
 			}),
 			Keyboard.addListener("keyboardDidShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
 			}),
 		];
 		const hideListeners = [
 			Keyboard.addListener("keyboardWillHide", () => {
-				setKeyboardHeight(0);
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
 			}),
 			Keyboard.addListener("keyboardDidHide", () => {
-				setKeyboardHeight(0);
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
 			}),
 		];
 
@@ -51,7 +60,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 				listener.remove();
 			}
 		};
-	}, []);
+	}, [isClosing]);
 
 	useEffect(() => {
 		if (visible) {
@@ -65,25 +74,29 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 		weight === "" || reps === "" || (Number(weight) === defaultWeight && Number(reps) === defaultReps);
 
 	const handleAddSet = () => {
-		Keyboard.dismiss();
+		setIsClosing(true);
 		editSet({
 			setId: setId as Id<"sets">,
 			weight: Number(weight),
 			reps: Number(reps),
 		});
 		closeSheet();
-		setWeight("");
-		setReps("");
 	};
 
 	const handleDeleteSet = () => {
-		Keyboard.dismiss();
+		setIsClosing(true);
 		deleteSet({
 			setId: setId as Id<"sets">,
 		});
 		closeSheet();
-		setWeight("");
-		setReps("");
+	};
+
+	const handleModalHide = () => {
+		Keyboard.dismiss();
+		setKeyboardHeight(0);
+		setIsClosing(false);
+		setWeight(String(defaultWeight));
+		setReps(String(defaultReps));
 	};
 
 	return (
@@ -93,6 +106,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 			isVisible={visible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
+			onModalHide={handleModalHide}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
 			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}

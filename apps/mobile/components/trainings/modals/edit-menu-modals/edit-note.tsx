@@ -15,30 +15,42 @@ type EditNoteProps = {
 };
 
 export default function EditNoteModal({ visible, setVisible, workoutExerciseId, closeParent }: EditNoteProps) {
-	const closeSheet = () => setVisible(false);
+	const closeSheet = () => {
+		setIsClosing(true);
+		setVisible(false);
+	};
 	const workoutExercise = useQuery(api.workoutExercises.getWorkoutExerciseById, {
 		workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
 	});
 	const [note, setNote] = useState<string | undefined>(workoutExercise?.note);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const [isClosing, setIsClosing] = useState(false);
 	const inputRef = useRef<TextInput>(null);
 	const editNote = useMutation(api.workoutExercises.editNote);
 
 	useEffect(() => {
 		const showListeners = [
 			Keyboard.addListener("keyboardWillShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
 			}),
 			Keyboard.addListener("keyboardDidShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
 			}),
 		];
 		const hideListeners = [
 			Keyboard.addListener("keyboardWillHide", () => {
-				setKeyboardHeight(0);
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
 			}),
 			Keyboard.addListener("keyboardDidHide", () => {
-				setKeyboardHeight(0);
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
 			}),
 		];
 
@@ -50,7 +62,7 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 				listener.remove();
 			}
 		};
-	}, []);
+	}, [isClosing]);
 
 	useEffect(() => {
 		if (visible) {
@@ -60,14 +72,21 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 		}
 	}, [visible]);
 
+	const disabled = note === workoutExercise?.note;
+
 	const handleEditNote = () => {
-		Keyboard.dismiss();
 		editNote({
 			workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
 			note,
 		});
 		closeSheet();
 		closeParent();
+	};
+
+	const handleModalHide = () => {
+		Keyboard.dismiss();
+		setKeyboardHeight(0);
+		setIsClosing(false);
 	};
 
 	return (
@@ -77,6 +96,7 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 			isVisible={visible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
+			onModalHide={handleModalHide}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
 			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
@@ -101,7 +121,11 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 								defaultValue={workoutExercise?.note || ""}
 								maxLength={50}
 								onChangeText={setNote}
-								onSubmitEditing={handleEditNote}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleEditNote();
+									}
+								}}
 								ref={inputRef}
 								returnKeyType="done"
 								value={note}
@@ -117,8 +141,12 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 							<Text className="p-2 text-lg text-text">Zrušit</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl bg-accent"
+							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
+							disabled={disabled}
 							onPress={handleEditNote}
+							style={{
+								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+							}}
 						>
 							<NotebookPen color="white" size={20} />
 							<Text className="p-1 font-semibold text-lg text-text">Upravit poznámku</Text>

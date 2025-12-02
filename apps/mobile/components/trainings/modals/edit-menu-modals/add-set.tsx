@@ -21,23 +21,32 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 	const [reps, setReps] = useState("");
 	const addSet = useMutation(api.workoutExercises.addSet);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const [isClosing, setIsClosing] = useState(false);
 	const inputRef = useRef<TextInput>(null);
 
 	useEffect(() => {
 		const showListeners = [
 			Keyboard.addListener("keyboardWillShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
 			}),
 			Keyboard.addListener("keyboardDidShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
 			}),
 		];
 		const hideListeners = [
 			Keyboard.addListener("keyboardWillHide", () => {
-				setKeyboardHeight(0);
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
 			}),
 			Keyboard.addListener("keyboardDidHide", () => {
-				setKeyboardHeight(0);
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
 			}),
 		];
 
@@ -49,7 +58,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 				listener.remove();
 			}
 		};
-	}, []);
+	}, [isClosing]);
 
 	useEffect(() => {
 		if (visible) {
@@ -62,19 +71,25 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 	const disabled = weight === "" || reps === "";
 
 	const handleAddSet = () => {
+		setIsClosing(true);
 		if (weight !== "" && reps !== "") {
-			Keyboard.dismiss();
 			addSet({
 				workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
 				weight: Number(weight),
 				reps: Number(reps),
 				order: setsLength ? setsLength : 0,
 			});
-			setWeight("");
-			setReps("");
 		}
 		closeSheet();
 		closeParent();
+	};
+
+	const handleModalHide = () => {
+		Keyboard.dismiss();
+		setKeyboardHeight(0);
+		setIsClosing(false);
+		setWeight("");
+		setReps("");
 	};
 
 	return (
@@ -84,6 +99,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 			isVisible={visible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
+			onModalHide={handleModalHide}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
 			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
@@ -147,10 +163,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 						<TouchableOpacity
 							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
 							disabled={disabled}
-							onPress={() => {
-								Keyboard.dismiss();
-								handleAddSet();
-							}}
+							onPress={handleAddSet}
 							style={{
 								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
 							}}
