@@ -1,7 +1,7 @@
 import { useMutation } from "convex/react";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Pressable, Text, TextInput, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Pressable, Text, TextInput, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
@@ -14,6 +14,7 @@ export default function VahaSet() {
 		if (weight.toString().trim() === "" || Number.isNaN(Number(weight))) {
 			return;
 		}
+		Keyboard.dismiss();
 		addWeight({ weight });
 		setWeight("");
 		router.push("/(auth)/(tabs)/profile");

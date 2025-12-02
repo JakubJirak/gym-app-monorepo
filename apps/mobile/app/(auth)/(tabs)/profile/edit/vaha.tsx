@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { router } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Pressable, Text, TextInput, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Pressable, Text, TextInput, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
@@ -23,6 +23,7 @@ export default function Vaha() {
 		}
 
 		if (userWeight) {
+			Keyboard.dismiss();
 			await editWeight({
 				weightId: userWeight._id,
 				changeWeight: trimmed,

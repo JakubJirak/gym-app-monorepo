@@ -51,22 +51,24 @@ export default function Stats() {
 					<Statistics trainings={trainings} />
 				</View>
 
-				<View>
-					<Link className="mt-6 mb-4" href="/stats/history">
-						<View className="w-full flex-row items-center gap-3">
-							<History color={COLORS.accent} size={24} />
-							<Text className="font-bold text-white text-xl">Historie cviků</Text>
-							<View className="mb-1 ml-auto">
-								<ChevronRight color={COLORS.muted} size={20} />
+				<Link href="/stats/history">
+					<View>
+						<View className="mt-6 mb-4">
+							<View className="w-full flex-row items-center gap-3">
+								<History color={COLORS.accent} size={24} />
+								<Text className="font-bold text-white text-xl">Historie cviků</Text>
+								<View className="mb-1 ml-auto">
+									<ChevronRight color={COLORS.muted} size={20} />
+								</View>
 							</View>
 						</View>
-					</Link>
-					<View className="rounded-xl bg-secondary p-4">
-						<Text className="text-base text-muted">
-							Zobrazte si historii všech vašich sérií pro jednotlivé cviky!
-						</Text>
+						<View className="rounded-xl bg-secondary p-4">
+							<Text className="text-base text-muted">
+								Zobrazte si historii všech vašich sérií pro jednotlivé cviky!
+							</Text>
+						</View>
 					</View>
-				</View>
+				</Link>
 
 				{trainings.length > 0 && (
 					<View>

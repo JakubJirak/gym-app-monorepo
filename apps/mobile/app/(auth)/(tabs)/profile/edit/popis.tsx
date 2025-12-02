@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { router } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
@@ -17,6 +17,7 @@ export default function Popis() {
 		}
 
 		if (userDescription) {
+			Keyboard.dismiss();
 			await editDescription({
 				descriptionId: userDescription._id,
 				description: trimmed,

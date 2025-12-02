@@ -63,6 +63,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 
 	const handleAddSet = () => {
 		if (weight !== "" && reps !== "") {
+			Keyboard.dismiss();
 			addSet({
 				workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
 				weight: Number(weight),

@@ -65,6 +65,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 		weight === "" || reps === "" || (Number(weight) === defaultWeight && Number(reps) === defaultReps);
 
 	const handleAddSet = () => {
+		Keyboard.dismiss();
 		editSet({
 			setId: setId as Id<"sets">,
 			weight: Number(weight),
@@ -76,6 +77,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 	};
 
 	const handleDeleteSet = () => {
+		Keyboard.dismiss();
 		deleteSet({
 			setId: setId as Id<"sets">,
 		});
@@ -115,7 +117,13 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setWeight}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleAddSet();
+									}
+								}}
 								ref={inputRef}
+								returnKeyType="done"
 								value={weight}
 							/>
 						</View>
@@ -127,6 +135,12 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setReps}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleAddSet();
+									}
+								}}
+								returnKeyType="done"
 								value={reps}
 							/>
 						</View>

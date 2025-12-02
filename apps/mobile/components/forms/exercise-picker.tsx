@@ -1,6 +1,6 @@
 import { useQuery } from "convex/react";
 import { Check, ChevronDown, Plus } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, Keyboard, type ListRenderItem, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
@@ -22,9 +22,18 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [query, setQuery] = useState("");
 	const exercises = useQuery(api.exercises.getAllExercises);
+	const inputRef = useRef<TextInput>(null);
 
 	const chosenId = selectedId ?? internalSelectedId;
 	const chosenExercise = useMemo(() => exercises?.find((e) => e._id === chosenId) ?? null, [exercises, chosenId]);
+
+	useEffect(() => {
+		if (modalVisible) {
+			setTimeout(() => {
+				inputRef.current?.focus();
+			}, 100);
+		}
+	}, [modalVisible]);
 
 	const filtered = useMemo(() => {
 		const q = query.trim().toLowerCase();
@@ -40,8 +49,14 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 			setInternalSelectedId(item._id);
 		}
 		setQuery("");
+		Keyboard.dismiss();
 		setModalVisible(false);
 	}
+
+	const closeModal = () => {
+		Keyboard.dismiss();
+		setModalVisible(false);
+	};
 
 	const renderItem: ListRenderItem<Exercise> = ({ item }) => {
 		const selected = item._id === chosenId;
@@ -77,18 +92,15 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 				backdropOpacity={0.5}
 				hideModalContentWhileAnimating={true}
 				isVisible={modalVisible}
-				onBackButtonPress={() => setModalVisible(false)}
-				onBackdropPress={() => {
-					Keyboard.dismiss();
-					setModalVisible(false);
-				}}
-				onSwipeComplete={() => setModalVisible(false)}
+				onBackButtonPress={closeModal}
+				onBackdropPress={closeModal}
+				onSwipeComplete={closeModal}
 				propagateSwipe
 				style={{ justifyContent: "flex-end", margin: 0 }}
 				swipeDirection={["down"]}
 				useNativeDriver
 			>
-				<View className="h-[80%] rounded-t-xl bg-darker p-4">
+				<View className="h-[90%] rounded-t-xl bg-darker p-4">
 					<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />
 					<View className="mb-3 flex-row items-center justify-between">
 						<View className="flex-1">
@@ -98,6 +110,7 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 								onChangeText={setQuery}
 								placeholder="Hledej cvik..."
 								placeholderTextColorClassName="accent-muted"
+								ref={inputRef}
 								value={query}
 							/>
 						</View>

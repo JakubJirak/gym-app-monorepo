@@ -61,6 +61,7 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 	}, [visible]);
 
 	const handleEditNote = () => {
+		Keyboard.dismiss();
 		editNote({
 			workoutExerciseId: workoutExerciseId as Id<"workoutExercises">,
 			note,
