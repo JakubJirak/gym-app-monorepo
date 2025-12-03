@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "convex/react";
 import { router } from "expo-router";
+import { Pencil } from "lucide-react-native";
 import { useState } from "react";
-import { Keyboard, KeyboardAvoidingView, Pressable, Text, TextInput, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
@@ -9,6 +10,7 @@ export default function Vaha() {
 	const userWeight = useQuery(api.userWeights.getUserWeight);
 	const [weight, setWeight] = useState(userWeight ? String(userWeight.weight) : "");
 	const editWeight = useMutation(api.userWeights.updateUserWeight);
+	const [errMsg, setErrMsg] = useState("");
 
 	const handleEdit = async () => {
 		const trimmed = weight.toString().trim();
@@ -17,8 +19,15 @@ export default function Vaha() {
 		}
 
 		const numeric = Number(trimmed);
-		if (numeric > 200 || numeric < 10) {
+		if (numeric > 200) {
 			setWeight("");
+			setErrMsg("Váha nesmí být větší než 200 kg");
+			return;
+		}
+
+		if (numeric < 20) {
+			setWeight("");
+			setErrMsg("Váha nesmí být menší než 20 kg");
 			return;
 		}
 
@@ -48,10 +57,19 @@ export default function Vaha() {
 					submitBehavior="blurAndSubmit"
 					value={weight}
 				/>
+				{errMsg !== "" && (
+					<View className="items-center">
+						<Text className="text-base text-destructive">{errMsg}</Text>
+					</View>
+				)}
 			</View>
-			<Pressable className="mt-auto mb-4 rounded-2xl bg-accent py-3" onPress={handleEdit}>
-				<Text className="text-center font-medium text-2xl text-text">Uložit</Text>
-			</Pressable>
+			<TouchableOpacity
+				className="mt-auto mb-4 flex-row items-center justify-center gap-3 rounded-2xl bg-accent py-3"
+				onPress={handleEdit}
+			>
+				<Pencil color="white" size={22} />
+				<Text className="text-center font-semibold text-text text-xl">Upravit váhu</Text>
+			</TouchableOpacity>
 		</KeyboardAvoidingView>
 	);
 }

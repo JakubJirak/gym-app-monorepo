@@ -1,6 +1,6 @@
 import { useQuery } from "convex/react";
 import { Link } from "expo-router";
-import { KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { COLORS } from "@/constants/COLORS";
 import { authClient } from "@/src/lib/auth-client";
@@ -10,6 +10,14 @@ export default function Edit() {
 	const { data: session } = authClient.useSession();
 	const userWeight = useQuery(api.userWeights.getUserWeight);
 	const desc = useQuery(api.description.getUserDescription);
+
+	if (userWeight === undefined || desc === undefined) {
+		return (
+			<View className="flex-1 items-center justify-center bg-primary">
+				<ActivityIndicator color={COLORS.accent} size="large" />
+			</View>
+		);
+	}
 
 	if (!session) {
 		return null;
@@ -61,7 +69,7 @@ export default function Edit() {
 									Váha
 								</Text>
 								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
-									<Text className="text-lg text-text">Nastavte váhu</Text>
+									<Text className="text-lg text-muted">Nastavte váhu</Text>
 								</View>
 							</View>
 						</Link>
@@ -94,7 +102,7 @@ export default function Edit() {
 									Popis
 								</Text>
 								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
-									<Text className="text-lg text-text">Nenastaveno</Text>
+									<Text className="text-lg text-muted">Nenastaveno</Text>
 								</View>
 							</View>
 						</Link>

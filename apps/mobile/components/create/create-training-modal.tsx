@@ -1,7 +1,8 @@
+import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { useMutation } from "convex/react";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { toLocalISODateString } from "@/src/utils/date-utils";
@@ -81,14 +82,16 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 					</View>
 				</View>
 
-				<Pressable
-					className="mt-auto mb-8 rounded-2xl py-3"
+				<TouchableOpacity
+					className="mt-auto mb-8 flex-row items-center justify-center rounded-2xl px-4 py-3"
 					disabled={isDisabled}
 					onPress={createTraining}
 					style={{ backgroundColor: isDisabled ? COLORS.disabled : COLORS.accent }}
 				>
-					<Text className="text-center font-bold text-text text-xl">Vytvořit trénink</Text>
-				</Pressable>
+					<Ionicons color="white" name="add" size={28} />
+					<Text className="p-2 text-center font-bold text-text text-xl">Vytvořit</Text>
+					<Text className="-ml-0.5 text-center font-bold text-text text-xl">trénink</Text>
+				</TouchableOpacity>
 			</View>
 		</Modal>
 	);

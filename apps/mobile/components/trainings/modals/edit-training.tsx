@@ -78,6 +78,12 @@ export default function EditTrainingModal({
 								cursorColorClassName="accent-text"
 								maxLength={50}
 								onChangeText={setName}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleEditTraining();
+									}
+								}}
+								returnKeyType="done"
 								value={name}
 							/>
 						</View>

@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "convex/react";
 import { router } from "expo-router";
+import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
@@ -43,8 +44,12 @@ export default function Popis() {
 					value={description}
 				/>
 			</View>
-			<TouchableOpacity className="mt-auto mb-4 rounded-2xl bg-accent py-2.5" onPress={handleEdit}>
-				<Text className="text-center font-medium text-2xl text-text">Uložit</Text>
+			<TouchableOpacity
+				className="mt-auto mb-4 flex-row items-center justify-center gap-3 rounded-2xl bg-accent py-3"
+				onPress={handleEdit}
+			>
+				<Pencil color="white" size={22} />
+				<Text className="text-center font-semibold text-text text-xl">Uložit popis</Text>
 			</TouchableOpacity>
 		</KeyboardAvoidingView>
 	);
