@@ -25,10 +25,10 @@ export default function Index() {
 
 	return (
 		<ScrollView className="flex flex-1 bg-primary px-4 pt-4">
-			<View className="flex-1 gap-8 pb-8">
+			<View className="flex-1 gap-6 pb-8">
 				<WelcomeMessage />
-				<WeeklyStats trainings={workouts} />
 				<Tip />
+				<WeeklyStats trainings={workouts} />
 				{workouts.length > 0 ? (
 					<LastTraining workoutId={workouts[0]._id} workoutName={workouts[0].name} />
 				) : (

@@ -10,7 +10,7 @@ export default function TabsLayout() {
 	const [sheetVisible, setSheetVisible] = useState(false);
 	const [createModalVisible, setCreateModalVisible] = useState(false);
 	const [trainingRoutineModalVisible, setTrainingRoutineModalVisible] = useState(false);
-	const openSheet = () => setSheetVisible(true);
+	const openSheet = () => setCreateModalVisible(true);
 
 	return (
 		<>

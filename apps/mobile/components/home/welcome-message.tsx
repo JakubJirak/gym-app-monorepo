@@ -15,7 +15,7 @@ export default function WelcomeMessage() {
 	};
 
 	return (
-		<View className="mb-4 gap-2">
+		<View className="gap-2">
 			<View className="flex-row items-center gap-4">
 				<Dumbbell color={COLORS.accent} size={28} />
 				<Text className="font-bold text-3xl text-text">{getGreeting()}</Text>
