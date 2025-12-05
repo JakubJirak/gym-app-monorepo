@@ -37,7 +37,7 @@ export default function Training({ id, note, date, filter }: TrainingProps) {
 				/>
 				<View className="flex-1 gap-1">
 					<Text className="font-semibold text-lg text-text">
-						{format(new Date(date), "PPPP", { locale: cs })}
+						{format(new Date(date), "EEEE, dd.MM.yyyy", { locale: cs })}
 					</Text>
 					{note !== "" && (
 						<View className="flex-row items-center gap-2">

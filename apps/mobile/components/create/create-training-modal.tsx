@@ -54,7 +54,7 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 			swipeDirection={["down"]}
 			useNativeDriver
 		>
-			<View className="h-[75%] rounded-t-xl bg-darker p-4">
+			<View className="h-[60%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<Text className="mt-2 mb-6 text-center font-bold text-text text-xl">Nový trénink</Text>
@@ -76,7 +76,7 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 					style={{ backgroundColor: isDisabled ? COLORS.disabled : COLORS.accent }}
 				>
 					<Ionicons color="white" name="add" size={28} />
-					<Text className="p-2 text-center font-bold text-text text-xl">Vytvořit</Text>
+					<Text className="px-2 py-1 text-center font-bold text-text text-xl">Vytvořit</Text>
 					<Text className="-ml-0.5 text-center font-bold text-text text-xl">trénink</Text>
 				</TouchableOpacity>
 			</View>

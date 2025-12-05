@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import { Link } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -66,7 +67,7 @@ export default function SignUp() {
 				className="flex-1 bg-primary px-6"
 				keyboardVerticalOffset={35}
 			>
-				<ScrollView className="bg-primary py-8" showsVerticalScrollIndicator={false}>
+				<ScrollView className="bg-primary py-3.5" showsVerticalScrollIndicator={false}>
 					<View className="gap-6">
 						<Text className="mt-4 text-center font-bold text-4xl text-white">Registrace</Text>
 						<View className="gap-4">
@@ -169,7 +170,7 @@ export default function SignUp() {
 							{(formState) => (
 								<TouchableOpacity
 									activeOpacity={0.8}
-									className={`mt-4 rounded-xl px-6 py-4 ${
+									className={`mt-4 rounded-xl px-5 py-3 ${
 										formState.canSubmit ? "bg-accent" : "bg-disabled"
 									}`}
 									disabled={!formState.canSubmit}
@@ -181,6 +182,12 @@ export default function SignUp() {
 								</TouchableOpacity>
 							)}
 						</form.Subscribe>
+						<View className="mx-auto flex-row gap-1.5">
+							<Text className="text-white">Už máte účet?</Text>
+							<Link href="/sign-in">
+								<Text className="text-accent text-sm">Přihlaste se</Text>
+							</Link>
+						</View>
 						{isError && <Text className="mt-2 text-center text-red-500">{errorMessage}</Text>}
 					</View>
 				</ScrollView>

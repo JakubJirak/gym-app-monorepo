@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import { Link } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -120,7 +121,7 @@ export default function SignIn() {
 							{(formState) => (
 								<TouchableOpacity
 									activeOpacity={0.8}
-									className={`mt-4 rounded-xl px-6 py-4 ${formState.canSubmit ? "bg-accent" : "bg-disabled"}`}
+									className={`mt-4 rounded-xl px-6 py-3 ${formState.canSubmit ? "bg-accent" : "bg-disabled"}`}
 									disabled={!formState.canSubmit || isLoading}
 									onPress={form.handleSubmit}
 								>
@@ -130,6 +131,13 @@ export default function SignIn() {
 								</TouchableOpacity>
 							)}
 						</form.Subscribe>
+						<View className="mx-auto flex-row gap-1.5">
+							<Text className="text-white">Nemáte účet?</Text>
+							<Link href="/sign-up">
+								<Text className="text-accent text-sm">Registrujte se</Text>
+							</Link>
+						</View>
+
 						{isError && <Text className="mt-2 text-center text-red-500">{errorMessage}</Text>}
 					</View>
 				</View>
