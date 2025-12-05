@@ -1,3 +1,4 @@
+// biome-ignore lint/performance/noNamespaceImport: ui
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import type * as React from "react";
 

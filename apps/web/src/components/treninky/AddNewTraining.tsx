@@ -196,7 +196,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 	};
 
 	const isValidTraining = (): boolean => {
-		if (!(training.name.trim() && training.date && training.filterId) || training.exercises.length === 0) {
+		if (!(training.date && training.filterId) || training.exercises.length === 0) {
 			return false;
 		}
 		return training.exercises.every((exercise) => {

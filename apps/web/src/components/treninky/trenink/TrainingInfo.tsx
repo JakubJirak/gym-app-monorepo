@@ -1,9 +1,8 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Calendar } from "lucide-react";
+import { NotebookPen } from "lucide-react";
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
-import { formatDate } from "utils/date-utils";
 import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddExercise.tsx";
 import DialogDelete from "@/components/treninky/editDialogs/DialogDeleteTraining.tsx";
 import TrainingLi from "@/components/treninky/TrainingLi.tsx";
@@ -27,9 +26,22 @@ const TrainingInfo = ({ trainingId }: { trainingId: string }) => {
 	return (
 		<div>
 			<div className="mb-2 flex w-full items-center justify-between">
-				<div className="col-span-2 flex items-center gap-2 text-muted-foreground text-sm">
-					<Calendar className="h-4 w-4" />
-					{formatDate(new Date(training.workoutDate), "PPPP")}
+				{training.name !== "" && (
+					<div className="col-span-2 flex items-center gap-2 text-muted-foreground text-sm">
+						<NotebookPen size={16} />
+						{training.name}
+					</div>
+				)}
+				<div
+					className="mr-2 ml-auto rounded-xl border px-2 py-1 text-center text-xs"
+					style={{
+						borderColor: training?.filter?.color
+							? `${training.filter.color}99`
+							: "hsl(var(--border))",
+						color: training?.filter?.color || "hsl(var(--foreground))",
+					}}
+				>
+					{training?.filter?.name || "Žádný"}
 				</div>
 				<Badge variant="secondary">Cviky: {training.exercises.length}</Badge>
 			</div>

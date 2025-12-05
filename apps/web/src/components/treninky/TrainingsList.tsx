@@ -2,7 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useMutation } from "convex/react";
-import { Calendar, Dumbbell } from "lucide-react";
+import { Dumbbell, NotebookPen } from "lucide-react";
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { GiWeightLiftingUp } from "react-icons/gi";
@@ -10,7 +10,6 @@ import { formatDate } from "utils/date-utils.ts";
 import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddExercise.tsx";
 import DialogDelete from "@/components/treninky/editDialogs/DialogDeleteTraining.tsx";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
-import { Badge } from "@/components/ui/badge.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
@@ -85,20 +84,37 @@ const TrainingsList = () => {
 								>
 									<AccordionTrigger className="flex items-center gap-2 py-3 hover:no-underline">
 										<Link
-											className="grid w-full grid-cols-[5fr_2fr] grid-rows-2 items-center"
+											className="flex flex-1 flex-row items-center gap-y-1"
 											params={{ trainingId: training._id }}
 											to={"/treninky/$trainingId"}
 										>
-											<div className="font-semibold">{training.name}</div>
-											<Badge variant="secondary">
-												{training?.filter?.name}
-											</Badge>
-											<div className="col-span-2 flex items-center gap-2 text-muted-foreground text-sm">
-												<Calendar className="h-4 w-4" />
-												{formatDate(
-													new Date(training.workoutDate),
-													"PPPP"
+											<div className="flex flex-1 flex-col gap-1">
+												<div className="font-semibold text-base">
+													{formatDate(
+														new Date(training.workoutDate),
+														"PPPP"
+													)}
+												</div>
+												{training.name && (
+													<div className="flex items-center gap-2 text-muted-foreground text-sm">
+														<NotebookPen className="h-4 w-4" />
+														{training.name}
+													</div>
 												)}
+											</div>
+
+											<div
+												className="rounded-full border px-3 py-1 text-center"
+												style={{
+													borderColor: training?.filter?.color
+														? `${training.filter.color}99`
+														: "hsl(var(--border))",
+													color:
+														training?.filter?.color ||
+														"hsl(var(--foreground))",
+												}}
+											>
+												{training?.filter?.name || "Žádný"}
 											</div>
 										</Link>
 									</AccordionTrigger>

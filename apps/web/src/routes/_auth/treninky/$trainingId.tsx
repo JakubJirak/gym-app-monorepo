@@ -1,6 +1,7 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { formatDate } from "utils/date-utils";
 import Header from "@/components/Header.tsx";
 import MuscleGroupTrainingStats from "@/components/treninky/trenink/MuscleGroupTrainingStats";
 import TrainingInfo from "@/components/treninky/trenink/TrainingInfo.tsx";
@@ -21,11 +22,13 @@ function RouteComponent() {
 		})
 	);
 
-	if (!training) return null;
+	if (!training) {
+		return null;
+	}
 
 	return (
 		<div className="pb-8">
-			<Header page={training.name} />
+			<Header page={formatDate(new Date(training.workoutDate), "dd.MM.yyyy")} />
 
 			<Tabs className="mx-auto w-[90%] max-w-[500px] space-y-3" defaultValue="cviky">
 				<TabsList className="w-full bg-secondary">

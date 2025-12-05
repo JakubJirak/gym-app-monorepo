@@ -1,7 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router";
 import Header from "@/components/Header.tsx";
 import TrainingsList from "@/components/treninky/TrainingsList";
 import { authClient } from "@/lib/auth-client.ts";
-import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth/treninky/")({
 	component: RouteComponent,
@@ -15,7 +15,9 @@ export const Route = createFileRoute("/_auth/treninky/")({
 
 function RouteComponent() {
 	const { data: session } = authClient.useSession();
-	if (!session) return null;
+	if (!session) {
+		return null;
+	}
 
 	return (
 		<div className="pb-8">
