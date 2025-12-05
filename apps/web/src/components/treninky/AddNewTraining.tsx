@@ -35,7 +35,6 @@ export type Set = {
 
 export type Exercise = {
 	tempId: string;
-	name: string;
 	exerciseId: string | null;
 	notes: string;
 	sets: Set[];
@@ -43,7 +42,6 @@ export type Exercise = {
 };
 
 export type Training = {
-	name: string;
 	workoutDate: string;
 	filterId: Id<"filters">;
 	exercises?: {
@@ -89,7 +87,6 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 		const tempId = `temp-${Date.now()}-${Math.random()}`;
 		const newExercise: Exercise = {
 			tempId,
-			name: "",
 			exerciseId: null,
 			notes: "",
 			order: training.exercises.length,
@@ -194,7 +191,6 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 
 	// Upravená funkce - nyní přijímá ExerciseSelect místo ExerciseOption
 	const selectExercise = (tempId: string, selected: ExerciseSelect) => {
-		updateExercise(tempId, "name", selected.name);
 		updateExercise(tempId, "exerciseId", selected._id); // Změněno z selected.id na selected._id
 		handleSetSelectedStatus(tempId, selected);
 	};
@@ -204,7 +200,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 			return false;
 		}
 		return training.exercises.every((exercise) => {
-			if (!exercise.name.trim() || exercise.exerciseId == null) {
+			if (exercise.exerciseId == null) {
 				return false;
 			}
 			return exercise.sets.some((set) => set.reps.trim() !== "" && set.weight.trim() !== "");
@@ -217,7 +213,6 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 		}
 
 		const newTraining: Training = {
-			name: training.name,
 			workoutDate: training.date.toISOString(),
 			filterId: training.filterId,
 			exercises: training.exercises.map((ex) => ({
@@ -281,19 +276,6 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 								</p>
 							</div>
 						)}
-
-						<div className="space-y-2">
-							<Label htmlFor="training-name">Název tréninku *</Label>
-							<Input
-								className="text-sm placeholder:text-sm"
-								id="training-name"
-								onChange={(e) =>
-									setTraining((prev) => ({ ...prev, name: e.target.value }))
-								}
-								placeholder="Zadejte název tréninku"
-								value={training.name}
-							/>
-						</div>
 
 						<div className="space-y-2">
 							<Label htmlFor="filter-select">Filtr *</Label>

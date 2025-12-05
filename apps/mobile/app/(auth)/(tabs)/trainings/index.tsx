@@ -49,7 +49,7 @@ export default function Trainings() {
 					</View>
 				)}
 				renderItem={({ item }) => (
-					<Training date={item.workoutDate} filter={item.filter} id={item._id} name={item.name} />
+					<Training date={item.workoutDate} filter={item.filter} id={item._id} note={item.name} />
 				)}
 				showsHorizontalScrollIndicator={false}
 				showsVerticalScrollIndicator={false}

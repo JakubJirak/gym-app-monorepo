@@ -5,6 +5,8 @@ import {
 } from "@react-navigation/material-top-tabs";
 import type { ParamListBase, TabNavigationState } from "@react-navigation/native";
 import { useQuery } from "convex/react";
+import { format } from "date-fns/format";
+import { cs } from "date-fns/locale/cs";
 import { useLocalSearchParams, withLayoutContext } from "expo-router";
 import { createContext } from "react";
 import { Text, View } from "react-native";
@@ -43,11 +45,16 @@ export default function TrainingIdLayout() {
 		return null;
 	}
 
+	const filterColor = workout.filter?.color || COLORS.accent;
+
 	return (
 		<TrainingIdContext.Provider value={id}>
 			<View className="flex-1">
 				<View className="px-4">
-					<TrainingHeader text={workout.name} trainingId={id as string} />
+					<TrainingHeader
+						text={format(new Date(workout.workoutDate), "dd.MM.yyyy", { locale: cs })}
+						trainingId={id as string}
+					/>
 				</View>
 
 				<MaterialTopTabs
@@ -56,14 +63,15 @@ export default function TrainingIdLayout() {
 							backgroundColor: COLORS.primary,
 							marginTop: -12,
 						},
-						tabBarActiveTintColor: COLORS.accent,
+						tabBarActiveTintColor: filterColor,
 						tabBarInactiveTintColor: "#999",
 						tabBarIndicatorStyle: {
-							backgroundColor: COLORS.accent,
+							backgroundColor: filterColor,
 						},
 						tabBarLabel: ({ focused, children }) => (
 							<Text
-								className={`${focused ? "font-bold text-accent" : "font-normal text-muted"} text-lg`}
+								className={`${focused ? "" : "font-normal text-muted"} text-lg`}
+								style={{ color: focused ? filterColor : "#999" }}
 							>
 								{children}
 							</Text>

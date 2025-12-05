@@ -51,7 +51,7 @@ export default function Exercise({
 					)}
 				</View>
 
-				<Text className="rounded-xl border border-inactive px-2 py-1 font-light text-muted text-xs">
+				<Text className="rounded-xl border border-muted/25 px-2 py-1 font-light text-muted text-xs">
 					{muscleGroup}
 				</Text>
 			</View>

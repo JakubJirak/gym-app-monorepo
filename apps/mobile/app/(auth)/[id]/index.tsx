@@ -1,8 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
-import { format } from "date-fns";
-import { cs } from "date-fns/locale";
 import { useLocalSearchParams } from "expo-router";
+import { NotebookPen } from "lucide-react-native";
 import { useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import Exercise from "@/components/trainings/exercise";
@@ -39,21 +37,18 @@ export default function TrainingById() {
 					keyExtractor={(item) => item._id}
 					ListHeaderComponent={() => (
 						<>
-							<View className="mt-3 flex-row items-center pb-4">
-								<View className="flex-1 flex-row gap-2">
-									<Ionicons
-										color={COLORS.muted}
-										name="calendar-outline"
-										size={20}
-									/>
-									<Text className="text-muted">
-										{format(new Date(workout.workoutDate), "PPPP", {
-											locale: cs,
-										})}
-									</Text>
-								</View>
+							<View className="mt-3 flex-row items-center gap-2">
+								{workout.name !== "" && (
+									<View className="max-w-1/2 flex-row items-center gap-2">
+										<NotebookPen color={COLORS.muted} size={16} />
+										<Text className="text-muted text-sm">{workout.name}</Text>
+									</View>
+								)}
+								<Text className="ml-auto rounded-full bg-secondary px-3 py-2 text-text">
+									Cviky: {workout.exercises.length}
+								</Text>
 								<Text
-									className={"rounded-xl border px-2.5 py-1.5 text-base text-text"}
+									className="rounded-xl border px-2.5 py-1.5 text-base text-text"
 									style={{
 										borderColor: `${workout?.filter?.color}CC`,
 										color: "white",

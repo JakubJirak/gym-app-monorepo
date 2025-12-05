@@ -2,7 +2,7 @@ import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { useMutation } from "convex/react";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { toLocalISODateString } from "@/src/utils/date-utils";
@@ -20,23 +20,20 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 	const closeSheet = () => setCreateModalVisible(false);
 	const [filterId, setFilterId] = useState<string | undefined>(undefined);
 	const [date, setDate] = useState(new Date());
-	const [name, setName] = useState("");
 	const createWorkout = useMutation(api.workouts.createWorkout);
 	const router = useRouter();
 
-	const isDisabled = name.trim() === "" || filterId === undefined;
+	const isDisabled = filterId === undefined;
 
 	const createTraining = async () => {
 		if (filterId !== undefined) {
 			const isoDate = toLocalISODateString(date);
 			const workoutId = await createWorkout({
-				name: name.trim(),
 				workoutDate: isoDate,
 				filterId: filterId as Id<"filters">,
 			});
 			if (workoutId) {
 				closeSheet();
-				setName("");
 				setFilterId(undefined);
 				setDate(new Date());
 				router.navigate({ pathname: "/(auth)/[id]", params: { id: workoutId.workoutId } });
@@ -62,16 +59,6 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 
 				<Text className="mt-2 mb-6 text-center font-bold text-text text-xl">Nový trénink</Text>
 				<View className="gap-4">
-					<View>
-						<Text className="mb-2 font-semibold text-lg text-text">Název tréninku</Text>
-						<TextInput
-							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
-							cursorColorClassName="accent-text"
-							maxLength={50}
-							onChangeText={setName}
-							value={name}
-						/>
-					</View>
 					<View>
 						<Text className="mb-2 font-semibold text-lg text-text">Datum</Text>
 						<DatePicker date={date} setDate={setDate} />

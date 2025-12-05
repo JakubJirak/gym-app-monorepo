@@ -178,7 +178,6 @@ export const getWorkoutById = query({
 
 export const createWorkout = mutation({
 	args: {
-		name: v.string(),
 		workoutDate: v.string(),
 		filterId: v.id("filters"),
 		exercises: v.optional(
@@ -212,7 +211,7 @@ export const createWorkout = mutation({
 		// 1. Vytvoření tréninku
 		const workoutId = await ctx.db.insert("workouts", {
 			userId,
-			name: args.name,
+			name: "",
 			workoutDate: args.workoutDate,
 			filterId: args.filterId,
 		});

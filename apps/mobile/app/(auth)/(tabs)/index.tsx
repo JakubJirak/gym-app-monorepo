@@ -30,7 +30,7 @@ export default function Index() {
 				<Tip />
 				<WeeklyStats trainings={workouts} />
 				{workouts.length > 0 ? (
-					<LastTraining workoutId={workouts[0]._id} workoutName={workouts[0].name} />
+					<LastTraining workoutId={workouts[0]._id} workoutName={workouts[0].workoutDate} />
 				) : (
 					<EmptyTrainings />
 				)}

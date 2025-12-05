@@ -29,7 +29,6 @@ const TrainingsList = () => {
 
 	const handleAddTraining = async (training: Training) => {
 		await createWorkout({
-			name: training.name,
 			workoutDate: training.workoutDate,
 			filterId: training.filterId,
 			exercises: training.exercises,

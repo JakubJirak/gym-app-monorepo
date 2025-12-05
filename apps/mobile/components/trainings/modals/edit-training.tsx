@@ -34,12 +34,11 @@ export default function EditTrainingModal({
 	const editWorkout = useMutation(api.workouts.editWorkout);
 
 	const disabled =
-		name === "" ||
 		filterId === undefined ||
 		(name === defaultName && filterId === defaultFilterId && toLocalISODateString(date) === defaultDate);
 
-	const handleEditTraining = () => {
-		editWorkout({
+	const handleEditTraining = async () => {
+		await editWorkout({
 			workoutId: trainingId as Id<"workouts">,
 			name,
 			workoutDate: toLocalISODateString(date),
@@ -72,7 +71,7 @@ export default function EditTrainingModal({
 
 					<View className="gap-4">
 						<View>
-							<Text className="mb-2 font-semibold text-lg text-text">Název tréninku</Text>
+							<Text className="mb-2 font-semibold text-lg text-text">Poznámka</Text>
 							<TextInput
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
