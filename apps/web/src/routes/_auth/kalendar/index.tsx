@@ -1,17 +1,16 @@
-import Header from "@/components/Header.tsx";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
-import { Badge } from "@/components/ui/badge.tsx";
-import { Calendar, CalendarDayButton } from "@/components/ui/calendar.tsx";
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { NotebookPen } from "lucide-react";
 import { useState } from "react";
 import { toLocalISODateString } from "utils/date-utils";
-import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import CalendarTrainingLi from "@/components/calendar/CalendarTrainingLi";
+import Header from "@/components/Header.tsx";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
+import { Calendar, CalendarDayButton } from "@/components/ui/calendar.tsx";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export const Route = createFileRoute("/_auth/kalendar/")({
 	component: RouteComponent,
@@ -33,97 +32,113 @@ function RouteComponent() {
 
 	const matchingTrainings = trainings?.filter((training) => training.workoutDate === toLocalISODateString(date));
 
-	function formatDate(date: Date | null, formatString: string) {
-		if (date) {
-			return format(date, formatString, { locale: cs });
+	function formatDate(d: Date | null, formatString: string) {
+		if (d) {
+			return format(d, formatString, { locale: cs });
 		}
 		return "neplatne datum";
 	}
 
 	return (
-		<>
-			<div className="">
-				<Header page="KALENDÁŘ" />
+		<div className="">
+			<Header page="KALENDÁŘ" />
 
-				<div className="max-w-[500px] mx-auto w-[90%] space-y-4 pb-8">
-					<div className="">
-						<Calendar
-							locale={cs}
-							mode="single"
-							defaultMonth={date}
-							selected={date}
-							onSelect={(d) => d && setDate(d)}
-							className="w-full rounded-2xl border border-border"
-							components={{
-								DayButton: ({ children, modifiers, day, ...props }) => {
-									const trainingsDates = allDates();
-									const dayString = toLocalISODateString(day.date);
-									const isSpecial = trainingsDates?.includes(dayString);
+			<div className="mx-auto w-[90%] max-w-[500px] space-y-4 pb-8">
+				<div className="">
+					<Calendar
+						className="w-full rounded-2xl border border-border"
+						components={{
+							// biome-ignore lint/correctness/noNestedComponentDefinitions: faster
+							DayButton: ({ children, modifiers, day, ...props }) => {
+								const trainingsDates = allDates();
+								const dayString = toLocalISODateString(day.date);
+								const isSpecial = trainingsDates?.includes(dayString);
 
-									return (
-										<CalendarDayButton
-											day={day}
-											modifiers={modifiers}
-											{...props}
-											className={
-												isSpecial
-													? "bg-ring/70 rounded-lg text-white font-bold"
-													: ""
-											}
-										>
-											{children}
-										</CalendarDayButton>
-									);
-								},
-							}}
-						/>
-					</div>
-					<div className="">
-						<Accordion type="multiple" className="w-full space-y-2">
-							{matchingTrainings?.map((training) => (
-								<AccordionItem
-									key={training._id}
-									value={training._id}
-									className="bg-background has-focus-visible:border-ring has-focus-visible:ring-ring/50 rounded-xl border px-4 outline-none last:border-b has-focus-visible:ring-[3px]"
-								>
-									<AccordionTrigger className="hover:no-underline flex items-center py-3 gap-2">
-										<Link
-											className="w-full grid grid-cols-[5fr_2fr] items-center grid-rows-2"
-											to={"/treninky/$trainingId"}
-											params={{ trainingId: training._id }}
-										>
-											<div className="font-semibold">{training.name}</div>
-											<Badge variant="secondary">
-												Cviky: {training.exercises.length}
-											</Badge>
-											<div className="flex col-span-2 items-center gap-2 text-sm text-muted-foreground">
-												<CalendarIcon className="h-4 w-4" />
+								return (
+									<CalendarDayButton
+										day={day}
+										modifiers={modifiers}
+										{...props}
+										className={
+											isSpecial
+												? "rounded-lg bg-ring/70 font-bold text-white"
+												: ""
+										}
+									>
+										{children}
+									</CalendarDayButton>
+								);
+							},
+						}}
+						defaultMonth={date}
+						locale={cs}
+						mode="single"
+						onSelect={(d) => d && setDate(d)}
+						selected={date}
+					/>
+				</div>
+				<div className="">
+					<Accordion className="w-full space-y-2" type="multiple">
+						{matchingTrainings?.map((training) => (
+							<AccordionItem
+								className="rounded-xl border bg-background px-4 outline-none last:border-b has-focus-visible:border-ring has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50"
+								key={training._id}
+								value={training._id}
+							>
+								<AccordionTrigger className="flex items-center gap-2 py-3 hover:no-underline">
+									<Link
+										className="flex flex-1 flex-row items-center gap-y-1"
+										params={{ trainingId: training._id }}
+										to={"/treninky/$trainingId"}
+									>
+										<div className="flex flex-1 flex-col gap-1">
+											<div className="font-semibold text-base">
 												{formatDate(
 													new Date(training.workoutDate),
-													"PPPP",
+													"PPPP"
 												)}
 											</div>
-										</Link>
-									</AccordionTrigger>
-									{/*@ts-ignore */}
-									<AccordionContent className="pb-2">
-										<div className="flex flex-col gap-2 items-stretch relative">
-											{training.exercises.map((exercise, index) => (
-												<CalendarTrainingLi
-													key={exercise._id}
-													exercise={exercise}
-													index={index}
-													len={training.exercises.length}
-												/>
-											))}
+											{training.name && (
+												<div className="flex items-center gap-2 text-muted-foreground text-sm">
+													<NotebookPen className="h-4 w-4" />
+													{training.name}
+												</div>
+											)}
 										</div>
-									</AccordionContent>
-								</AccordionItem>
-							))}
-						</Accordion>
-					</div>
+
+										<div
+											className="rounded-full border px-3 py-1 text-center"
+											style={{
+												borderColor: training?.filter?.color
+													? `${training.filter.color}99`
+													: "hsl(var(--border))",
+												color:
+													training?.filter?.color ||
+													"hsl(var(--foreground))",
+											}}
+										>
+											{training?.filter?.name || "Žádný"}
+										</div>
+									</Link>
+								</AccordionTrigger>
+
+								<AccordionContent className="pb-4">
+									<div className="relative flex flex-col items-stretch gap-2">
+										{training.exercises.map((exercise, index) => (
+											<CalendarTrainingLi
+												exercise={exercise}
+												index={index}
+												key={exercise._id}
+												len={training.exercises.length}
+											/>
+										))}
+									</div>
+								</AccordionContent>
+							</AccordionItem>
+						))}
+					</Accordion>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
