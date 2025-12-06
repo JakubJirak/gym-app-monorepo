@@ -78,7 +78,7 @@ export default function FilterDropdown({ value, onChange }: Props) {
 					) : null}
 
 					<Text className={`${selected ? "text-text" : "text-muted"} text-base`}>
-						{selected ? selected.name : "Vyberte filtr..."}
+						{selected ? selected.name : "Vyberte kategorii..."}
 					</Text>
 				</View>
 
@@ -107,7 +107,9 @@ export default function FilterDropdown({ value, onChange }: Props) {
 						keyExtractor={(item) => item._id}
 						ListEmptyComponent={() => (
 							<View className="items-center py-8">
-								<Text className="mb-4 text-center text-muted">Nemáte žádné filtry</Text>
+								<Text className="mb-4 text-center text-muted">
+									Nemáte žádné kategorie
+								</Text>
 							</View>
 						)}
 						ListFooterComponent={() => (
@@ -121,7 +123,9 @@ export default function FilterDropdown({ value, onChange }: Props) {
 									}}
 								>
 									<Plus color="white" size={20} />
-									<Text className="font-semibold text-text">Přidat nový filtr</Text>
+									<Text className="font-semibold text-text">
+										Přidat novou kategorii
+									</Text>
 								</TouchableOpacity>
 							</View>
 						)}

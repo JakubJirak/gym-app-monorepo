@@ -20,6 +20,7 @@ export default function History() {
 						id: training._id,
 						name: formatDate(new Date(training.workoutDate), "d. MMMM yyyy"),
 						date: training.workoutDate,
+						note: cvik.note,
 						sets: cvik.sets,
 					};
 				}
@@ -61,7 +62,9 @@ export default function History() {
 						</View>
 					) : null
 				}
-				renderItem={({ item }) => <HistoryExercise name={item.name} sets={item.sets} />}
+				renderItem={({ item }) => (
+					<HistoryExercise name={item.name} note={item.note} sets={item.sets} />
+				)}
 				showsVerticalScrollIndicator={false}
 			/>
 		</View>

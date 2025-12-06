@@ -8,7 +8,7 @@ export default function Links() {
 
 			<ProfileLink href="/profile/exercises" icon="barbell-outline" text="Cviky" />
 
-			<ProfileLink href="/profile/filtry" icon="people-outline" text="Filtry" />
+			<ProfileLink href="/profile/filtry" icon="funnel-outline" text="Kategorie" />
 
 			{/* <ProfileLink href="/profile/rutiny" icon="layers-outline" text="Rutiny" />
 

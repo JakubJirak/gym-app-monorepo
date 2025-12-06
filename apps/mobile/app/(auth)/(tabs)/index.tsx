@@ -2,6 +2,7 @@ import { useQuery } from "convex/react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import EmptyTrainings from "@/components/home/empty-trainings";
 import LastTraining from "@/components/home/last-training";
+import QuickLinks from "@/components/home/quick-links";
 import Tip from "@/components/home/tip";
 import WeeklyStats from "@/components/home/weekly-stats";
 import WelcomeMessage from "@/components/home/welcome-message";
@@ -24,8 +25,8 @@ export default function Index() {
 	}
 
 	return (
-		<ScrollView className="flex flex-1 bg-primary px-4 pt-4">
-			<View className="flex-1 gap-6 pb-8">
+		<ScrollView className="flex flex-1 bg-primary px-4 pt-4" showsVerticalScrollIndicator={false}>
+			<View className="flex-1 gap-10 pb-8">
 				<WelcomeMessage />
 				<Tip />
 				<WeeklyStats trainings={workouts} />
@@ -34,6 +35,7 @@ export default function Index() {
 				) : (
 					<EmptyTrainings />
 				)}
+				<QuickLinks />
 			</View>
 		</ScrollView>
 	);

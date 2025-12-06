@@ -91,7 +91,7 @@ export default function EditTrainingModal({
 							<DatePicker date={date} setDate={setDate} />
 						</View>
 						<View>
-							<Text className="mb-2 font-semibold text-lg text-text">Filtr</Text>
+							<Text className="mb-2 font-semibold text-lg text-text">Kategorie</Text>
 							<FilterDropdown onChange={setFilterId} value={filterId} />
 						</View>
 					</View>

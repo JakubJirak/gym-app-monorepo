@@ -34,7 +34,7 @@ export default function Filtry() {
 
 	return (
 		<View className="flex-1 bg-primary px-4">
-			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Filtry" />
+			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Kategorie" />
 			<TouchableOpacity
 				className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-2"
 				onPress={() => setAddFilter(true)}

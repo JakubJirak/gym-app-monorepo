@@ -79,7 +79,7 @@ export default function AddFilterModal({ sheetVisible, setSheetVisible }: AddFil
 				<View className="flex-1 justify-between">
 					<View className="mt-2 flex-row items-center gap-2 self-center">
 						<Ionicons color="white" name="add-outline" size={32} />
-						<Text className="font-bold text-2xl text-text">Přidat filtr</Text>
+						<Text className="font-bold text-2xl text-text">Přidat kategorii</Text>
 					</View>
 
 					<View className="gap-4">
@@ -131,7 +131,7 @@ export default function AddFilterModal({ sheetVisible, setSheetVisible }: AddFil
 							}}
 						>
 							<Ionicons color="white" name="add" size={28} />
-							<Text className="p-2 font-semibold text-lg text-text">Přidat filtr</Text>
+							<Text className="p-2 font-semibold text-lg text-text">Přidat kategorii</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

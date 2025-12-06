@@ -90,7 +90,7 @@ export default function EditFilterModal({
 				<View className="flex-1 justify-between">
 					<View className="mt-2 flex-row items-center gap-2 self-center">
 						<Pencil color="white" size={20} />
-						<Text className="font-bold text-2xl text-text">Upravit filtr</Text>
+						<Text className="font-bold text-2xl text-text">Upravit kategorii</Text>
 					</View>
 
 					<View className="gap-4">
@@ -142,7 +142,7 @@ export default function EditFilterModal({
 							}}
 						>
 							<Pencil color="white" size={16} />
-							<Text className="p-2 font-semibold text-lg text-text">Upravit filtr</Text>
+							<Text className="p-2 font-semibold text-lg text-text">Upravit kategorii</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

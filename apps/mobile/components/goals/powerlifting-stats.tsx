@@ -1,5 +1,5 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
-import { Trophy } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
@@ -19,7 +19,7 @@ export default function PowerliftingStats({
 	return (
 		<View className="mt-6 px-2">
 			<View className="mb-6 flex flex-row items-center gap-3 font-bold text-lg">
-				<Trophy color={COLORS.accent} size={24} />
+				<Ionicons color={COLORS.accent} name="trophy-outline" size={26} />
 				<Text className="font-bold text-text text-xl">Powerlifting PR</Text>
 			</View>
 			{total === 0 ? (

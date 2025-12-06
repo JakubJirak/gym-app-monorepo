@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react";
-import { Link } from "expo-router";
+import { type Href, Link } from "expo-router";
 import { ChevronRight, Lightbulb } from "lucide-react-native";
 import { useMemo } from "react";
 import { Text, View } from "react-native";
@@ -22,8 +22,7 @@ export default function Tip() {
 	}
 
 	return (
-		// biome-ignore lint/suspicious/noExplicitAny: dynamic route
-		<Link href={randomTip.link as any}>
+		<Link className="-my-4" href={randomTip.link as Href}>
 			<View className="w-full flex-row items-center gap-4 rounded-xl bg-secondary px-4 py-3.5">
 				<View className="rounded-lg bg-accent/20 p-2">
 					<Lightbulb color={COLORS.accent} size={20} />

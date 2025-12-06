@@ -3,6 +3,7 @@ import type { Id } from "../../../../packages/convex/convex/_generated/dataModel
 
 type HistoryExerciseProps = {
 	name: string;
+	note: string | undefined;
 	sets: {
 		_id: Id<"sets">;
 		reps: number;
@@ -11,7 +12,7 @@ type HistoryExerciseProps = {
 	}[];
 };
 
-export default function HistoryExercise({ name, sets }: HistoryExerciseProps) {
+export default function HistoryExercise({ name, note, sets }: HistoryExerciseProps) {
 	return (
 		<View className="py-4">
 			<View className="mb-1 flex-row items-center">
@@ -31,6 +32,11 @@ export default function HistoryExercise({ name, sets }: HistoryExerciseProps) {
 					</View>
 				)}
 			/>
+			{note ? (
+				<View className="mt-2">
+					<Text className="text-muted">{note}</Text>
+				</View>
+			) : null}
 		</View>
 	);
 }
