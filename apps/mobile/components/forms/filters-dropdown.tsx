@@ -118,7 +118,6 @@ export default function FilterDropdown({ value, onChange }: Props) {
 									activeOpacity={0.8}
 									className="flex-row items-center gap-2 rounded-xl bg-secondary px-4 py-3"
 									onPress={() => {
-										setModalVisible(false);
 										setAddFilterVisible(true);
 									}}
 								>

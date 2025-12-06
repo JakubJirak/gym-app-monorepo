@@ -17,23 +17,19 @@ export default function TrainingFooter({ id, exercises, isEdit, setIsEdit }: Tra
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [addExerciseModal, setAddExerciseModal] = useState(false);
 
-	const stopid = () => {
-		console.log(id);
-	};
-
 	return (
 		<View className="h-[72px] flex-row items-center border-[#1a1a1a] border-t bg-darker pr-2 pb-8">
-			<TouchableOpacity className="flex w-1/4 items-center pt-2" onPress={stopid}>
+			{/* <TouchableOpacity className="flex w-1/4 items-center pt-2">
 				<Ionicons color="white" name="share-social-outline" size={24} />
+			</TouchableOpacity> */}
+			<TouchableOpacity className="flex w-1/3 items-center pt-2" onPress={() => setDeleteModal(true)}>
+				<Ionicons color="white" name="trash-outline" size={24} />
 			</TouchableOpacity>
-			<TouchableOpacity className="flex w-1/4 items-center pt-2" onPress={() => setAddExerciseModal(true)}>
+			<TouchableOpacity className="flex w-1/3 items-center pt-2" onPress={() => setAddExerciseModal(true)}>
 				<Ionicons color="white" name="add-outline" size={32} />
 			</TouchableOpacity>
-			<TouchableOpacity className="flex w-1/4 items-center pt-2" onPress={() => setIsEdit(!isEdit)}>
+			<TouchableOpacity className="flex w-1/3 items-center pt-2" onPress={() => setIsEdit(!isEdit)}>
 				<Pencil color={isEdit ? COLORS.accent : "white"} size={22} />
-			</TouchableOpacity>
-			<TouchableOpacity className="flex w-1/4 items-center pt-2" onPress={() => setDeleteModal(true)}>
-				<Ionicons color="white" name="trash-outline" size={24} />
 			</TouchableOpacity>
 
 			<DeleteTrainingModal setSheetVisible={setDeleteModal} sheetVisible={deleteModal} trainingId={id} />
