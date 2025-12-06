@@ -1,13 +1,17 @@
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { Stack } from "expo-router";
+// biome-ignore lint/performance/noNamespaceImport: expo import
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
 import "../global.css";
 import { COLORS } from "@/constants/COLORS";
 import { authClient } from "../src/lib/auth-client";
 
+SplashScreen.preventAutoHideAsync();
+
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL as string, {
-	// Optionally pause queries until the user is authenticated
 	expectAuth: true,
 	unsavedChangesWarning: false,
 });
@@ -25,10 +29,20 @@ export default function RootLayout() {
 }
 
 function StackLayout() {
-	//const isAuth = true;
-	const { data: session } = authClient.useSession();
-	// biome-ignore lint/complexity/noUselessTernary: guard needs boolean
+	const { data: session, isPending } = authClient.useSession();
+	// biome-ignore lint/complexity/noUselessTernary: auth route boolean
 	const isAuth = session ? true : false;
+
+	useEffect(() => {
+		if (!isPending) {
+			SplashScreen.hideAsync();
+		}
+	}, [isPending]);
+
+	// Keep splash screen visible while auth is loading
+	if (isPending) {
+		return null;
+	}
 
 	return (
 		<Stack
