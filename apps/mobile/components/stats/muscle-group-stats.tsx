@@ -1,43 +1,42 @@
+import { useQuery } from "convex/react";
 import { memo, useMemo } from "react";
 import { Text, View } from "react-native";
 import { RadarChart } from "react-native-gifted-charts";
 import { COLORS } from "@/constants/COLORS";
-import type { api } from "../../../../packages/convex/convex/_generated/api";
+import { api } from "../../../../packages/convex/convex/_generated/api";
 
 type MuscleGroupStatsProps = {
 	trainings: typeof api.workouts.getUserWorkouts._returnType;
 };
 
-const MUSCLE_GROUP_COLORS = [
-	COLORS.accent,
-	"#3b82f6",
-	"#8b5cf6",
-	"#ec4899",
-	"#f59e0b",
-	"#10b981",
-	"#06b6d4",
-	"#f43f5e",
-];
-
 const MuscleGroupStats = memo(function MuscleGroupStatsComponent({ trainings }: MuscleGroupStatsProps) {
+	const allMuscleGroups = useQuery(api.muscleGroups.getAllMuscleGroups);
+
 	const muscleGroupCount = useMemo(() => {
-		if (!trainings) {
+		if (!(trainings && allMuscleGroups)) {
 			return {};
 		}
 
-		const count = trainings
+		// Initialize all muscle groups with 0
+		const count: Record<string, number> = {};
+		for (const group of allMuscleGroups) {
+			count[group.name] = 0;
+		}
+
+		// Count exercises per muscle group
+		// biome-ignore lint/complexity/noForEach: for each is simpler to read
+		trainings
 			.flatMap((t) => t.exercises)
-			.reduce<Record<string, number>>((acc, cvik) => {
+			.forEach((cvik) => {
 				const group: string =
 					cvik.exercise?.muscleGroup && cvik.exercise.muscleGroup !== null
 						? cvik.exercise.muscleGroup
 						: "Ostatní";
-				acc[group] = (acc[group] || 0) + 1;
-				return acc;
-			}, {});
+				count[group] = (count[group] || 0) + 1;
+			});
 
 		return Object.fromEntries(Object.entries(count).sort(([, a], [, b]) => b - a));
-	}, [trainings]);
+	}, [trainings, allMuscleGroups]);
 
 	const chartData = useMemo(() => {
 		const entries = Object.entries(muscleGroupCount);
@@ -46,7 +45,7 @@ const MuscleGroupStats = memo(function MuscleGroupStatsComponent({ trainings }: 
 
 	const labels = useMemo(() => Object.keys(muscleGroupCount), [muscleGroupCount]);
 
-	if (!trainings || chartData.length === 0) {
+	if (!(trainings && allMuscleGroups) || chartData.length === 0) {
 		return null;
 	}
 
@@ -92,15 +91,8 @@ const MuscleGroupStats = memo(function MuscleGroupStatsComponent({ trainings }: 
 				/>
 			</View>
 			<View className="gap-2 px-6 pb-6">
-				{labels.map((label, index) => (
+				{labels.map((label) => (
 					<View className="flex-row items-center gap-3" key={label}>
-						<View
-							className="h-3 w-3 rounded-full"
-							style={{
-								backgroundColor:
-									MUSCLE_GROUP_COLORS[index % MUSCLE_GROUP_COLORS.length],
-							}}
-						/>
 						<Text className="flex-1 text-base text-text">{label}</Text>
 						<Text className="text-base text-muted">{muscleGroupCount[label]}x</Text>
 					</View>
