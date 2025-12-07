@@ -7,23 +7,31 @@ type ExerciseProps = {
 	name: string;
 	exerciseId: string;
 	usageCount: number;
+	userId: string;
 };
 
-export default function Exercise({ name, exerciseId, usageCount }: ExerciseProps) {
+export default function Exercise({ name, exerciseId, usageCount, userId }: ExerciseProps) {
 	const [edit, setEdit] = useState(false);
 	return (
-		<View className="mb-2 flex-row items-center justify-between rounded-xl bg-secondary px-4">
+		<View className="mb-2 flex-row items-center justify-between rounded-xl bg-secondary px-4 py-3.5">
 			<Text className="flex-1 text-base text-text">{name}</Text>
 			<Text className="text-base text-muted">{usageCount}x</Text>
-			<TouchableOpacity className="ml-4 rounded-full bg-secondary py-3.5" onPress={() => setEdit(true)}>
-				<Pencil color="white" size={18} />
-			</TouchableOpacity>
-			<EditExerciseModal
-				exerciseId={exerciseId}
-				exerciseName={name}
-				setSheetVisible={setEdit}
-				sheetVisible={edit}
-			/>
+			{userId !== "default" && (
+				<>
+					<TouchableOpacity
+						className="ml-4 rounded-full bg-secondary"
+						onPress={() => setEdit(true)}
+					>
+						<Pencil color="white" size={18} />
+					</TouchableOpacity>
+					<EditExerciseModal
+						exerciseId={exerciseId}
+						exerciseName={name}
+						setSheetVisible={setEdit}
+						sheetVisible={edit}
+					/>
+				</>
+			)}
 		</View>
 	);
 }

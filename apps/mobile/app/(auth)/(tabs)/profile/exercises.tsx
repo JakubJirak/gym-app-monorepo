@@ -12,6 +12,7 @@ type ExerciseType = {
 	_id: string;
 	name: string;
 	muscleGroup: string;
+	userId: string;
 };
 
 type SortedExercises = {
@@ -78,16 +79,6 @@ export default function Exercises() {
 			</TouchableOpacity>
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View className="mx-2 mt-4 gap-2 pb-20">
-					{/*<View className="flex-row items-center gap-3">
-						<Dumbbell color="white" size={28} />
-						<Text className="font-bold text-text text-xl">Vaše</Text>
-						<Text className="-ml-1.5 font-bold text-text text-xl">cviky</Text>
-					</View>
-
-					<Text className="text-base text-muted">
-						Zde si můžete zobrazit a vytvořit nový cvik pro určinou svalovou partii!
-					</Text>*/}
-
 					{Object.entries(sortedExercisesByLength).map(([muscleGroup, ex]) => (
 						<View className="mt-1 mb-4" key={muscleGroup}>
 							<Text className="mb-2 font-semibold text-lg text-text">{muscleGroup}</Text>
@@ -97,6 +88,7 @@ export default function Exercises() {
 									key={exercise._id}
 									name={exercise.name}
 									usageCount={exerciseUsageCount[exercise._id] || 0}
+									userId={exercise.userId}
 								/>
 							))}
 						</View>

@@ -52,6 +52,7 @@ export const getAllExercises = query({
 		// Vytvoříme pole objektů s názvem cviku a názvem muscleGroup
 		const exercisesWithMuscleGroup = allExercises.map((exercise) => ({
 			_id: exercise._id,
+			userId: exercise.userId,
 			name: exercise.name,
 			muscleGroup: muscleGroupMap[exercise.muscleGroupId] || "",
 		}));
