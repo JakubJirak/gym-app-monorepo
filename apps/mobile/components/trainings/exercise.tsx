@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -6,6 +7,7 @@ import ExerciseSet from "./set";
 
 type ExerciseProps = {
 	_id: string;
+	exerciseId: string;
 	name: string;
 	muscleGroup: string | null;
 	note: string | undefined;
@@ -25,6 +27,7 @@ type ExerciseProps = {
 
 export default function Exercise({
 	_id,
+	exerciseId,
 	name,
 	muscleGroup,
 	sets,
@@ -35,12 +38,22 @@ export default function Exercise({
 	trainingId,
 }: ExerciseProps) {
 	const [editMenu, setEditMenu] = useState(false);
+	const router = useRouter();
+
+	const handleNavigateToHistory = () => {
+		router.push({
+			pathname: "/(auth)/(tabs)/stats/history",
+			params: { exerciseId, trainingId },
+		});
+	};
 
 	return (
 		<View className="py-4">
 			<View className="mb-2 flex-row items-center">
 				<View className="flex-1 flex-row items-center">
-					<Text className="flex font-semibold text-text text-xl">{name}</Text>
+					<TouchableOpacity onPress={handleNavigateToHistory}>
+						<Text className="flex font-semibold text-text text-xl">{name}</Text>
+					</TouchableOpacity>
 					{isEdit && (
 						<TouchableOpacity
 							className="ml-2 rounded-full bg-secondary p-1.5"

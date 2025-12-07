@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { formatDate } from "@/src/utils/date-utils";
 import { api } from "../../../../packages/convex/convex/_generated/api";
@@ -7,9 +7,19 @@ import { ExercisePicker } from "../forms/exercise-picker";
 import HistoryExercise from "./history-exercise";
 import HistoryGraph from "./history-graph";
 
-export default function History() {
-	const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+type HistoryProps = {
+	initialExerciseId?: string;
+};
+
+export default function History({ initialExerciseId }: HistoryProps) {
+	const [selectedId, setSelectedId] = useState<string | undefined>(initialExerciseId);
 	const trainings = useQuery(api.workouts.getUserWorkouts);
+
+	useEffect(() => {
+		if (initialExerciseId) {
+			setSelectedId(initialExerciseId);
+		}
+	}, [initialExerciseId]);
 
 	const getHistoryOfSetsById = (id: string) =>
 		trainings

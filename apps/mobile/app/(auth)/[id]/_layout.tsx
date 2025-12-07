@@ -9,7 +9,7 @@ import { format } from "date-fns/format";
 import { cs } from "date-fns/locale/cs";
 import { useLocalSearchParams, withLayoutContext } from "expo-router";
 import { createContext } from "react";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import TrainingHeader from "@/components/trainings/training-header";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
@@ -39,6 +39,14 @@ export default function TrainingIdLayout() {
 		});
 	} catch (_) {
 		workout = null;
+	}
+
+	if (workout === undefined) {
+		return (
+			<View className="flex-1 items-center justify-center bg-primary">
+				<ActivityIndicator color={COLORS.accent} size="large" />
+			</View>
+		);
 	}
 
 	if (!workout) {

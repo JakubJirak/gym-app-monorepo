@@ -2,7 +2,7 @@ import { useQuery } from "convex/react";
 import { useLocalSearchParams } from "expo-router";
 import { NotebookPen } from "lucide-react-native";
 import { useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import Exercise from "@/components/trainings/exercise";
 import TrainingFooter from "@/components/trainings/training-footer";
 import { COLORS } from "@/constants/COLORS";
@@ -15,14 +15,6 @@ export default function TrainingById() {
 	const workout = useQuery(api.workouts.getWorkoutById, {
 		workoutId: id as Id<"workouts">,
 	});
-
-	if (workout === undefined) {
-		return (
-			<View className="flex-1 items-center justify-center bg-primary">
-				<ActivityIndicator color={COLORS.accent} size="large" />
-			</View>
-		);
-	}
 
 	if (!workout) {
 		return null;
@@ -70,6 +62,7 @@ export default function TrainingById() {
 						item.exercise ? (
 							<Exercise
 								_id={item._id}
+								exerciseId={item.exercise._id}
 								exercisesLength={workout.exercises.length}
 								isEdit={isEdit}
 								muscleGroup={item.exercise.muscleGroup}
