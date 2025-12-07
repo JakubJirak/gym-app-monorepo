@@ -40,7 +40,7 @@ export default function Training({ id, note, date, filter }: TrainingProps) {
 						{format(new Date(date), "EEEE, dd.MM.yyyy", { locale: cs })}
 					</Text>
 					{note !== "" && (
-						<View className="flex-row items-center gap-2">
+						<View className="max-w-[90%] flex-row items-center gap-2">
 							<NotebookPen color={COLORS.muted} size={16} />
 							<Text className="text-muted">{note}</Text>
 						</View>

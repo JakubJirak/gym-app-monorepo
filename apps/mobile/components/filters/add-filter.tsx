@@ -89,7 +89,7 @@ export default function AddFilterModal({ sheetVisible, setSheetVisible }: AddFil
 								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
-								maxLength={20}
+								maxLength={15}
 								onChangeText={setName}
 								onSubmitEditing={() => {
 									if (!disabled) {
