@@ -64,6 +64,8 @@ export default function EditGoals({ visible, setVisible }: CreateGoalsProps) {
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
 			isVisible={visible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
@@ -72,6 +74,7 @@ export default function EditGoals({ visible, setVisible }: CreateGoalsProps) {
 			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
+			useNativeDriverForBackdrop
 		>
 			<View className="h-[90%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />

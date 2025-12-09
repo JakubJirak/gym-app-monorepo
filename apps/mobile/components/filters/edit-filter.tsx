@@ -1,3 +1,4 @@
+import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ type EditFilterProps = {
 	defaultColor: string;
 	defaultName: string;
 	filterId: string;
+	usageCount: number;
 };
 
 export default function EditFilterModal({
@@ -22,12 +24,14 @@ export default function EditFilterModal({
 	defaultColor,
 	defaultName,
 	filterId,
+	usageCount,
 }: EditFilterProps) {
 	const closeSheet = () => setSheetVisible(false);
 	const [name, setName] = useState(defaultName);
 	const [visible, setVisible] = useState(false);
 	const [color, setColor] = useState(defaultColor);
 	const editFilter = useMutation(api.filters.editFilter);
+	const deleteFilter = useMutation(api.filters.deleteFilter);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 	useEffect(() => {
@@ -60,7 +64,7 @@ export default function EditFilterModal({
 
 	const disabled = name === defaultName && color === defaultColor;
 
-	const handleAddExercise = () => {
+	const handleEditFilter = () => {
 		editFilter({
 			filterId: filterId as Id<"filters">,
 			name,
@@ -71,10 +75,19 @@ export default function EditFilterModal({
 		closeSheet();
 	};
 
+	const handleDeleteFilter = () => {
+		deleteFilter({
+			filterId: filterId as Id<"filters">,
+		});
+		closeSheet();
+	};
+
 	return (
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
@@ -83,6 +96,7 @@ export default function EditFilterModal({
 			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
+			useNativeDriverForBackdrop
 		>
 			<View className="h-[55%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
@@ -104,7 +118,7 @@ export default function EditFilterModal({
 								onChangeText={setName}
 								onSubmitEditing={() => {
 									if (!disabled) {
-										handleAddExercise();
+										handleEditFilter();
 									}
 								}}
 								returnKeyType="done"
@@ -127,23 +141,58 @@ export default function EditFilterModal({
 					</View>
 
 					<View className="mt-4 mb-6 flex-row">
-						<TouchableOpacity
-							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
-							onPress={closeSheet}
-						>
-							<Text className="p-2 text-lg text-text">Zrušit</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-							disabled={disabled}
-							onPress={handleAddExercise}
-							style={{
-								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-							}}
-						>
-							<Pencil color="white" size={16} />
-							<Text className="p-2 font-semibold text-lg text-text">Upravit kategorii</Text>
-						</TouchableOpacity>
+						{usageCount === 0 ? (
+							<View className="mt-8 mb-6 flex-row">
+								<TouchableOpacity
+									className="mr-3 flex w-[15%] items-center justify-center rounded-xl bg-destructive"
+									onPress={handleDeleteFilter}
+								>
+									<Ionicons color="white" name="trash-outline" size={24} />
+								</TouchableOpacity>
+								<TouchableOpacity
+									className="mr-3 flex w-[25%] items-center justify-center rounded-xl border border-border"
+									onPress={closeSheet}
+								>
+									<Text className="p-2 text-lg text-text">Zrušit</Text>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									className="flex w-[52%] flex-row items-center justify-center rounded-xl"
+									disabled={disabled}
+									onPress={handleEditFilter}
+									style={{
+										backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+									}}
+								>
+									<Pencil color="white" size={18} />
+									<Text className="p-2 font-semibold text-lg text-text">
+										Upravit cvik
+									</Text>
+								</TouchableOpacity>
+							</View>
+						) : (
+							<>
+								<TouchableOpacity
+									className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
+									onPress={closeSheet}
+								>
+									<Text className="p-2 text-lg text-text">Zrušit</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									className="flex w-[60%] flex-row items-center justify-center rounded-xl"
+									disabled={disabled}
+									onPress={handleEditFilter}
+									style={{
+										backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+									}}
+								>
+									<Pencil color="white" size={16} />
+									<Text className="p-2 font-semibold text-lg text-text">
+										Upravit kategorii
+									</Text>
+								</TouchableOpacity>
+							</>
+						)}
 					</View>
 				</View>
 			</View>

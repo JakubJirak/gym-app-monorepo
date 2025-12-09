@@ -17,7 +17,7 @@ export default function Filter({
 	const [edit, setEdit] = useState(false);
 
 	return (
-		<View className="my-2 flex-row items-center gap-4 rounded-xl bg-secondary px-3">
+		<View className="my-1.5 flex-row items-center gap-4 rounded-xl bg-secondary px-3">
 			<View style={{ backgroundColor: color, height: 16, width: 16, borderRadius: 100, marginLeft: 4 }} />
 			<Text className="flex-1 text-lg text-text">{name}</Text>
 			<Text className="text-base text-muted">{usageCount}x</Text>
@@ -33,6 +33,7 @@ export default function Filter({
 				filterId={id}
 				setSheetVisible={setEdit}
 				sheetVisible={edit}
+				usageCount={usageCount}
 			/>
 		</View>
 	);

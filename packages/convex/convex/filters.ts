@@ -55,3 +55,12 @@ export const editFilter = mutation({
 		});
 	},
 });
+
+export const deleteFilter = mutation({
+	args: {
+		filterId: v.id("filters"),
+	},
+	handler: async (ctx, { filterId }) => {
+		await ctx.db.delete(filterId);
+	},
+});

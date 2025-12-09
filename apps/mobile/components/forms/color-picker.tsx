@@ -155,6 +155,8 @@ export default function ColorPickerBottomSheet({
 
 	return (
 		<Modal
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
 			isVisible={visible}
 			onBackButtonPress={close}
 			onBackdropPress={close}
@@ -163,6 +165,7 @@ export default function ColorPickerBottomSheet({
 			style={{ justifyContent: "flex-end", margin: 0 }}
 			swipeDirection={["down"]}
 			useNativeDriver
+			useNativeDriverForBackdrop
 		>
 			<View
 				className={`${className}rounded-t-2xl h-[65%] bg-darker p-4`}

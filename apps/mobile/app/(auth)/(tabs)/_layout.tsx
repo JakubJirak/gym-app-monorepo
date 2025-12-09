@@ -28,6 +28,9 @@ export default function TabsLayout() {
 						height: 72,
 						paddingTop: 6,
 					},
+					sceneStyle: {
+						backgroundColor: COLORS.primary,
+					},
 				}}
 			>
 				<Tabs.Screen

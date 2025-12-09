@@ -94,3 +94,12 @@ export const editExercise = mutation({
 		});
 	},
 });
+
+export const deleteExercise = mutation({
+	args: {
+		exerciseId: v.id("exercises"),
+	},
+	handler: async (ctx, args) => {
+		await ctx.db.delete(args.exerciseId);
+	},
+});

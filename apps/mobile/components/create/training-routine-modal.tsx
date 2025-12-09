@@ -24,6 +24,8 @@ export default function TrainingRoutineModal({
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
 			isVisible={trainingRoutineModalVisible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
@@ -32,6 +34,7 @@ export default function TrainingRoutineModal({
 			style={{ justifyContent: "flex-end", margin: 0 }}
 			swipeDirection={["down"]}
 			useNativeDriver
+			useNativeDriverForBackdrop
 		>
 			<View className="h-[50%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />

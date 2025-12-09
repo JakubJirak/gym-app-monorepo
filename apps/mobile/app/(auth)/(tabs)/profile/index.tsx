@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
 import { useRouter } from "expo-router";
 import { Weight } from "lucide-react-native";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Links from "@/components/profile/links";
 import ProfileHeader from "@/components/profile/profile-header";
 import { COLORS } from "@/constants/COLORS";
@@ -15,6 +15,14 @@ export default function Profile() {
 	const workouts = useQuery(api.workouts.getUserWorkouts);
 	const desc = useQuery(api.description.getUserDescription);
 	const router = useRouter();
+
+	if (userWeight === undefined || workouts === undefined || desc === undefined) {
+		return (
+			<View className="flex-1 items-center justify-center bg-primary">
+				<ActivityIndicator color={COLORS.accent} size="large" />
+			</View>
+		);
+	}
 
 	if (!session) {
 		return null;

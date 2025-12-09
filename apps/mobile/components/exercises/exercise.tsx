@@ -13,7 +13,7 @@ type ExerciseProps = {
 export default function Exercise({ name, exerciseId, usageCount, userId }: ExerciseProps) {
 	const [edit, setEdit] = useState(false);
 	return (
-		<View className="mb-2 flex-row items-center justify-between rounded-xl bg-secondary px-4 py-3.5">
+		<View className="mb-2 flex-row items-center justify-between rounded-xl bg-secondary px-4 py-3">
 			<Text className="flex-1 text-base text-text">{name}</Text>
 			<Text className="text-base text-muted">{usageCount}x</Text>
 			{userId !== "default" && (
@@ -29,6 +29,7 @@ export default function Exercise({ name, exerciseId, usageCount, userId }: Exerc
 						exerciseName={name}
 						setSheetVisible={setEdit}
 						sheetVisible={edit}
+						usageCount={usageCount}
 					/>
 				</>
 			)}

@@ -99,6 +99,7 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 				style={{ justifyContent: "flex-end", margin: 0 }}
 				swipeDirection={["down"]}
 				useNativeDriver
+				useNativeDriverForBackdrop
 			>
 				<View className="h-[90%] rounded-t-xl bg-darker p-4">
 					<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />

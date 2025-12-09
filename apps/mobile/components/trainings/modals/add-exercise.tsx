@@ -36,6 +36,8 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
@@ -44,6 +46,7 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 			style={{ justifyContent: "flex-end", margin: 0 }}
 			swipeDirection={["down"]}
 			useNativeDriver
+			useNativeDriverForBackdrop
 		>
 			<View className="h-[40%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />

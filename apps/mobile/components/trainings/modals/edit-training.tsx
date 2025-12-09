@@ -51,6 +51,8 @@ export default function EditTrainingModal({
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
@@ -59,6 +61,7 @@ export default function EditTrainingModal({
 			style={{ justifyContent: "flex-end", margin: 0 }}
 			swipeDirection={["down"]}
 			useNativeDriver
+			useNativeDriverForBackdrop
 		>
 			<View className="h-[75%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />

@@ -69,7 +69,7 @@ export default function Exercises() {
 	}
 
 	return (
-		<View className="flex-1 bg-primary px-3">
+		<View className="flex-1 bg-primary px-2">
 			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Cviky" />
 			<TouchableOpacity
 				className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-2"
@@ -78,10 +78,10 @@ export default function Exercises() {
 				<Plus color="white" size={44} />
 			</TouchableOpacity>
 			<ScrollView showsVerticalScrollIndicator={false}>
-				<View className="mx-2 mt-4 gap-2 pb-20">
+				<View className="mx-2 mt-4 pb-20">
 					{Object.entries(sortedExercisesByLength).map(([muscleGroup, ex]) => (
-						<View className="mt-1 mb-4" key={muscleGroup}>
-							<Text className="mb-2 font-semibold text-lg text-text">{muscleGroup}</Text>
+						<View className="mt-1 mb-2" key={muscleGroup}>
+							<Text className="mb-1 font-semibold text-lg text-text">{muscleGroup}</Text>
 							{ex.map((exercise) => (
 								<Exercise
 									exerciseId={exercise._id}

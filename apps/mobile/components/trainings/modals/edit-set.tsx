@@ -103,6 +103,8 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
 			isVisible={visible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
@@ -112,6 +114,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
+			useNativeDriverForBackdrop
 		>
 			<View className="h-[45%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />

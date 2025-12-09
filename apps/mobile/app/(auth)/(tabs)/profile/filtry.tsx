@@ -33,7 +33,7 @@ export default function Filtry() {
 	}, {});
 
 	return (
-		<View className="flex-1 bg-primary px-4">
+		<View className="flex-1 bg-primary px-2">
 			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Kategorie" />
 			<TouchableOpacity
 				className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-2"

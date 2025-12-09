@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ type EditExerciseProps = {
 	setSheetVisible: (visible: boolean) => void;
 	exerciseId: string;
 	exerciseName: string;
+	usageCount: number;
 };
 
 export default function EditExerciseModal({
@@ -19,10 +21,12 @@ export default function EditExerciseModal({
 	setSheetVisible,
 	exerciseId,
 	exerciseName,
+	usageCount,
 }: EditExerciseProps) {
 	const closeSheet = () => setSheetVisible(false);
 	const [name, setName] = useState(exerciseName || "");
 	const editExercise = useMutation(api.exercises.editExercise);
+	const deleteExercise = useMutation(api.exercises.deleteExercise);
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 	useEffect(() => {
@@ -66,10 +70,19 @@ export default function EditExerciseModal({
 		}
 	};
 
+	const handleDeleteExercise = () => {
+		deleteExercise({
+			exerciseId: exerciseId as Id<"exercises">,
+		});
+		closeSheet();
+	};
+
 	return (
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
@@ -78,6 +91,7 @@ export default function EditExerciseModal({
 			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
+			useNativeDriverForBackdrop
 		>
 			<View className="h-[40%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
@@ -107,23 +121,58 @@ export default function EditExerciseModal({
 					</View>
 
 					<View className="mt-4 mb-6 flex-row">
-						<TouchableOpacity
-							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
-							onPress={closeSheet}
-						>
-							<Text className="p-2 text-lg text-text">Zrušit</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-							disabled={disabled}
-							onPress={handleEditExercise}
-							style={{
-								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-							}}
-						>
-							<Pencil color="white" size={16} />
-							<Text className="p-2 font-semibold text-lg text-text">Upravit cvik</Text>
-						</TouchableOpacity>
+						{usageCount === 0 ? (
+							<View className="mt-8 mb-6 flex-row">
+								<TouchableOpacity
+									className="mr-3 flex w-[15%] items-center justify-center rounded-xl bg-destructive"
+									onPress={handleDeleteExercise}
+								>
+									<Ionicons color="white" name="trash-outline" size={24} />
+								</TouchableOpacity>
+								<TouchableOpacity
+									className="mr-3 flex w-[25%] items-center justify-center rounded-xl border border-border"
+									onPress={closeSheet}
+								>
+									<Text className="p-2 text-lg text-text">Zrušit</Text>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									className="flex w-[52%] flex-row items-center justify-center rounded-xl"
+									disabled={disabled}
+									onPress={handleEditExercise}
+									style={{
+										backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+									}}
+								>
+									<Pencil color="white" size={18} />
+									<Text className="p-2 font-semibold text-lg text-text">
+										Upravit cvik
+									</Text>
+								</TouchableOpacity>
+							</View>
+						) : (
+							<>
+								<TouchableOpacity
+									className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
+									onPress={closeSheet}
+								>
+									<Text className="p-2 text-lg text-text">Zrušit</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									className="flex w-[60%] flex-row items-center justify-center rounded-xl"
+									disabled={disabled}
+									onPress={handleEditExercise}
+									style={{
+										backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+									}}
+								>
+									<Pencil color="white" size={16} />
+									<Text className="p-2 font-semibold text-lg text-text">
+										Upravit cvik
+									</Text>
+								</TouchableOpacity>
+							</>
+						)}
 					</View>
 				</View>
 			</View>
