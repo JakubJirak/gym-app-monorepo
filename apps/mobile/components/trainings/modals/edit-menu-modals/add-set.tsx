@@ -19,7 +19,42 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 	const closeSheet = () => setVisible(false);
 	const [weight, setWeight] = useState("");
 	const [reps, setReps] = useState("");
-	const addSet = useMutation(api.workoutExercises.addSet);
+	const addSet = useMutation(api.workoutExercises.addSet).withOptimisticUpdate((localStore, args) => {
+		// Get the current workout data from all possible queries
+		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+
+		for (const query of queries) {
+			const currentData = query.value;
+			
+			// biome-ignore lint/complexity/useOptionalChain: logic of the app
+						if (currentData && currentData.exercises) {
+				// Find the exercise that this set belongs to
+				const updatedExercises = currentData.exercises.map((exercise) => {
+					if (exercise._id === args.workoutExerciseId) {
+						// Add optimistic set
+						const optimisticSet = {
+							_id: `temp-${Date.now()}` as Id<"sets">,
+							reps: args.reps,
+							weight: args.weight,
+							order: args.order,
+						};
+
+						return {
+							...exercise,
+							sets: exercise.sets ? [...exercise.sets, optimisticSet] : [optimisticSet],
+						};
+					}
+					return exercise;
+				});
+
+				// Update the query with optimistic data
+				localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+					...currentData,
+					exercises: updatedExercises,
+				});
+			}
+		}
+	});
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	const [isClosing, setIsClosing] = useState(false);
 	const inputRef = useRef<TextInput>(null);

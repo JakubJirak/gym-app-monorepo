@@ -38,8 +38,46 @@ export default function EditMenuModal({
 	const [note, setNote] = useState(false);
 	const [remove, setRemove] = useState(false);
 	const closeSheet = () => setSheetVisible(false);
-	const moveUp = useMutation(api.workoutExercises.moveUp);
-	const moveDown = useMutation(api.workoutExercises.moveDown);
+	const moveUp = useMutation(api.workoutExercises.moveUp).withOptimisticUpdate((localStore, args) => {
+		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+		for (const query of queries) {
+			const currentData = query.value;
+			if (currentData?.exercises && query.args.workoutId === args.workoutId) {
+				const exercises = [...currentData.exercises];
+				const currentIndex = exercises.findIndex((e) => e.order === args.order);
+				if (currentIndex > 0) {
+					[exercises[currentIndex - 1], exercises[currentIndex]] = [
+						{ ...exercises[currentIndex], order: args.order - 1 },
+						{ ...exercises[currentIndex - 1], order: args.order },
+					];
+					localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+						...currentData,
+						exercises: exercises.sort((a, b) => a.order - b.order),
+					});
+				}
+			}
+		}
+	});
+	const moveDown = useMutation(api.workoutExercises.moveDown).withOptimisticUpdate((localStore, args) => {
+		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+		for (const query of queries) {
+			const currentData = query.value;
+			if (currentData?.exercises && query.args.workoutId === args.workoutId) {
+				const exercises = [...currentData.exercises];
+				const currentIndex = exercises.findIndex((e) => e.order === args.order);
+				if (currentIndex < exercises.length - 1) {
+					[exercises[currentIndex], exercises[currentIndex + 1]] = [
+						{ ...exercises[currentIndex + 1], order: args.order },
+						{ ...exercises[currentIndex], order: args.order + 1 },
+					];
+					localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+						...currentData,
+						exercises: exercises.sort((a, b) => a.order - b.order),
+					});
+				}
+			}
+		}
+	});
 
 	const handleMoveUp = () => {
 		if (!isFirst) {

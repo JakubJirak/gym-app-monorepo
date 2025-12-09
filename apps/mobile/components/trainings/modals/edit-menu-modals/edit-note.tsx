@@ -26,7 +26,21 @@ export default function EditNoteModal({ visible, setVisible, workoutExerciseId, 
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	const [isClosing, setIsClosing] = useState(false);
 	const inputRef = useRef<TextInput>(null);
-	const editNote = useMutation(api.workoutExercises.editNote);
+	const editNote = useMutation(api.workoutExercises.editNote).withOptimisticUpdate((localStore, args) => {
+		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+		for (const query of queries) {
+			const currentData = query.value;
+			if (currentData?.exercises) {
+				const updatedExercises = currentData.exercises.map((exercise) =>
+					exercise._id === args.workoutExerciseId ? { ...exercise, note: args.note } : exercise
+				);
+				localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+					...currentData,
+					exercises: updatedExercises,
+				});
+			}
+		}
+	});
 
 	useEffect(() => {
 		const showListeners = [

@@ -31,7 +31,19 @@ export default function EditTrainingModal({
 	const [date, setDate] = useState(new Date(defaultDate ?? ""));
 	const [name, setName] = useState(defaultName ?? "");
 	const closeSheet = () => setSheetVisible(false);
-	const editWorkout = useMutation(api.workouts.editWorkout);
+	const editWorkout = useMutation(api.workouts.editWorkout).withOptimisticUpdate((localStore, args) => {
+		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+		for (const query of queries) {
+			const currentData = query.value;
+			if (currentData && query.args.workoutId === args.workoutId) {
+				localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+					...currentData,
+					name: args.name,
+					workoutDate: args.workoutDate,
+				});
+			}
+		}
+	});
 
 	const disabled =
 		filterId === undefined ||

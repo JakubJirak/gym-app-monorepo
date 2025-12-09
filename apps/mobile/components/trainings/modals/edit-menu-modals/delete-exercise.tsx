@@ -23,7 +23,26 @@ export default function DeleteWorkoutExerciseModal({
 	order,
 }: DeleteWorkoutExerciseProps) {
 	const closeSheet = () => setVisible(false);
-	const deleteWorkoutExercise = useMutation(api.workoutExercises.deleteWorkoutExercise);
+	const deleteWorkoutExercise = useMutation(api.workoutExercises.deleteWorkoutExercise).withOptimisticUpdate(
+		(localStore, args) => {
+			const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+			for (const query of queries) {
+				const currentData = query.value;
+				if (currentData?.exercises && query.args.workoutId === args.workoutId) {
+					const updatedExercises = currentData.exercises
+						.filter((exercise) => exercise._id !== args.workoutExerciseId)
+						.map((exercise) => ({
+							...exercise,
+							order: exercise.order > args.order ? exercise.order - 1 : exercise.order,
+						}));
+					localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+						...currentData,
+						exercises: updatedExercises,
+					});
+				}
+			}
+		}
+	);
 
 	const handleDeleteExercise = () => {
 		deleteWorkoutExercise({

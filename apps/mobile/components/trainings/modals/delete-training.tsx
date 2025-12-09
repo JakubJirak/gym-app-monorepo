@@ -14,7 +14,14 @@ type MenuModalProps = {
 
 export default function DeleteTrainingModal({ sheetVisible, setSheetVisible, trainingId }: MenuModalProps) {
 	const closeSheet = () => setSheetVisible(false);
-	const deleteTraining = useMutation(api.workouts.deleteWorkout);
+	const deleteTraining = useMutation(api.workouts.deleteWorkout).withOptimisticUpdate((localStore, args) => {
+		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+		for (const query of queries) {
+			if (query.args.workoutId === args.workoutId) {
+				localStore.setQuery(api.workouts.getWorkoutById, query.args, undefined);
+			}
+		}
+	});
 	const router = useRouter();
 
 	const handleDeleteTraining = () => {

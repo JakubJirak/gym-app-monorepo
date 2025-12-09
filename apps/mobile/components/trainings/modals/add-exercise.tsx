@@ -18,7 +18,28 @@ type AddExerciseProps = {
 export default function AddExerciseModal({ sheetVisible, setSheetVisible, trainingId, exercises }: AddExerciseProps) {
 	const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 	const closeSheet = () => setSheetVisible(false);
-	const addExercise = useMutation(api.workoutExercises.addWorkoutExercise);
+	const addExercise = useMutation(api.workoutExercises.addWorkoutExercise).withOptimisticUpdate(
+		(localStore, args) => {
+			const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+			for (const query of queries) {
+				const currentData = query.value;
+				if (currentData && query.args.workoutId === args.workoutId) {
+					const optimisticExercise = {
+						_id: `temp-${Date.now()}` as Id<"workoutExercises">,
+						exercise: null,
+						note: args.note,
+						sets: [],
+						order: args.order,
+						workoutId: args.workoutId,
+					};
+					localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+						...currentData,
+						exercises: [...currentData.exercises, optimisticExercise],
+					});
+				}
+			}
+		}
+	);
 
 	const handleAddExercise = () => {
 		if (selectedId !== undefined) {

@@ -20,8 +20,43 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 	const closeSheet = () => setVisible(false);
 	const [weight, setWeight] = useState(String(defaultWeight));
 	const [reps, setReps] = useState(String(defaultReps));
-	const editSet = useMutation(api.workoutExercises.editSet);
-	const deleteSet = useMutation(api.workoutExercises.deleteSet);
+	const editSet = useMutation(api.workoutExercises.editSet).withOptimisticUpdate((localStore, args) => {
+		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+		for (const query of queries) {
+			const currentData = query.value;
+			if (currentData?.exercises) {
+				const updatedExercises = currentData.exercises.map((exercise) => ({
+					...exercise,
+					sets:
+						exercise.sets?.map((set) =>
+							set._id === args.setId
+								? { ...set, reps: args.reps, weight: args.weight }
+								: set
+						) || null,
+				}));
+				localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+					...currentData,
+					exercises: updatedExercises,
+				});
+			}
+		}
+	});
+	const deleteSet = useMutation(api.workoutExercises.deleteSet).withOptimisticUpdate((localStore, args) => {
+		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+		for (const query of queries) {
+			const currentData = query.value;
+			if (currentData?.exercises) {
+				const updatedExercises = currentData.exercises.map((exercise) => ({
+					...exercise,
+					sets: exercise.sets?.filter((set) => set._id !== args.setId) || null,
+				}));
+				localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+					...currentData,
+					exercises: updatedExercises,
+				});
+			}
+		}
+	});
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 	const [isClosing, setIsClosing] = useState(false);
 	const inputRef = useRef<TextInput>(null);
