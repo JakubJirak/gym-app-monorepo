@@ -18,7 +18,20 @@ export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, def
 	const closeSheet = () => setSheetVisible(false);
 	const [name, setName] = useState(defaultName ?? "");
 	const [muscleGroupId, setMuscleGroupId] = useState<string | undefined>(undefined);
-	const addExercise = useMutation(api.exercises.addExercise);
+	const addExercise = useMutation(api.exercises.addExercise).withOptimisticUpdate((localStore, args) => {
+		const current = localStore.getQuery(api.exercises.getAllExercises, {});
+		if (current) {
+			const muscleGroups = localStore.getQuery(api.muscleGroups.getAllMuscleGroups, {});
+			const muscleGroup = muscleGroups?.find((mg) => mg._id === args.muscleGroupId);
+			const optimisticExercise = {
+				_id: `temp-${Date.now()}` as Id<"exercises">,
+				userId: "optimistic",
+				name: args.name,
+				muscleGroup: muscleGroup?.name || "",
+			};
+			localStore.setQuery(api.exercises.getAllExercises, {}, [...current, optimisticExercise]);
+		}
+	});
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 	useEffect(() => {

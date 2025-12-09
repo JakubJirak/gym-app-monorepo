@@ -30,9 +30,30 @@ export default function EditFilterModal({
 	const [name, setName] = useState(defaultName);
 	const [visible, setVisible] = useState(false);
 	const [color, setColor] = useState(defaultColor);
-	const editFilter = useMutation(api.filters.editFilter);
-	const deleteFilter = useMutation(api.filters.deleteFilter);
+	const editFilter = useMutation(api.filters.editFilter).withOptimisticUpdate((localStore, args) => {
+		const current = localStore.getQuery(api.filters.getAllFilters, {});
+		if (current) {
+			const updatedFilters = current.map((filter) =>
+				filter._id === args.filterId ? { ...filter, name: args.name, color: args.color } : filter
+			);
+			localStore.setQuery(api.filters.getAllFilters, {}, updatedFilters);
+		}
+	});
+	const deleteFilter = useMutation(api.filters.deleteFilter).withOptimisticUpdate((localStore, args) => {
+		const current = localStore.getQuery(api.filters.getAllFilters, {});
+		if (current) {
+			const filteredFilters = current.filter((filter) => filter._id !== args.filterId);
+			localStore.setQuery(api.filters.getAllFilters, {}, filteredFilters);
+		}
+	});
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+	useEffect(() => {
+		if (sheetVisible) {
+			setName(defaultName);
+			setColor(defaultColor);
+		}
+	}, [sheetVisible, defaultName, defaultColor]);
 
 	useEffect(() => {
 		const showListeners = [
@@ -70,8 +91,6 @@ export default function EditFilterModal({
 			name,
 			color,
 		});
-		setName("");
-		setColor("#000000");
 		closeSheet();
 	};
 

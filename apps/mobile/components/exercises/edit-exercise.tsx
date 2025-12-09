@@ -25,9 +25,29 @@ export default function EditExerciseModal({
 }: EditExerciseProps) {
 	const closeSheet = () => setSheetVisible(false);
 	const [name, setName] = useState(exerciseName || "");
-	const editExercise = useMutation(api.exercises.editExercise);
-	const deleteExercise = useMutation(api.exercises.deleteExercise);
+	const editExercise = useMutation(api.exercises.editExercise).withOptimisticUpdate((localStore, args) => {
+		const current = localStore.getQuery(api.exercises.getAllExercises, {});
+		if (current) {
+			const updatedExercises = current.map((exercise) =>
+				exercise._id === args.exerciseId ? { ...exercise, name: args.name } : exercise
+			);
+			localStore.setQuery(api.exercises.getAllExercises, {}, updatedExercises);
+		}
+	});
+	const deleteExercise = useMutation(api.exercises.deleteExercise).withOptimisticUpdate((localStore, args) => {
+		const current = localStore.getQuery(api.exercises.getAllExercises, {});
+		if (current) {
+			const filteredExercises = current.filter((exercise) => exercise._id !== args.exerciseId);
+			localStore.setQuery(api.exercises.getAllExercises, {}, filteredExercises);
+		}
+	});
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+	useEffect(() => {
+		if (sheetVisible) {
+			setName(exerciseName);
+		}
+	}, [sheetVisible, exerciseName]);
 
 	useEffect(() => {
 		const showListeners = [
@@ -65,7 +85,6 @@ export default function EditExerciseModal({
 				exerciseId: exerciseId as Id<"exercises">,
 				name,
 			});
-			setName("");
 			closeSheet();
 		}
 	};

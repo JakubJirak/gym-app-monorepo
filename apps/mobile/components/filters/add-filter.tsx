@@ -6,6 +6,7 @@ import Modal from "react-native-modal";
 import ColorSquarePicker from "@/components/forms/color-picker";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 
 type AddFilterProps = {
 	sheetVisible: boolean;
@@ -17,7 +18,19 @@ export default function AddFilterModal({ sheetVisible, setSheetVisible }: AddFil
 	const [name, setName] = useState("");
 	const [visible, setVisible] = useState(false);
 	const [color, setColor] = useState("#000000");
-	const addFilter = useMutation(api.filters.addFilter);
+	const addFilter = useMutation(api.filters.addFilter).withOptimisticUpdate((localStore, args) => {
+		const current = localStore.getQuery(api.filters.getAllFilters, {});
+		if (current) {
+			const optimisticFilter = {
+				_id: `temp-${Date.now()}` as Id<"filters">,
+				_creationTime: Date.now(),
+				userId: "optimistic",
+				name: args.name,
+				color: args.color,
+			};
+			localStore.setQuery(api.filters.getAllFilters, {}, [...current, optimisticFilter]);
+		}
+	});
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 	useEffect(() => {
