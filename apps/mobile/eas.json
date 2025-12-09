@@ -12,7 +12,14 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_CONVEX_URL": "https://api.convex.jirak.dev",
+        "EXPO_PUBLIC_CONVEX_SITE_URL": "https://convex.jirak.dev"
+      }
     }
   },
   "submit": {
