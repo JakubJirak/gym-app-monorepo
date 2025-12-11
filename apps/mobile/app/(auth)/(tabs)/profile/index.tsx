@@ -54,7 +54,15 @@ export default function Profile() {
 						</Text>
 					</TouchableOpacity>
 
-					<View className="w-[47%] items-center gap-2 rounded-xl bg-secondary p-3">
+					<TouchableOpacity
+						activeOpacity={1}
+						className="w-[47%] items-center gap-2 rounded-xl bg-secondary p-3"
+						onPress={() => {
+							if (!userWeight) {
+								router.push("/profile/edit/vahaset");
+							}
+						}}
+					>
 						<View className="flex-row items-center gap-2">
 							<Weight color={COLORS.muted} size={20} />
 							<Text className="text-lg text-muted">Váha</Text>
@@ -64,11 +72,9 @@ export default function Profile() {
 								userWeight ? "text-lg text-text tracking-wider" : "text-base text-muted"
 							}
 						>
-							{userWeight === undefined && ""}
-							{userWeight && `${userWeight.weight} kg`}
-							{!userWeight && "Nenastaveno"}
+							{userWeight ? `${userWeight.weight} kg` : "Nenastaveno"}
 						</Text>
-					</View>
+					</TouchableOpacity>
 				</View>
 
 				<View className="my-8 h-0.5 w-full bg-secondary" />
