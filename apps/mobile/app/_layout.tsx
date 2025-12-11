@@ -64,13 +64,9 @@ function StackLayout() {
 
 /* 
 FIXY PRO DALSI BUILD
-- zmenseni paddingu, marginu v ukazovani serii a cviku, zmenseni fontu cviku
-- pri vytvoreni noveho cviku pres menu ten cvik automaticky vybrat
 - flashing klavesnice po vybrani cviku a otevrene klavesnici
-- muscleGroups butou mit vlastni modal, ne dialog
 - opravit flashovani vsech modalu nebo klavesnice
 - opravit offset pro navigation buttons
-- pridat optimistic rendering na vsechny queries
 
 FEATURES PRO DALSI BUILD
 - pridat moznost vytvorit si rutinu
@@ -79,4 +75,14 @@ FEATURES PRO DALSI BUILD
 - pri vytvoreni treninku pomoci rutiny automaticky pridat posledni serie s danou vahou a opakovani
 - lehci pridavani serii - mit + button kdyz nemam zadnou serii
 - pridani profilovych fotek a jejich moznosti vyberu
+
+DONE - FIX
+- zmenseni paddingu, marginu v ukazovani serii a cviku, zmenseni fontu cviku
+- muscleGroups butou mit vlastni modal, ne dialog
+- pri vytvoreni noveho cviku pres menu ten cvik automaticky vybrat
+- pridat optimistic rendering na vsechny queries
+
+DONE - FEATURES
+- pomoci textu pro pridani treninku se zobrazi modal na pridani treninku
+- kliknuti na vaha nenastaveno presmeruje uzivatele na nastaveni vahy
 */

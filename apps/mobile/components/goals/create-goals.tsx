@@ -16,7 +16,15 @@ export default function EditGoals({ visible, setVisible }: CreateGoalsProps) {
 	const [squat, setSquat] = useState("");
 	const [bench, setBench] = useState("");
 	const [deadlift, setDeadlift] = useState("");
-	const disabled = squat === "" || bench === "" || deadlift === "";
+
+	const squatNum = Number.parseFloat(squat.replace(",", "."));
+	const benchNum = Number.parseFloat(bench.replace(",", "."));
+	const deadliftNum = Number.parseFloat(deadlift.replace(",", "."));
+
+	const isValidNumber = (num: number) => !Number.isNaN(num) && num > 0 && num <= 1000;
+
+	const disabled = !(isValidNumber(squatNum) && isValidNumber(benchNum) && isValidNumber(deadliftNum));
+
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 	const addUserGoals = useMutation(api.userGoals.addUserGoals);

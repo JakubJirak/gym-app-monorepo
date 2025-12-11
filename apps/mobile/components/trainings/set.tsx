@@ -15,7 +15,7 @@ export default function ExerciseSet({ order, weight, reps, isEdit, setId }: Exer
 	const [edit, setEdit] = useState(false);
 
 	return (
-		<View className="my-1.5 flex-row items-center rounded-xl bg-secondary px-4 py-2.5">
+		<View className="my-1 flex-row items-center rounded-xl bg-secondary px-4 py-2.5">
 			<Text className="flex-1 text-text">{order + 1}. série</Text>
 			<Text className="font-semibold text-text">
 				{weight}kg × {reps}

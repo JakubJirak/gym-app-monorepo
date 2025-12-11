@@ -12,9 +12,15 @@ type AddNewExerciseProps = {
 	sheetVisible: boolean;
 	setSheetVisible: (visible: boolean) => void;
 	defaultName?: string;
+	onExerciseCreated?: (exerciseId: string) => void;
 };
 
-export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, defaultName }: AddNewExerciseProps) {
+export default function AddNewExerciseModal({
+	sheetVisible,
+	setSheetVisible,
+	defaultName,
+	onExerciseCreated,
+}: AddNewExerciseProps) {
 	const closeSheet = () => setSheetVisible(false);
 	const [name, setName] = useState(defaultName ?? "");
 	const [muscleGroupId, setMuscleGroupId] = useState<string | undefined>(undefined);
@@ -25,9 +31,11 @@ export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, def
 			const muscleGroup = muscleGroups?.find((mg) => mg._id === args.muscleGroupId);
 			const optimisticExercise = {
 				_id: `temp-${Date.now()}` as Id<"exercises">,
+				_creationTime: Date.now(),
 				userId: "optimistic",
 				name: args.name,
-				muscleGroup: muscleGroup?.name || "",
+				muscleGroup: muscleGroup?.name || null,
+				muscleGroupId: args.muscleGroupId,
 			};
 			localStore.setQuery(api.exercises.getAllExercises, {}, [...current, optimisticExercise]);
 		}
@@ -64,14 +72,17 @@ export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, def
 
 	const disabled = name === "" || muscleGroupId === undefined;
 
-	const handleAddExercise = () => {
-		addExercise({
+	const handleAddExercise = async () => {
+		const exerciseId = await addExercise({
 			name,
 			muscleGroupId: muscleGroupId as Id<"muscleGroups">,
 		});
 		setName("");
 		setMuscleGroupId(undefined);
 		closeSheet();
+		if (exerciseId && onExerciseCreated) {
+			onExerciseCreated(exerciseId);
+		}
 	};
 
 	return (
@@ -103,7 +114,6 @@ export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, def
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
 							<TextInput
-								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								maxLength={20}
@@ -119,11 +129,7 @@ export default function AddNewExerciseModal({ sheetVisible, setSheetVisible, def
 						</View>
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Svalová partie</Text>
-							<MuscleGroupDropdown
-								onChange={setMuscleGroupId}
-								value={muscleGroupId}
-								variant="modal"
-							/>
+							<MuscleGroupDropdown onChange={setMuscleGroupId} value={muscleGroupId} />
 						</View>
 					</View>
 

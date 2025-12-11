@@ -46,6 +46,10 @@ export default function PowerliftingStats() {
 		);
 	}
 
+	if (total === 0) {
+		return null;
+	}
+
 	return (
 		<View className="-mt-2 rounded-xl px-2 py-4">
 			<View className="flex-row">

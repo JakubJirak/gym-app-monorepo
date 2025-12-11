@@ -10,9 +10,9 @@ export default function Links() {
 
 			<ProfileLink href="/profile/filtry" icon="funnel-outline" text="Kategorie" />
 
-			{/* <ProfileLink href="/profile/rutiny" icon="layers-outline" text="Rutiny" />
+			<ProfileLink href="/profile/rutiny" icon="layers-outline" text="Rutiny" />
 
-			<ProfileLink href="/profile/friends" icon="people-outline" text="Přátelé" /> */}
+			{/* <ProfileLink href="/profile/friends" icon="people-outline" text="Přátelé" /> */}
 		</View>
 	);
 }

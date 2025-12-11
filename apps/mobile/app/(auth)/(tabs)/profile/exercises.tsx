@@ -11,7 +11,7 @@ import { api } from "../../../../../../packages/convex/convex/_generated/api";
 type ExerciseType = {
 	_id: string;
 	name: string;
-	muscleGroup: string;
+	muscleGroup: string | null;
 	userId: string;
 };
 
@@ -41,10 +41,11 @@ export default function Exercises() {
 	const sortedExercises = useMemo<SortedExercises>(
 		() =>
 			(exercises ?? []).reduce<SortedExercises>((acc, exercise) => {
-				if (!acc[exercise.muscleGroup]) {
-					acc[exercise.muscleGroup] = [];
+				const muscleGroup = exercise.muscleGroup || "Nezařazeno";
+				if (!acc[muscleGroup]) {
+					acc[muscleGroup] = [];
 				}
-				acc[exercise.muscleGroup].push(exercise);
+				acc[muscleGroup].push(exercise);
 				return acc;
 			}, {}),
 		[exercises]

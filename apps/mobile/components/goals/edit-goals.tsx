@@ -21,11 +21,17 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 	const [squat, setSquat] = useState(squatDef);
 	const [bench, setBench] = useState(benchDef);
 	const [deadlift, setDeadlift] = useState(deadliftDef);
+
+	const squatNum = Number.parseFloat(squat.replace(",", "."));
+	const benchNum = Number.parseFloat(bench.replace(",", "."));
+	const deadliftNum = Number.parseFloat(deadlift.replace(",", "."));
+
+	const isValidNumber = (num: number) => !Number.isNaN(num) && num > 0 && num <= 1000;
+
 	const disabled =
-		squat === "" ||
-		bench === "" ||
-		deadlift === "" ||
+		!(isValidNumber(squatNum) && isValidNumber(benchNum) && isValidNumber(deadliftNum)) ||
 		(squat === squatDef && bench === benchDef && deadlift === deadliftDef);
+
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 	const updateUserGoals = useMutation(api.userGoals.updateUserGoals);

@@ -1,20 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Dumbbell } from "lucide-react-native";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import CreateTrainingModal from "../create/create-training-modal";
 
-export default function EmptyTrainings() {
+export default function EmptyList() {
 	const [modalVisible, setModalVisible] = useState(false);
 	return (
-		<TouchableOpacity activeOpacity={0.8} onPress={() => setModalVisible(true)}>
-			<View className="gap-3">
-				<View className="mb-1 flex-row items-center gap-2">
-					<Dumbbell color={COLORS.accent} size={20} />
-					<Text className="font-semibold text-text text-xl">Poslední trénink</Text>
-				</View>
-				<View className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-5 py-4">
+		<TouchableOpacity activeOpacity={1} onPress={() => setModalVisible(true)}>
+			<View className="w-full items-center justify-center py-8">
+				<Text className="text-base text-muted">Žádné tréninky</Text>
+				<View className="mt-6 w-full flex-row items-center justify-center gap-2">
 					<Text className="text-base text-muted">Přidejte trénink pomocí tlačítka</Text>
 					<Ionicons color={COLORS.muted} name="add-circle-outline" size={24} />
 				</View>
