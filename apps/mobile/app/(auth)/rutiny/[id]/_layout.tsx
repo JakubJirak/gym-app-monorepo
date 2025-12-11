@@ -60,10 +60,12 @@ export default function RoutineIdLayout() {
 							lazy: true,
 							lazyPreloadDistance: 1,
 							swipeEnabled: true,
+							animationEnabled: false,
 							tabBarStyle: {
 								backgroundColor: COLORS.primary,
 								marginTop: -12,
 								elevation: 0,
+								height: 48,
 							},
 							tabBarActiveTintColor: filterColor,
 							tabBarInactiveTintColor: "#999",
@@ -77,6 +79,7 @@ export default function RoutineIdLayout() {
 								fontWeight: "600",
 							},
 							tabBarPressColor: "transparent",
+							tabBarBounces: false,
 						}}
 					>
 						<MaterialTopTabs.Screen name="index" options={{ title: "Cviky" }} />

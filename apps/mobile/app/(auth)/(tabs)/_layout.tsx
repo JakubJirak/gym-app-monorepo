@@ -10,7 +10,7 @@ export default function TabsLayout() {
 	const [sheetVisible, setSheetVisible] = useState(false);
 	const [createModalVisible, setCreateModalVisible] = useState(false);
 	const [trainingRoutineModalVisible, setTrainingRoutineModalVisible] = useState(false);
-	const openSheet = () => setCreateModalVisible(true);
+	const openSheet = () => setSheetVisible(true);
 
 	return (
 		<>
@@ -58,7 +58,6 @@ export default function TabsLayout() {
 					}}
 				/>
 
-				{/* Create tab: použijeme listener, aby se navigace preventovala a otevřel sheet */}
 				<Tabs.Screen
 					listeners={{
 						tabPress: (e) => {

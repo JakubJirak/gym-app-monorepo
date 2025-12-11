@@ -14,7 +14,6 @@ export default function AuthLayout() {
 				}}
 			>
 				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-				<Stack.Screen name="[id]" options={{ headerShown: false }} />
 			</Stack>
 		</>
 	);

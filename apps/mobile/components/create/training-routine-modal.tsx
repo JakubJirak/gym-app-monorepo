@@ -1,8 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "convex/react";
 import { Layers } from "lucide-react-native";
-import { Pressable, Text, View } from "react-native";
+import { useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
+import { api } from "../../../../packages/convex/convex/_generated/api";
+import CreateFromRoutineDialog from "./create-from-routine-dialog";
 
 type TrainingRoutineModalProps = {
 	trainingRoutineModalVisible: boolean;
@@ -13,50 +16,107 @@ export default function TrainingRoutineModal({
 	trainingRoutineModalVisible,
 	setTrainingRoutineModalVisible,
 }: TrainingRoutineModalProps) {
+	const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
+	const [selectedRoutine, setSelectedRoutine] = useState<{
+		id: string;
+		name: string;
+		color?: string;
+	} | null>(null);
+	const routines = useQuery(api.routines.getUserRoutines);
 	const closeSheet = () => setTrainingRoutineModalVisible(false);
 
-	const onSelect = (opt: string) => {
-		console.log("Vybraná možnost:", opt);
+	const handleSelectRoutine = (id: string, name: string, color?: string) => {
+		setSelectedRoutine({ id, name, color });
+		setConfirmDialogVisible(true);
 		closeSheet();
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			hideModalContentWhileAnimating
-			isVisible={trainingRoutineModalVisible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
-		>
-			<View className="h-[50%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
+		<>
+			<Modal
+				animationIn="slideInUp"
+				animationOut="slideOutDown"
+				backdropOpacity={0.5}
+				hideModalContentWhileAnimating
+				isVisible={trainingRoutineModalVisible}
+				onBackButtonPress={closeSheet}
+				onBackdropPress={closeSheet}
+				onSwipeComplete={closeSheet}
+				propagateSwipe
+				style={{ justifyContent: "flex-end", margin: 0 }}
+				swipeDirection={["down"]}
+				useNativeDriver
+				useNativeDriverForBackdrop
+			>
+				<View className="h-[80%] rounded-t-xl bg-darker p-4">
+					<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
-				<View className="flex-1 justify-center gap-4">
-					<Pressable
-						className="boder-accent mx-4 flex flex-row items-center justify-center gap-4 rounded-2xl bg-secondary py-4"
-						onPress={() => onSelect("novy")}
-					>
-						<Ionicons color={COLORS.accent} name="add-circle-outline" size={40} />
-						<Text className="font-semibold text-text text-xl">Nový trénink</Text>
-					</Pressable>
+					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
+						<Layers color={COLORS.accent} size={22} />
+						<Text className="font-bold text-2xl text-text">Vyberte rutinu</Text>
+					</View>
 
-					<Pressable
-						className="mx-4 flex flex-row items-center justify-center gap-4 rounded-2xl bg-secondary px-12 py-5"
-						onPress={() => onSelect("rutina")}
-					>
-						<Layers color={COLORS.accent} size={36} />
-						<Text className="font-semibold text-text text-xl">Podle rutiny</Text>
-					</Pressable>
+					<FlatList
+						className="flex-1"
+						data={routines}
+						ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
+						keyExtractor={(item) => item._id}
+						ListEmptyComponent={() => (
+							<View className="mx-auto mt-10">
+								<Text className="text-center text-base text-muted">
+									Zatím nemáte žádné rutiny
+								</Text>
+							</View>
+						)}
+						renderItem={({ item }) => (
+							<TouchableOpacity
+								onPress={() =>
+									handleSelectRoutine(item._id, item.name, item.filter?.color)
+								}
+							>
+								<View className="flex-row items-center px-2 py-6">
+									<View
+										style={{
+											backgroundColor: item.filter?.color || "gray",
+											width: 3,
+											height: "100%",
+											borderRadius: 8,
+											marginRight: 24,
+											opacity: 0.8,
+										}}
+									/>
+									<View className="flex-1 gap-1">
+										<Text className="font-semibold text-lg text-text">
+											{item.name}
+										</Text>
+										<Text className="text-muted text-sm">
+											{item.exercises.length} cviky
+										</Text>
+									</View>
+									<View className="flex-col justify-between">
+										<Text
+											className="rounded-full border px-2.5 py-1.5 text-center font-light text-sm text-text"
+											style={{
+												borderColor: `${item.filter?.color ? `${item.filter.color}99` : "gray"}`,
+											}}
+										>
+											{item.filter?.name || "Žádný"}
+										</Text>
+									</View>
+								</View>
+							</TouchableOpacity>
+						)}
+					/>
 				</View>
-			</View>
-		</Modal>
+			</Modal>
+
+			<CreateFromRoutineDialog
+				routineColor={selectedRoutine?.color || null}
+				routineId={selectedRoutine?.id || null}
+				routineName={selectedRoutine?.name || null}
+				setVisible={setConfirmDialogVisible}
+				visible={confirmDialogVisible}
+			/>
+		</>
 	);
 }

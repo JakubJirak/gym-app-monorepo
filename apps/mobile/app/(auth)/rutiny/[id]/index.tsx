@@ -16,8 +16,10 @@ export default function TrainingById() {
 
 	if (routine === undefined) {
 		return (
-			<View className="flex-1 items-center justify-center bg-primary">
-				<ActivityIndicator color={COLORS.accent} size="large" />
+			<View className="flex-1 bg-primary px-5 pt-2">
+				<View className="flex-1 items-center justify-center">
+					<ActivityIndicator color={COLORS.accent} size="large" />
+				</View>
 			</View>
 		);
 	}
@@ -30,6 +32,7 @@ export default function TrainingById() {
 		<>
 			<View className="flex-1 bg-primary px-5 pt-2">
 				<FlatList
+					className="flex-1"
 					data={routine.exercises}
 					ItemSeparatorComponent={() => <View className="my-1 h-0.5 w-full bg-secondary" />}
 					keyExtractor={(item) => item._id}

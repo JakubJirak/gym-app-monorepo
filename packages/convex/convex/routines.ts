@@ -164,3 +164,55 @@ export const editRoutine = mutation({
 		});
 	},
 });
+
+export const createWorkoutFromRoutine = mutation({
+	args: {
+		routineId: v.id("routines"),
+		name: v.string(),
+		workoutDate: v.string(),
+	},
+	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return null;
+		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Get the routine with its filter
+		const routine = await ctx.db.get(args.routineId);
+		if (!routine) {
+			return null;
+		}
+
+		// Create the workout
+		const workoutId = await ctx.db.insert("workouts", {
+			userId,
+			name: args.name,
+			workoutDate: args.workoutDate,
+			filterId: routine.filterId,
+		});
+
+		// Get all routine exercises
+		const routineExercises = await ctx.db
+			.query("routinesExercises")
+			.withIndex("by_routineId", (q) => q.eq("routineId", args.routineId))
+			.collect();
+
+		// Sort by order
+		const sortedExercises = routineExercises.sort((a, b) => a.order - b.order);
+
+		// Create workout exercises from routine exercises
+		for (const routineExercise of sortedExercises) {
+			await ctx.db.insert("workoutExercises", {
+				workoutId,
+				exerciseId: routineExercise.exerciseId,
+				note: routineExercise.note,
+				order: routineExercise.order,
+			});
+		}
+
+		return { workoutId };
+	},
+});
