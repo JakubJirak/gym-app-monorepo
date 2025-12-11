@@ -83,7 +83,7 @@ export default function RoutineAddExerciseModal({
 				<View className="flex-1 items-center justify-between">
 					<View className="mt-2 flex-row items-center gap-2">
 						<Ionicons color="white" name="add-outline" size={32} />
-						<Text className="font-bold text-2xl text-text">Přidat cvik do rutinz</Text>
+						<Text className="font-bold text-2xl text-text">Přidat cvik</Text>
 					</View>
 
 					<ExercisePicker onSelect={(id) => setSelectedId(id)} selectedId={selectedId} />

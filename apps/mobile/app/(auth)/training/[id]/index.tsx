@@ -3,20 +3,20 @@ import { useLocalSearchParams } from "expo-router";
 import { NotebookPen } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
-import RoutineExercise from "@/components/routine/routine-exercise";
-import RoutineFooter from "@/components/routine/routine-footer";
+import Exercise from "@/components/trainings/exercise";
+import TrainingFooter from "@/components/trainings/training-footer";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../../../../../packages/convex/convex/_generated/dataModel";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 export default function TrainingById() {
 	const { id } = useLocalSearchParams();
 	const [isEdit, setIsEdit] = useState(false);
-	const routine = useQuery(api.routines.getRoutineById, {
-		routineId: id as Id<"routines">,
+	const workout = useQuery(api.workouts.getWorkoutById, {
+		workoutId: id as Id<"workouts">,
 	});
 
-	if (!routine) {
+	if (!workout) {
 		return null;
 	}
 
@@ -24,25 +24,25 @@ export default function TrainingById() {
 		<>
 			<View className="flex-1 bg-primary px-5 pt-2">
 				<FlatList
-					data={routine.exercises}
+					data={workout.exercises}
 					ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 					keyExtractor={(item) => item._id}
 					ListHeaderComponent={() => (
 						<>
 							<View className="mt-3 flex-row items-center gap-2">
-								{routine.name !== "" && (
+								{workout.name !== "" && (
 									<View className="max-w-1/2 flex-row items-center gap-2">
 										<NotebookPen color={COLORS.muted} size={16} />
-										<Text className="text-muted text-sm">{routine.name}</Text>
+										<Text className="text-muted text-sm">{workout.name}</Text>
 									</View>
 								)}
 								<Text className="ml-auto rounded-full bg-secondary px-3 py-2 text-text">
-									Cviky: {routine.exercises.length}
+									Cviky: {workout.exercises.length}
 								</Text>
 								<Text
 									className="rounded-xl border px-2.5 py-1.5 text-base text-text"
 									style={{
-										borderColor: `${routine?.filter?.color}CC`,
+										borderColor: `${workout?.filter?.color}CC`,
 										color: "white",
 										borderRadius: 1200,
 										paddingHorizontal: 10,
@@ -53,31 +53,34 @@ export default function TrainingById() {
 										fontWeight: "300",
 									}}
 								>
-									{routine.filter?.name}
+									{workout.filter?.name}
 								</Text>
 							</View>
 						</>
 					)}
-					renderItem={({ item }) => (
-						<RoutineExercise
-							_id={item._id}
-							exerciseId={item.exercise?._id}
-							exercisesLength={routine.exercises.length}
-							isEdit={isEdit}
-							muscleGroup={item.exercise?.muscleGroup}
-							name={item.exercise?.name}
-							note={item.note}
-							order={item.order}
-							routineId={routine._id}
-						/>
-					)}
+					renderItem={({ item }) =>
+						item.exercise ? (
+							<Exercise
+								_id={item._id}
+								exerciseId={item.exercise._id}
+								exercisesLength={workout.exercises.length}
+								isEdit={isEdit}
+								muscleGroup={item.exercise.muscleGroup}
+								name={item.exercise.name}
+								note={item.note}
+								order={item.order}
+								sets={item.sets}
+								trainingId={workout._id}
+							/>
+						) : null
+					}
 					showsHorizontalScrollIndicator={false}
 					showsVerticalScrollIndicator={false}
 				/>
 			</View>
-			<RoutineFooter
-				exercises={routine.exercises.length}
-				id={routine._id}
+			<TrainingFooter
+				exercises={workout.exercises.length}
+				id={workout._id}
 				isEdit={isEdit}
 				setIsEdit={setIsEdit}
 			/>

@@ -4,8 +4,8 @@ import { useContext, useMemo } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import StatsGraph from "@/components/training/stats-graph";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 import { TrainingIdContext } from "./_layout";
 
 export default function Stats() {

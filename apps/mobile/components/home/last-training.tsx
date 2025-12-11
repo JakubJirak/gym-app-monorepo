@@ -19,7 +19,7 @@ export default function LastTraining({ workoutId, workoutDate }: LastTrainingPro
 			</View>
 			<Link
 				href={{
-					pathname: "/[id]",
+					pathname: "/training/[id]",
 					params: { id: workoutId },
 				}}
 			>

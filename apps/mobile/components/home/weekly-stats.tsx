@@ -130,7 +130,7 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 						const handlePress = () => {
 							if (dayTraining) {
 								router.push({
-									pathname: "/[id]",
+									pathname: "/training/[id]",
 									params: { id: dayTraining._id },
 								});
 							}

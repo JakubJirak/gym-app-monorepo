@@ -36,7 +36,7 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 				closeSheet();
 				setFilterId(undefined);
 				setDate(new Date());
-				router.navigate({ pathname: "/(auth)/[id]", params: { id: workoutId.workoutId } });
+				router.navigate({ pathname: "/(auth)/training/[id]", params: { id: workoutId.workoutId } });
 			}
 		}
 	};

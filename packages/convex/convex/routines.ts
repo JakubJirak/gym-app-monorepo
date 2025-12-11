@@ -123,11 +123,13 @@ export const addRoutine = mutation({
 		//@ts-expect-error
 		const userId = user._id;
 
-		await ctx.db.insert("routines", {
+		const id = await ctx.db.insert("routines", {
 			name: args.name,
 			filterId: args.filterId,
 			userId,
 		});
+
+		return { id };
 	},
 });
 

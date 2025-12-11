@@ -1,4 +1,5 @@
 import { useMutation } from "convex/react";
+import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -18,6 +19,7 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 	const [name, setName] = useState("");
 	const closeSheet = () => setSheetVisible(false);
 	const addRutina = useMutation(api.routines.addRoutine);
+	const router = useRouter();
 
 	const disabled = filterId === undefined || name.trim() === "";
 
@@ -26,7 +28,12 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 			return;
 		}
 		if (filterId !== undefined) {
-			await addRutina({ name: name.trim(), filterId: filterId as Id<"filters"> });
+			const routineId = await addRutina({ name: name.trim(), filterId: filterId as Id<"filters"> });
+			if (routineId) {
+				setFilterId(undefined);
+				setName("");
+				router.navigate({ pathname: "/rutiny/[id]", params: { id: routineId.id } });
+			}
 		}
 		closeSheet();
 	};

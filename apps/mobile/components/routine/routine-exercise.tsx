@@ -40,7 +40,7 @@ export default function RoutineExercise({
 
 	return (
 		<View className="py-4">
-			<View className="mb-2 flex-row items-center">
+			<View className="mb-0 flex-row items-center">
 				<View className="flex-1 flex-row items-center">
 					<TouchableOpacity onPress={handleNavigateToHistory}>
 						<Text className="flex font-semibold text-[19px] text-text">{name}</Text>

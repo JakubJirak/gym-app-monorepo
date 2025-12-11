@@ -11,7 +11,7 @@ export default function Routine({ name, color, filterName, id }: RoutineProps) {
 	return (
 		<Link
 			href={{
-				pathname: "/profile/rutiny/[id]",
+				pathname: "/rutiny/[id]",
 				params: { id },
 			}}
 		>

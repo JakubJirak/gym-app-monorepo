@@ -2,6 +2,7 @@ import { ChartColumnIncreasing } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import { COLORS } from "@/constants/COLORS";
+import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 
 type Exercise = {
 	_id: string;
@@ -11,7 +12,7 @@ type Exercise = {
 	note?: string;
 	order: number;
 	workoutId: string;
-	sets: Array<{
+	sets?: Array<{
 		_id: string;
 		reps: number;
 		weight: number;
@@ -19,8 +20,23 @@ type Exercise = {
 	}>;
 };
 
+type Exercise2 = {
+	_id: Id<"routinesExercises">;
+	exercise: {
+		muscleGroup: string | null;
+		_id: Id<"exercises">;
+		_creationTime: number;
+		name: string;
+		userId: string;
+		muscleGroupId: Id<"muscleGroups">;
+	} | null;
+	order: number;
+	routineId: Id<"routines">;
+	note: string | undefined;
+};
+
 type StatsGraphProps = {
-	exercises: Exercise[];
+	exercises: Exercise[] | Exercise2[];
 };
 
 const MUSCLE_GROUP_COLORS = [
@@ -58,7 +74,7 @@ export default function StatsGraph({ exercises }: StatsGraphProps) {
 		<View className="mt-8 mb-6 gap-4">
 			<View className="mb-6 flex-row items-center gap-3">
 				<ChartColumnIncreasing color={COLORS.accent} />
-				<Text className="font-bold text-text text-xl">Celkové statistiky</Text>
+				<Text className="font-bold text-text text-xl">Statistiky podle partie</Text>
 			</View>
 			<View className="items-center">
 				<PieChart
