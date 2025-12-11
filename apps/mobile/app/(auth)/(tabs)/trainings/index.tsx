@@ -1,8 +1,8 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
 import { useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import Categories from "@/components/trainings/categories";
+import EmptyList from "@/components/trainings/empty-list";
 import Training from "@/components/trainings/training";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
@@ -39,15 +39,7 @@ export default function Trainings() {
 				data={filteredWorkouts}
 				ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 				keyExtractor={(item) => item._id}
-				ListEmptyComponent={() => (
-					<View className="items-center justify-center py-8">
-						<Text className="text-base text-muted">Žádné tréninky k zobrazení</Text>
-						<View className="mt-6 w-full flex-row items-center justify-center gap-2">
-							<Text className="text-base text-muted">Přidejte trénink pomocí tlačítka</Text>
-							<Ionicons color={COLORS.muted} name="add-circle-outline" size={24} />
-						</View>
-					</View>
-				)}
+				ListEmptyComponent={() => <EmptyList />}
 				renderItem={({ item }) => (
 					<Training date={item.workoutDate} filter={item.filter} id={item._id} note={item.name} />
 				)}
