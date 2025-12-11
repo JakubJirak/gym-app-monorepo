@@ -66,4 +66,17 @@ export default defineSchema({
 		content: v.string(),
 		link: v.string(),
 	}),
+
+	routines: defineTable({
+		userId: v.string(),
+		name: v.string(),
+		filterId: v.id("filters"),
+	}).index("by_userId", ["userId"]),
+
+	routinesExercises: defineTable({
+		routineId: v.id("routines"),
+		exerciseId: v.id("exercises"),
+		note: v.optional(v.string()),
+		order: v.number(),
+	}).index("by_routineId", ["routineId"]),
 });
