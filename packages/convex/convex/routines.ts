@@ -208,7 +208,6 @@ export const createWorkoutFromRoutine = mutation({
 			await ctx.db.insert("workoutExercises", {
 				workoutId,
 				exerciseId: routineExercise.exerciseId,
-				note: routineExercise.note,
 				order: routineExercise.order,
 			});
 		}
