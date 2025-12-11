@@ -5,15 +5,12 @@ import {
 } from "@react-navigation/material-top-tabs";
 import type { ParamListBase, TabNavigationState } from "@react-navigation/native";
 import { useQuery } from "convex/react";
-import { format } from "date-fns/format";
-import { cs } from "date-fns/locale/cs";
 import { useLocalSearchParams, withLayoutContext } from "expo-router";
 import { createContext } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
-import TrainingHeader from "@/components/trainings/training-header";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import { api } from "../../../../../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../../../../../packages/convex/convex/_generated/dataModel";
 
 const { Navigator } = createMaterialTopTabNavigator();
 
@@ -24,13 +21,13 @@ export const MaterialTopTabs = withLayoutContext<
 	MaterialTopTabNavigationEventMap
 >(Navigator);
 
-export const TrainingIdContext = createContext<string | string[] | undefined>(undefined);
+export const RoutineIdContext = createContext<string | string[] | undefined>(undefined);
 
-export default function TrainingIdLayout() {
+export default function RoutineIdLayout() {
 	const { id } = useLocalSearchParams();
-	const workout = useQuery(api.workouts.getWorkoutById, id ? { workoutId: id as Id<"workouts"> } : "skip");
+	const routine = useQuery(api.routines.getRoutineById, id ? { routineId: id as Id<"routines"> } : "skip");
 
-	if (workout === undefined) {
+	if (routine === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -38,21 +35,18 @@ export default function TrainingIdLayout() {
 		);
 	}
 
-	if (!workout) {
+	if (!routine) {
 		return null;
 	}
 
-	const filterColor = workout.filter?.color || COLORS.accent;
+	const filterColor = routine.filter?.color || COLORS.accent;
 
 	return (
-		<TrainingIdContext.Provider value={id}>
+		<RoutineIdContext.Provider value={id}>
 			<View className="flex-1">
-				<View className="px-4">
-					<TrainingHeader
-						text={format(new Date(workout.workoutDate), "dd.MM.yyyy", { locale: cs })}
-						trainingId={id as string}
-					/>
-				</View>
+				{/* <View className="px-4">
+					<TrainingHeader text={routine.name} trainingId={id as string} />
+				</View> */}
 
 				<MaterialTopTabs
 					screenOptions={{
@@ -79,6 +73,6 @@ export default function TrainingIdLayout() {
 					<MaterialTopTabs.Screen name="stats" options={{ title: "Stats" }} />
 				</MaterialTopTabs>
 			</View>
-		</TrainingIdContext.Provider>
+		</RoutineIdContext.Provider>
 	);
 }
