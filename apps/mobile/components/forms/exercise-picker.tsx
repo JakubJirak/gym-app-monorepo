@@ -94,6 +94,7 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 				isVisible={modalVisible}
 				onBackButtonPress={closeModal}
 				onBackdropPress={closeModal}
+				onModalWillHide={() => Keyboard.dismiss()}
 				onSwipeComplete={closeModal}
 				propagateSwipe
 				style={{ justifyContent: "flex-end", margin: 0 }}
@@ -121,7 +122,19 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 						data={filtered}
 						keyboardShouldPersistTaps="handled"
 						keyExtractor={(item) => item._id}
-						ListEmptyComponent={() => <EmptyComponent input={query} />}
+						ListEmptyComponent={() => (
+							<EmptyComponent
+								input={query}
+								onExerciseCreated={(exerciseId) => {
+									onSelect(exerciseId);
+									if (selectedId === undefined) {
+										setInternalSelectedId(exerciseId);
+									}
+									setQuery("");
+									setModalVisible(false);
+								}}
+							/>
+						)}
 						renderItem={renderItem}
 						showsVerticalScrollIndicator={false}
 					/>
@@ -131,7 +144,13 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 	);
 }
 
-const EmptyComponent = ({ input }: { input: string }) => {
+const EmptyComponent = ({
+	input,
+	onExerciseCreated,
+}: {
+	input: string;
+	onExerciseCreated: (exerciseId: string) => void;
+}) => {
 	const [sheetVisible, setSheetVisible] = useState(false);
 	return (
 		<View className="items-center py-4">
@@ -144,6 +163,7 @@ const EmptyComponent = ({ input }: { input: string }) => {
 			</TouchableOpacity>
 			<AddNewExerciseModal
 				defaultName={input}
+				onExerciseCreated={onExerciseCreated}
 				setSheetVisible={setSheetVisible}
 				sheetVisible={sheetVisible}
 			/>

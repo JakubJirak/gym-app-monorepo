@@ -52,7 +52,7 @@ export default function Exercise({
 			<View className="mb-2 flex-row items-center">
 				<View className="flex-1 flex-row items-center">
 					<TouchableOpacity onPress={handleNavigateToHistory}>
-						<Text className="flex font-semibold text-text text-xl">{name}</Text>
+						<Text className="flex font-semibold text-[19px] text-text">{name}</Text>
 					</TouchableOpacity>
 					{isEdit && (
 						<TouchableOpacity

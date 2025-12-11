@@ -21,13 +21,17 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 	const addExercise = useMutation(api.workoutExercises.addWorkoutExercise).withOptimisticUpdate(
 		(localStore, args) => {
 			const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+			const allExercises = localStore.getQuery(api.exercises.getAllExercises, {});
+
 			for (const query of queries) {
 				const currentData = query.value;
-				if (currentData && query.args.workoutId === args.workoutId) {
+				if (currentData && query.args.workoutId === args.workoutId && allExercises) {
+					const exerciseData = allExercises.find((ex) => ex._id === args.exerciseId);
+
 					const optimisticExercise = {
 						_id: `temp-${Date.now()}` as Id<"workoutExercises">,
-						exercise: null,
-						note: args.note,
+						exercise: exerciseData || null,
+						note: undefined,
 						sets: [],
 						order: args.order,
 						workoutId: args.workoutId,

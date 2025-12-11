@@ -52,9 +52,11 @@ export const getAllExercises = query({
 		// Vytvoříme pole objektů s názvem cviku a názvem muscleGroup
 		const exercisesWithMuscleGroup = allExercises.map((exercise) => ({
 			_id: exercise._id,
+			_creationTime: exercise._creationTime,
 			userId: exercise.userId,
 			name: exercise.name,
-			muscleGroup: muscleGroupMap[exercise.muscleGroupId] || "",
+			muscleGroup: muscleGroupMap[exercise.muscleGroupId] || null,
+			muscleGroupId: exercise.muscleGroupId,
 		}));
 
 		return exercisesWithMuscleGroup;
@@ -75,11 +77,12 @@ export const addExercise = mutation({
 		// @ts-expect-error
 		const userId = user._id;
 
-		await ctx.db.insert("exercises", {
+		const exerciseId = await ctx.db.insert("exercises", {
 			userId,
 			name: args.name,
 			muscleGroupId: args.muscleGroupId,
 		});
+		return exerciseId;
 	},
 });
 
