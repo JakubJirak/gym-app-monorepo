@@ -7,11 +7,12 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
+import EditRoutineModal from "./modals/edit-routine-modal";
 
-export default function TrainingHeader({ text, trainingId }: { text: string; trainingId: string }) {
+export default function RoutineHeader({ text, routineId }: { text: string; routineId: string }) {
 	const router = useRouter();
 	const [openEdit, setOpenEdit] = useState(false);
-	const training = useQuery(api.workouts.getWorkoutById, { workoutId: trainingId as Id<"workouts"> });
+	const routine = useQuery(api.routines.getRoutineById, { routineId: routineId as Id<"routines"> });
 
 	return (
 		<View className="mt-2 flex-row items-center pr-2 pb-4">
@@ -22,13 +23,12 @@ export default function TrainingHeader({ text, trainingId }: { text: string; tra
 			<TouchableOpacity className="w-8" onPress={() => setOpenEdit(true)}>
 				<Pencil color="white" size={22} />
 			</TouchableOpacity>
-			<EditTrainingModal
-				defaultDate={training?.workoutDate}
-				defaultFilterId={training?.filter?._id}
-				defaultName={training?.name}
+			<EditRoutineModal
+				defaultFilterId={routine?.filter?._id}
+				defaultName={routine?.name}
+				routineId={routineId}
 				setSheetVisible={setOpenEdit}
 				sheetVisible={openEdit}
-				trainingId={trainingId}
 			/>
 		</View>
 	);

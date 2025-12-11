@@ -21,12 +21,12 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 
 	const disabled = filterId === undefined || name.trim() === "";
 
-	const handleAddRoutine = () => {
+	const handleAddRoutine = async () => {
 		if (disabled) {
 			return;
 		}
 		if (filterId !== undefined) {
-			addRutina({ name: name.trim(), filterId: filterId as Id<"filters"> });
+			await addRutina({ name: name.trim(), filterId: filterId as Id<"filters"> });
 		}
 		closeSheet();
 	};

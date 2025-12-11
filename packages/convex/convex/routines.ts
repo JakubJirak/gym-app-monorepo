@@ -148,3 +148,17 @@ export const deleteRoutine = mutation({
 		await ctx.db.delete(args.routineId);
 	},
 });
+
+export const editRoutine = mutation({
+	args: {
+		routineId: v.id("routines"),
+		name: v.string(),
+		filterId: v.id("filters"),
+	},
+	handler: async (ctx, args) => {
+		await ctx.db.patch(args.routineId, {
+			name: args.name,
+			filterId: args.filterId,
+		});
+	},
+});

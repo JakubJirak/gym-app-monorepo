@@ -8,6 +8,7 @@ import { useQuery } from "convex/react";
 import { useLocalSearchParams, withLayoutContext } from "expo-router";
 import { createContext } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
+import RoutineHeader from "@/components/routine/routine-header";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../../../packages/convex/convex/_generated/dataModel";
@@ -43,10 +44,10 @@ export default function RoutineIdLayout() {
 
 	return (
 		<RoutineIdContext.Provider value={id}>
-			<View className="flex-1">
-				{/* <View className="px-4">
-					<TrainingHeader text={routine.name} trainingId={id as string} />
-				</View> */}
+			<View className="flex-1 bg-primary">
+				<View className="px-4">
+					<RoutineHeader routineId={id as string} text={routine.name} />
+				</View>
 
 				<MaterialTopTabs
 					screenOptions={{
