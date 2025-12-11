@@ -1,0 +1,176 @@
+import { useMutation, useQuery } from "convex/react";
+import { NotebookPen } from "lucide-react-native";
+import { useEffect, useRef, useState } from "react";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Modal from "react-native-modal";
+import { COLORS } from "@/constants/COLORS";
+import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+
+type EditNoteProps = {
+	visible: boolean;
+	setVisible: (visible: boolean) => void;
+	routineExerciseId: string;
+	closeParent: () => void;
+};
+
+export default function EditNoteModal({ visible, setVisible, routineExerciseId, closeParent }: EditNoteProps) {
+	const closeSheet = () => {
+		setIsClosing(true);
+		setVisible(false);
+	};
+	const routineExercise = useQuery(api.routineExercises.getRoutineExerciseById, {
+		routineExerciseId: routineExerciseId as Id<"routinesExercises">,
+	});
+	const [note, setNote] = useState<string | undefined>(routineExercise?.note);
+	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const [isClosing, setIsClosing] = useState(false);
+	const inputRef = useRef<TextInput>(null);
+	const editNote = useMutation(api.routineExercises.editNote).withOptimisticUpdate((localStore, args) => {
+		const queries = localStore.getAllQueries(api.routines.getRoutineById);
+		for (const query of queries) {
+			const currentData = query.value;
+			if (currentData?.exercises) {
+				const updatedExercises = currentData.exercises.map((exercise) =>
+					exercise._id === args.routineExerciseId ? { ...exercise, note: args.note } : exercise
+				);
+				localStore.setQuery(api.routines.getRoutineById, query.args, {
+					...currentData,
+					exercises: updatedExercises,
+				});
+			}
+		}
+	});
+
+	useEffect(() => {
+		const showListeners = [
+			Keyboard.addListener("keyboardWillShow", (e) => {
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
+			}),
+			Keyboard.addListener("keyboardDidShow", (e) => {
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
+			}),
+		];
+		const hideListeners = [
+			Keyboard.addListener("keyboardWillHide", () => {
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
+			}),
+			Keyboard.addListener("keyboardDidHide", () => {
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
+			}),
+		];
+
+		return () => {
+			for (const listener of showListeners) {
+				listener.remove();
+			}
+			for (const listener of hideListeners) {
+				listener.remove();
+			}
+		};
+	}, [isClosing]);
+
+	useEffect(() => {
+		if (visible) {
+			setTimeout(() => {
+				inputRef.current?.focus();
+			}, 100);
+		}
+	}, [visible]);
+
+	const disabled = note === routineExercise?.note;
+
+	const handleEditNote = () => {
+		editNote({
+			routineExerciseId: routineExerciseId as Id<"routinesExercises">,
+			note,
+		});
+		closeSheet();
+		closeParent();
+	};
+
+	const handleModalHide = () => {
+		Keyboard.dismiss();
+		setKeyboardHeight(0);
+		setIsClosing(false);
+	};
+
+	return (
+		<Modal
+			animationIn="slideInUp"
+			animationOut="slideOutDown"
+			backdropOpacity={0.5}
+			hideModalContentWhileAnimating
+			isVisible={visible}
+			onBackButtonPress={closeSheet}
+			onBackdropPress={closeSheet}
+			onModalHide={handleModalHide}
+			onSwipeComplete={closeSheet}
+			propagateSwipe
+			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
+			swipeDirection={["down"]}
+			useNativeDriver
+			useNativeDriverForBackdrop
+		>
+			<View className="h-[63%] rounded-t-xl bg-darker p-4">
+				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
+
+				<View className="flex-1">
+					<View className="mt-2 mb-4 flex-row items-center gap-2 self-center">
+						<NotebookPen color={COLORS.accent} size={20} />
+						<Text className="font-semibold text-text text-xl">Upravit poznámku</Text>
+					</View>
+
+					<View className="mt-2 gap-4">
+						<View>
+							<Text className="mb-2 font-semibold text-lg text-text">Poznámka</Text>
+							<TextInput
+								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
+								cursorColorClassName="accent-text"
+								defaultValue={routineExercise?.note || ""}
+								maxLength={50}
+								onChangeText={setNote}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleEditNote();
+									}
+								}}
+								ref={inputRef}
+								returnKeyType="done"
+								value={note}
+							/>
+						</View>
+					</View>
+
+					<View className="mt-8 mb-6 flex-row">
+						<TouchableOpacity
+							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
+							onPress={closeSheet}
+						>
+							<Text className="p-2 text-lg text-text">Zrušit</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
+							disabled={disabled}
+							onPress={handleEditNote}
+							style={{
+								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+							}}
+						>
+							<NotebookPen color="white" size={20} />
+							<Text className="p-1 font-semibold text-lg text-text">Upravit poznámku</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</View>
+		</Modal>
+	);
+}

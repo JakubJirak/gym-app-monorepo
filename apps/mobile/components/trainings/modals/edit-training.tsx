@@ -90,7 +90,7 @@ export default function EditTrainingModal({
 							<TextInput
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
-								maxLength={50}
+								maxLength={40}
 								onChangeText={setName}
 								onSubmitEditing={() => {
 									if (!disabled) {
