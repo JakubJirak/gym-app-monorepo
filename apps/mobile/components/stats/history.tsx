@@ -73,7 +73,12 @@ export default function History({ initialExerciseId }: HistoryProps) {
 					) : null
 				}
 				renderItem={({ item }) => (
-					<HistoryExercise name={item.name} note={item.note} sets={item.sets} />
+					<HistoryExercise
+						name={item.name}
+						note={item.note}
+						sets={item.sets}
+						trainingId={item.id}
+					/>
 				)}
 				showsVerticalScrollIndicator={false}
 			/>
