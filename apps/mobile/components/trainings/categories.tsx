@@ -30,6 +30,7 @@ export default function Categories({ selectedFilterId, setSelectedFilterId, cate
 				const isSelected = selectedFilterId === category._id;
 				return (
 					<TouchableOpacity
+						activeOpacity={0.7}
 						className="flex items-center justify-center rounded-full border px-3 py-1.5 text-center"
 						key={category._id}
 						onPress={() => handlePress(category._id)}
