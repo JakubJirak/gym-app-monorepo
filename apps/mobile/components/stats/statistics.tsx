@@ -66,6 +66,7 @@ export default function Statistics({ trainings }: StatisticsProps) {
 		<View className="p-1">
 			<View className="flex-row flex-wrap justify-between gap-y-4">
 				<TouchableOpacity
+					activeOpacity={0.7}
 					className="w-[48%] flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center"
 					onPress={() => router.push("/(auth)/(tabs)/trainings")}
 				>
