@@ -1,5 +1,6 @@
 import { useQuery } from "convex/react";
-import { Layers } from "lucide-react-native";
+import { useRouter } from "expo-router";
+import { Layers, Plus } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
@@ -16,6 +17,7 @@ export default function TrainingRoutineModal({
 	trainingRoutineModalVisible,
 	setTrainingRoutineModalVisible,
 }: TrainingRoutineModalProps) {
+	const router = useRouter();
 	const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
 	const [selectedRoutine, setSelectedRoutine] = useState<{
 		id: string;
@@ -62,19 +64,33 @@ export default function TrainingRoutineModal({
 						ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 						keyExtractor={(item) => item._id}
 						ListEmptyComponent={() => (
-							<View className="mx-auto mt-10">
+							<View className="mx-auto mt-10 gap-4">
 								<Text className="text-center text-base text-muted">
 									Zatím nemáte žádné rutiny
 								</Text>
+								<TouchableOpacity
+									activeOpacity={0.7}
+									className="mx-auto flex flex-row items-center gap-2 rounded-xl bg-secondary px-6 py-3"
+									onPress={() => {
+										closeSheet();
+										router.push("/(auth)/(tabs)/profile/rutiny");
+									}}
+								>
+									<Plus color="white" size={20} />
+									<Text className="font-semibold text-lg text-text">
+										Vytvořit rutinu
+									</Text>
+								</TouchableOpacity>
 							</View>
 						)}
 						renderItem={({ item }) => (
 							<TouchableOpacity
+								activeOpacity={0.7}
 								onPress={() =>
 									handleSelectRoutine(item._id, item.name, item.filter?.color)
 								}
 							>
-								<View className="flex-row items-center px-2 py-6">
+								<View className="flex-row items-center px-2 py-5">
 									<View
 										style={{
 											backgroundColor: item.filter?.color || "gray",
@@ -88,9 +104,6 @@ export default function TrainingRoutineModal({
 									<View className="flex-1 gap-1">
 										<Text className="font-semibold text-lg text-text">
 											{item.name}
-										</Text>
-										<Text className="text-muted text-sm">
-											{item.exercises.length} cviky
 										</Text>
 									</View>
 									<View className="flex-col justify-between">
