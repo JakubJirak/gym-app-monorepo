@@ -1,8 +1,10 @@
 import { useRouter } from "expo-router";
-import { Pencil } from "lucide-react-native";
+import { Pencil, Plus } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { COLORS } from "@/constants/COLORS";
 import EditMenuModal from "./modals/edit-menu";
+import AddSetModal from "./modals/edit-menu-modals/add-set";
 import ExerciseSet from "./set";
 
 type ExerciseProps = {
@@ -38,6 +40,7 @@ export default function Exercise({
 	trainingId,
 }: ExerciseProps) {
 	const [editMenu, setEditMenu] = useState(false);
+	const [addSetModal, setAddSetModal] = useState(false);
 	const router = useRouter();
 
 	const handleNavigateToHistory = () => {
@@ -68,20 +71,38 @@ export default function Exercise({
 					{muscleGroup}
 				</Text>
 			</View>
-			<FlatList
-				data={sets}
-				keyExtractor={(item) => item._id}
-				renderItem={({ item }) => (
-					<ExerciseSet
-						isEdit={isEdit}
-						order={item.order}
-						reps={item.reps}
-						setId={item._id}
-						weight={item.weight}
-					/>
-				)}
-			/>
+			{sets && sets.length > 0 ? (
+				<FlatList
+					data={sets}
+					keyExtractor={(item) => item._id}
+					renderItem={({ item }) => (
+						<ExerciseSet
+							isEdit={isEdit}
+							order={item.order}
+							reps={item.reps}
+							setId={item._id}
+							weight={item.weight}
+						/>
+					)}
+				/>
+			) : (
+				<TouchableOpacity
+					activeOpacity={0.7}
+					className="mt-2 flex-row items-center justify-center gap-2 rounded-xl border border-secondary py-2"
+					onPress={() => setAddSetModal(true)}
+				>
+					<Plus color={COLORS.muted} size={20} />
+					<Text className="text-base text-muted">Přidat sérii</Text>
+				</TouchableOpacity>
+			)}
 			{note && <Text className="mt-2 text-muted">{note}</Text>}
+			<AddSetModal
+				closeParent={() => setAddSetModal(false)}
+				setsLength={sets?.length}
+				setVisible={setAddSetModal}
+				visible={addSetModal}
+				workoutExerciseId={_id}
+			/>
 			<EditMenuModal
 				exerciseId={_id}
 				isFirst={order === 0}
