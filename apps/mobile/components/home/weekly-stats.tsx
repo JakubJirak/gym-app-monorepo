@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { Calendar, Repeat, TrendingUp, Weight } from "lucide-react-native";
 import { useMemo } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { type GestureResponderEvent, Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { toLocalISODateString } from "@/src/utils/date-utils";
 import type { api } from "../../../../packages/convex/convex/_generated/api";
@@ -105,13 +105,21 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 		);
 	}
 
+	const handleCalendarPress = () => {
+		router.push("/(auth)/(tabs)/stats/calendar");
+	};
+
 	return (
 		<View className="w-full gap-3">
 			<View className="mb-1 flex-row items-center gap-2">
 				<Calendar color={COLORS.accent} size={20} />
 				<Text className="font-semibold text-text text-xl">Tento týden</Text>
 			</View>
-			<View className="rounded-xl bg-secondary px-3 py-3">
+			<TouchableOpacity
+				activeOpacity={0.8}
+				className="rounded-xl bg-secondary px-3 py-3"
+				onPress={handleCalendarPress}
+			>
 				<View className="flex-row justify-between gap-3">
 					{weekDays.map((day) => {
 						const hasTraining = trainingDates.includes(day.dateString);
@@ -127,8 +135,9 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 							textColor = COLORS.accent;
 						}
 
-						const handlePress = () => {
+						const handleDayPress = (e: GestureResponderEvent) => {
 							if (dayTraining) {
+								e.stopPropagation();
 								router.push({
 									pathname: "/training/[id]",
 									params: { id: dayTraining._id },
@@ -143,7 +152,7 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 									activeOpacity={hasTraining ? 0.7 : 1}
 									className="h-10 w-10 items-center justify-center rounded-lg"
 									disabled={!hasTraining}
-									onPress={handlePress}
+									onPress={handleDayPress}
 									style={{
 										backgroundColor,
 									}}
@@ -162,14 +171,18 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 						);
 					})}
 				</View>
-			</View>
+			</TouchableOpacity>
 
 			<View className="rounded-xl bg-secondary px-3 py-2">
 				<View className="flex-row justify-between gap-4">
-					<View className="flex-1 items-center gap-0.5 rounded-lg bg-darker py-2.5">
+					<TouchableOpacity
+						activeOpacity={0.7}
+						className="flex-1 items-center gap-0.5 rounded-lg bg-darker py-2.5"
+						onPress={() => router.push("/(auth)/(tabs)/trainings")}
+					>
 						<Calendar color={COLORS.muted} size={18} />
 						<Text className="mt-1 font-bold text-text">{totalWorkouts}</Text>
-					</View>
+					</TouchableOpacity>
 					<View className="flex-1 items-center gap-0.5 rounded-lg bg-darker py-2.5">
 						<TrendingUp color={COLORS.muted} size={18} />
 						<Text className="mt-1 font-bold text-text">{allSets}</Text>
