@@ -18,8 +18,11 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 	const [filterId, setFilterId] = useState<string | undefined>(undefined);
 	const [name, setName] = useState("");
 	const nameInputRef = useRef<TextInput>(null);
+	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const [isClosing, setIsClosing] = useState(false);
+
 	const closeSheet = () => {
-		Keyboard.dismiss();
+		setIsClosing(true);
 		setSheetVisible(false);
 	};
 	const addRutina = useMutation(api.routines.addRoutine);
@@ -28,11 +31,46 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 	const disabled = filterId === undefined || name.trim() === "";
 
 	useEffect(() => {
+		const showListeners = [
+			Keyboard.addListener("keyboardWillShow", (e) => {
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
+			}),
+			Keyboard.addListener("keyboardDidShow", (e) => {
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
+			}),
+		];
+		const hideListeners = [
+			Keyboard.addListener("keyboardWillHide", () => {
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
+			}),
+			Keyboard.addListener("keyboardDidHide", () => {
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
+			}),
+		];
+
+		return () => {
+			for (const listener of showListeners) {
+				listener.remove();
+			}
+			for (const listener of hideListeners) {
+				listener.remove();
+			}
+		};
+	}, [isClosing]);
+
+	useEffect(() => {
 		if (sheetVisible) {
-			// Small delay to ensure modal is fully visible
 			setTimeout(() => {
 				nameInputRef.current?.focus();
-			}, 300);
+			}, 100);
 		}
 	}, [sheetVisible]);
 
@@ -40,40 +78,43 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 		if (disabled) {
 			return;
 		}
+		setIsClosing(true);
 		if (filterId !== undefined) {
 			const routineId = await addRutina({ name: name.trim(), filterId: filterId as Id<"filters"> });
 			if (routineId) {
-				setFilterId(undefined);
-				setName("");
 				router.navigate({ pathname: "/rutiny/[id]", params: { id: routineId.id } });
 			}
 		}
 		closeSheet();
 	};
 
+	const handleModalHide = () => {
+		Keyboard.dismiss();
+		setKeyboardHeight(0);
+		setIsClosing(false);
+		setName("");
+		setFilterId(undefined);
+	};
+
 	return (
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
-			avoidKeyboard
 			backdropOpacity={0.5}
 			backdropTransitionOutTiming={0}
 			hideModalContentWhileAnimating
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
-			onModalHide={() => {
-				setName("");
-				setFilterId(undefined);
-			}}
+			onModalHide={handleModalHide}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
+			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
 			swipeDirection={["down"]}
 			useNativeDriver
 			useNativeDriverForBackdrop
 		>
-			<View className="h-[50%] rounded-t-xl bg-darker p-4">
+			<View className="h-[60%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1">
