@@ -69,12 +69,10 @@ FIXY PRO DALSI BUILD
 - opravit offset pro navigation buttons
 
 FEATURES PRO DALSI BUILD
-- pridat moznost vytvorit si rutinu
-- pridat menu na vyber vytvoreni treninku pomoci rutiny nebo cviku
 - pridat moznost sdilet trenink mezi uzivateli, popr. udelat si pratele
 - pri vytvoreni treninku pomoci rutiny automaticky pridat posledni serie s danou vahou a opakovani
-- lehci pridavani serii - mit + button kdyz nemam zadnou serii
 - pridani profilovych fotek a jejich moznosti vyberu
+
 
 DONE - FIX
 - zmenseni paddingu, marginu v ukazovani serii a cviku, zmenseni fontu cviku
@@ -85,4 +83,8 @@ DONE - FIX
 DONE - FEATURES
 - pomoci textu pro pridani treninku se zobrazi modal na pridani treninku
 - kliknuti na vaha nenastaveno presmeruje uzivatele na nastaveni vahy
+- pridat moznost vytvorit si rutinu
+- pridat menu na vyber vytvoreni treninku pomoci rutiny nebo cviku
+- proklik v tydennim kalendari na celkovy kalendar
+- lehci pridavani serii - mit + button kdyz nemam zadnou serii
 */
