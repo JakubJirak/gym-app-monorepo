@@ -68,6 +68,7 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 
 	useEffect(() => {
 		if (sheetVisible) {
+			setIsClosing(false);
 			setTimeout(() => {
 				nameInputRef.current?.focus();
 			}, 100);
@@ -127,7 +128,6 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
 							<TextInput
-								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								maxLength={20}
