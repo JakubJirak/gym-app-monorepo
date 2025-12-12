@@ -55,10 +55,12 @@ export default function Profile() {
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						activeOpacity={1}
+						activeOpacity={0.7}
 						className="w-[47%] items-center gap-2 rounded-xl bg-secondary p-3"
 						onPress={() => {
-							if (!userWeight) {
+							if (userWeight) {
+								router.push("/profile/edit/vaha");
+							} else {
 								router.push("/profile/edit/vahaset");
 							}
 						}}
