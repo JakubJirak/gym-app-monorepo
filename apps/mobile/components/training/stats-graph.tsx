@@ -71,7 +71,7 @@ export default function StatsGraph({ exercises }: StatsGraphProps) {
 	}
 
 	return (
-		<View className="mt-8 mb-6 gap-4">
+		<View className="mb-6 gap-4">
 			<View className="mb-6 flex-row items-center gap-3">
 				<ChartColumnIncreasing color={COLORS.accent} />
 				<Text className="font-bold text-text text-xl">Statistiky podle partie</Text>

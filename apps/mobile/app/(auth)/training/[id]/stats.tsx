@@ -91,7 +91,7 @@ export default function Stats() {
 				</View>
 			</View>
 
-			<View className="pb-10">
+			<View className="mt-8 pb-10">
 				<StatsGraph exercises={workout.exercises} />
 			</View>
 		</ScrollView>
