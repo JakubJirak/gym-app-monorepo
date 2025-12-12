@@ -39,6 +39,7 @@ export default function TrainingRoutineModal({
 				animationIn="slideInUp"
 				animationOut="slideOutDown"
 				backdropOpacity={0.5}
+				backdropTransitionOutTiming={0}
 				hideModalContentWhileAnimating
 				isVisible={trainingRoutineModalVisible}
 				onBackButtonPress={closeSheet}

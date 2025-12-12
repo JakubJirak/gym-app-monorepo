@@ -81,6 +81,7 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
 			backdropOpacity={0.5}
+			backdropTransitionOutTiming={0}
 			hideModalContentWhileAnimating
 			isVisible={visible}
 			onBackButtonPress={closeSheet}

@@ -1,8 +1,8 @@
 import { useMutation } from "convex/react";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import FilterDropdown from "@/components/forms/filters-dropdown";
 import { COLORS } from "@/constants/COLORS";
@@ -17,11 +17,24 @@ type EditTrainingProps = {
 export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTrainingProps) {
 	const [filterId, setFilterId] = useState<string | undefined>(undefined);
 	const [name, setName] = useState("");
-	const closeSheet = () => setSheetVisible(false);
+	const nameInputRef = useRef<TextInput>(null);
+	const closeSheet = () => {
+		Keyboard.dismiss();
+		setSheetVisible(false);
+	};
 	const addRutina = useMutation(api.routines.addRoutine);
 	const router = useRouter();
 
 	const disabled = filterId === undefined || name.trim() === "";
+
+	useEffect(() => {
+		if (sheetVisible) {
+			// Small delay to ensure modal is fully visible
+			setTimeout(() => {
+				nameInputRef.current?.focus();
+			}, 300);
+		}
+	}, [sheetVisible]);
 
 	const handleAddRoutine = async () => {
 		if (disabled) {
@@ -42,11 +55,17 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 		<Modal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
+			avoidKeyboard
 			backdropOpacity={0.5}
+			backdropTransitionOutTiming={0}
 			hideModalContentWhileAnimating
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
+			onModalHide={() => {
+				setName("");
+				setFilterId(undefined);
+			}}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
 			style={{ justifyContent: "flex-end", margin: 0 }}
@@ -54,7 +73,7 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 			useNativeDriver
 			useNativeDriverForBackdrop
 		>
-			<View className="h-[70%] rounded-t-xl bg-darker p-4">
+			<View className="h-[50%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1">
@@ -67,6 +86,7 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
 							<TextInput
+								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								maxLength={20}
@@ -76,6 +96,7 @@ export default function AddRoutine({ sheetVisible, setSheetVisible }: EditTraini
 										handleAddRoutine();
 									}
 								}}
+								ref={nameInputRef}
 								returnKeyType="done"
 								value={name}
 							/>

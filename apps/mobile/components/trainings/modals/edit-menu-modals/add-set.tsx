@@ -25,9 +25,9 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 
 		for (const query of queries) {
 			const currentData = query.value;
-			
+
 			// biome-ignore lint/complexity/useOptionalChain: logic of the app
-						if (currentData && currentData.exercises) {
+			if (currentData && currentData.exercises) {
 				// Find the exercise that this set belongs to
 				const updatedExercises = currentData.exercises.map((exercise) => {
 					if (exercise._id === args.workoutExerciseId) {
@@ -132,6 +132,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
 			backdropOpacity={0.5}
+			backdropTransitionOutTiming={0}
 			hideModalContentWhileAnimating
 			isVisible={visible}
 			onBackButtonPress={closeSheet}

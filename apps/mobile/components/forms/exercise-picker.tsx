@@ -90,6 +90,7 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 				animationIn="slideInUp"
 				animationOut="slideOutDown"
 				backdropOpacity={0.5}
+				backdropTransitionOutTiming={0}
 				hideModalContentWhileAnimating={true}
 				isVisible={modalVisible}
 				onBackButtonPress={closeModal}

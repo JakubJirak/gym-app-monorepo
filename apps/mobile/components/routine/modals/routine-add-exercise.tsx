@@ -66,6 +66,7 @@ export default function RoutineAddExerciseModal({
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
 			backdropOpacity={0.5}
+			backdropTransitionOutTiming={0}
 			hideModalContentWhileAnimating
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}

@@ -106,6 +106,7 @@ export default function EditFilterModal({
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
 			backdropOpacity={0.5}
+			backdropTransitionOutTiming={0}
 			hideModalContentWhileAnimating
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}

@@ -53,6 +53,7 @@ export default function CreateFromRoutineDialog({
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
 			backdropOpacity={0.5}
+			backdropTransitionOutTiming={0}
 			hideModalContentWhileAnimating
 			isVisible={visible}
 			onBackButtonPress={closeSheet}

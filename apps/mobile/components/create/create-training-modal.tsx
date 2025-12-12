@@ -46,6 +46,7 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 			animationIn="slideInUp"
 			animationOut="slideOutDown"
 			backdropOpacity={0.5}
+			backdropTransitionOutTiming={0}
 			hideModalContentWhileAnimating
 			isVisible={createModalVisible}
 			onBackButtonPress={closeSheet}
