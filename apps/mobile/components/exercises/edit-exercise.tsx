@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
@@ -23,7 +23,10 @@ export default function EditExerciseModal({
 	exerciseName,
 	usageCount,
 }: EditExerciseProps) {
-	const closeSheet = () => setSheetVisible(false);
+	const closeSheet = () => {
+		setIsClosing(true);
+		setSheetVisible(false);
+	};
 	const [name, setName] = useState(exerciseName || "");
 	const editExercise = useMutation(api.exercises.editExercise).withOptimisticUpdate((localStore, args) => {
 		const current = localStore.getQuery(api.exercises.getAllExercises, {});
@@ -42,6 +45,8 @@ export default function EditExerciseModal({
 		}
 	});
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const [isClosing, setIsClosing] = useState(false);
+	const inputRef = useRef<TextInput>(null);
 
 	useEffect(() => {
 		if (sheetVisible) {
@@ -52,18 +57,26 @@ export default function EditExerciseModal({
 	useEffect(() => {
 		const showListeners = [
 			Keyboard.addListener("keyboardWillShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
 			}),
 			Keyboard.addListener("keyboardDidShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
+				if (!isClosing) {
+					setKeyboardHeight(e.endCoordinates.height);
+				}
 			}),
 		];
 		const hideListeners = [
 			Keyboard.addListener("keyboardWillHide", () => {
-				setKeyboardHeight(0);
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
 			}),
 			Keyboard.addListener("keyboardDidHide", () => {
-				setKeyboardHeight(0);
+				if (!isClosing) {
+					setKeyboardHeight(0);
+				}
 			}),
 		];
 
@@ -75,11 +88,20 @@ export default function EditExerciseModal({
 				listener.remove();
 			}
 		};
-	}, []);
+	}, [isClosing]);
 
-	const disabled = name === "";
+	useEffect(() => {
+		if (sheetVisible) {
+			setTimeout(() => {
+				inputRef.current?.focus();
+			}, 100);
+		}
+	}, [sheetVisible]);
+
+	const disabled = name === "" || name === exerciseName;
 
 	const handleEditExercise = () => {
+		setIsClosing(true);
 		if (name !== "") {
 			editExercise({
 				exerciseId: exerciseId as Id<"exercises">,
@@ -90,10 +112,17 @@ export default function EditExerciseModal({
 	};
 
 	const handleDeleteExercise = () => {
+		setIsClosing(true);
 		deleteExercise({
 			exerciseId: exerciseId as Id<"exercises">,
 		});
 		closeSheet();
+	};
+
+	const handleModalHide = () => {
+		Keyboard.dismiss();
+		setKeyboardHeight(0);
+		setIsClosing(false);
 	};
 
 	return (
@@ -106,6 +135,7 @@ export default function EditExerciseModal({
 			isVisible={sheetVisible}
 			onBackButtonPress={closeSheet}
 			onBackdropPress={closeSheet}
+			onModalHide={handleModalHide}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
 			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
@@ -125,7 +155,6 @@ export default function EditExerciseModal({
 					<View>
 						<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
 						<TextInput
-							autoFocus
 							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 							cursorColorClassName="accent-text"
 							maxLength={20}
@@ -135,6 +164,7 @@ export default function EditExerciseModal({
 									handleEditExercise();
 								}
 							}}
+							ref={inputRef}
 							returnKeyType="done"
 							value={name}
 						/>
