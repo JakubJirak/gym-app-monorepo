@@ -61,7 +61,10 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 			<View className="h-[60%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
-				<Text className="mt-2 mb-6 text-center font-bold text-text text-xl">Nový trénink</Text>
+				<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
+					<Ionicons color={COLORS.accent} name="add-circle-outline" size={26} />
+					<Text className="font-bold text-text text-xl">Nový trénink</Text>
+				</View>
 				<View className="gap-4">
 					<View>
 						<Text className="mb-2 font-semibold text-lg text-text">Datum</Text>

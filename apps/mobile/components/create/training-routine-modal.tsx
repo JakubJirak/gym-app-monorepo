@@ -56,7 +56,7 @@ export default function TrainingRoutineModal({
 
 					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
 						<Layers color={COLORS.accent} size={22} />
-						<Text className="font-bold text-2xl text-text">Vyberte rutinu</Text>
+						<Text className="font-bold text-text text-xl">Vyberte rutinu</Text>
 					</View>
 
 					<FlatList

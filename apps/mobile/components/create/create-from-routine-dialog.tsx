@@ -71,7 +71,7 @@ export default function CreateFromRoutineDialog({
 				<View className="flex-1">
 					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
 						<Layers color={COLORS.accent} size={22} />
-						<Text className="font-bold text-2xl text-text">Podle rutiny</Text>
+						<Text className="font-bold text-text text-xl">Podle rutiny</Text>
 					</View>
 
 					<View className="gap-4">
