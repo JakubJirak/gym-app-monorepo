@@ -115,8 +115,14 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setSquat}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleSave();
+									}
+								}}
 								placeholder="0"
 								placeholderTextColor={COLORS.muted}
+								returnKeyType="done"
 								value={squat}
 							/>
 						</View>
@@ -128,8 +134,14 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setBench}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleSave();
+									}
+								}}
 								placeholder="0"
 								placeholderTextColor={COLORS.muted}
+								returnKeyType="done"
 								value={bench}
 							/>
 						</View>
@@ -141,8 +153,14 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setDeadlift}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleSave();
+									}
+								}}
 								placeholder="0"
 								placeholderTextColor={COLORS.muted}
+								returnKeyType="done"
 								value={deadlift}
 							/>
 						</View>
