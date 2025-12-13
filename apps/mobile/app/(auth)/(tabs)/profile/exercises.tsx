@@ -82,7 +82,7 @@ export default function Exercises() {
 				<View className="mx-2 mt-4 pb-20">
 					{Object.entries(sortedExercisesByLength).map(([muscleGroup, ex]) => (
 						<View className="mt-1 mb-2" key={muscleGroup}>
-							<Text className="mb-1 font-semibold text-lg text-text">{muscleGroup}</Text>
+							<Text className="mb-2 font-semibold text-lg text-text">{muscleGroup}</Text>
 							{ex.map((exercise) => (
 								<Exercise
 									exerciseId={exercise._id}
