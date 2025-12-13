@@ -33,6 +33,7 @@ export default function Rutiny() {
 				renderItem={({ item }) => (
 					<Routine
 						color={item.filter?.color}
+						filterId={item.filterId}
 						filterName={item.filter?.name}
 						id={item._id}
 						name={item.name}
