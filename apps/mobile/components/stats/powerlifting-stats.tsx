@@ -51,7 +51,7 @@ export default function PowerliftingStats() {
 	}
 
 	return (
-		<View className="-mt-2 rounded-xl px-2 py-4">
+		<View className="-mt-2 rounded-xl bg-darker px-2 py-4">
 			<View className="flex-row">
 				<View className="w-1/3 items-center gap-1">
 					<Text className="text-text text-xl">{squatPR}kg</Text>
