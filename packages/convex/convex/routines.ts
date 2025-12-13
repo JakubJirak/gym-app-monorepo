@@ -8,7 +8,7 @@ export const getUserRoutines = query({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -67,9 +67,15 @@ export const getRoutineById = query({
 		routineId: v.id("routines"),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		const routine = await ctx.db.get(args.routineId);
 		if (!routine) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 
 		const filter = await ctx.db.get(routine.filterId);
@@ -118,7 +124,7 @@ export const addRoutine = mutation({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -138,6 +144,12 @@ export const deleteRoutine = mutation({
 		routineId: v.id("routines"),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		const routineExercises = await ctx.db
 			.query("routinesExercises")
 			.withIndex("by_routineId", (q) => q.eq("routineId", args.routineId))
@@ -158,6 +170,12 @@ export const editRoutine = mutation({
 		filterId: v.id("filters"),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.patch(args.routineId, {
 			name: args.name,
 			filterId: args.filterId,
@@ -175,7 +193,7 @@ export const createWorkoutFromRoutine = mutation({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -183,7 +201,7 @@ export const createWorkoutFromRoutine = mutation({
 		// Get the routine with its filter
 		const routine = await ctx.db.get(args.routineId);
 		if (!routine) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 
 		// Create the workout

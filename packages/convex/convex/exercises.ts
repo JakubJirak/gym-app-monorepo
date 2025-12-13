@@ -8,7 +8,7 @@ export const getAllExercises = query({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -72,7 +72,7 @@ export const addExercise = mutation({
 		// @ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null; // Uživatel není přihlášen
+			throw new Error("Unauthorized");
 		}
 		// @ts-expect-error
 		const userId = user._id;
@@ -92,6 +92,12 @@ export const editExercise = mutation({
 		name: v.string(),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.patch(args.exerciseId, {
 			name: args.name,
 		});
@@ -103,6 +109,12 @@ export const deleteExercise = mutation({
 		exerciseId: v.id("exercises"),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.delete(args.exerciseId);
 	},
 });

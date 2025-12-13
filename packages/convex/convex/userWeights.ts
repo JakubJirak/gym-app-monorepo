@@ -8,7 +8,7 @@ export const getUserWeight = query({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -28,7 +28,7 @@ export const addUserWeight = mutation({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -48,6 +48,12 @@ export const updateUserWeight = mutation({
 		changeWeight: v.string(), // očekává číslo jako vstupní parametr
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.patch(args.weightId, {
 			weight: args.changeWeight,
 		});

@@ -8,7 +8,7 @@ export const getUserDescription = query({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -28,7 +28,7 @@ export const addUserDescription = mutation({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -45,7 +45,14 @@ export const editUserDescription = mutation({
 		descriptionId: v.id("userDescription"),
 		description: v.string(),
 	},
+
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.patch(args.descriptionId, {
 			description: args.description,
 		});

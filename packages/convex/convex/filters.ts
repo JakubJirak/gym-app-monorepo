@@ -8,7 +8,7 @@ export const getAllFilters = query({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -29,7 +29,7 @@ export const addFilter = mutation({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -49,6 +49,12 @@ export const editFilter = mutation({
 		color: v.string(),
 	},
 	handler: async (ctx, { filterId, name, color }) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.patch(filterId, {
 			name,
 			color,
@@ -61,6 +67,12 @@ export const deleteFilter = mutation({
 		filterId: v.id("filters"),
 	},
 	handler: async (ctx, { filterId }) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.delete(filterId);
 	},
 });

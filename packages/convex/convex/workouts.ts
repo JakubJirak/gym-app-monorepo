@@ -8,7 +8,7 @@ export const getUserWorkouts = query({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -97,22 +97,20 @@ export const getWorkoutById = query({
 		workoutId: v.id("workouts"),
 	},
 	async handler(ctx, args) {
-		// Získej přihlášeného uživatele přes tvůj helper
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null; // Uživatel není přihlášen
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
-		const userId = user._id; // Interní databázové ID uživatele
+		const userId = user._id;
 
 		// Načti trénink podle ID
 		const workout = await ctx.db.get(args.workoutId);
 		if (!workout) {
-			return null; // Trénink nenalezen
+			throw new Error("Trénink nenalezen");
 		}
 
-		// Zkontroluj, že trénink patří přihlášenému uživateli
 		if (workout.userId !== userId) {
 			throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
 		}
@@ -203,7 +201,7 @@ export const createWorkout = mutation({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
-			return null;
+			throw new Error("Unauthorized");
 		}
 		//@ts-expect-error
 		const userId = user._id;
@@ -249,6 +247,23 @@ export const deleteWorkout = mutation({
 		workoutId: v.id("workouts"),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const workout = await ctx.db.get(args.workoutId);
+		if (!workout) {
+			throw new Error("Trénink nenalezen");
+		}
+
+		if (workout.userId !== userId) {
+			throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
+		}
+
 		const workoutExercises = await ctx.db
 			.query("workoutExercises")
 			.withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
@@ -279,6 +294,23 @@ export const editWorkout = mutation({
 		filterId: v.id("filters"),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const workout = await ctx.db.get(args.workoutId);
+		if (!workout) {
+			throw new Error("Trénink nenalezen");
+		}
+
+		if (workout.userId !== userId) {
+			throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
+		}
+
 		await ctx.db.patch(args.workoutId, {
 			name: args.name,
 			workoutDate: args.workoutDate,

@@ -51,6 +51,5 @@ export const createAuth = (ctx: GenericCtx<DataModel>, { optionsOnly } = { optio
 
 export const getCurrentUser = query({
 	args: {},
-	//@ts-expect-error
-	handler: async (ctx) => authComponent.getAuthUser(ctx),
+	handler: async (ctx) => authComponent.getAuthUser(ctx as unknown as GenericCtx<DataModel>),
 });

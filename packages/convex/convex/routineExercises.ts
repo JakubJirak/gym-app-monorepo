@@ -1,11 +1,20 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { authComponent } from "./auth";
 
 export const getRoutineExerciseById = query({
 	args: {
 		routineExerciseId: v.id("routinesExercises"),
 	},
-	handler: async (ctx, args) => ctx.db.get(args.routineExerciseId),
+	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
+		return ctx.db.get(args.routineExerciseId);
+	},
 });
 
 export const addRoutineExercise = mutation({
@@ -16,6 +25,12 @@ export const addRoutineExercise = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.insert("routinesExercises", {
 			exerciseId: args.exerciseId,
 			routineId: args.routineId,
@@ -31,6 +46,12 @@ export const editExercise = mutation({
 		exerciseId: v.id("exercises"),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.patch(args.routineExerciseId, {
 			exerciseId: args.exerciseId,
 		});
@@ -43,6 +64,12 @@ export const editNote = mutation({
 		note: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.patch(args.routineExerciseId, {
 			note: args.note,
 		});
@@ -56,6 +83,12 @@ export const deleteRoutineExercise = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		// Delete the routineExercise itself
 		await ctx.db.delete(args.routineExerciseId);
 
@@ -80,6 +113,12 @@ export const moveUp = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		if (args.order === 0) {
 			return;
 		}
@@ -107,6 +146,12 @@ export const moveDown = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
+		//@ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+
 		const routineExercises = await ctx.db
 			.query("routinesExercises")
 			.withIndex("by_routineId", (q) => q.eq("routineId", args.routineId))
