@@ -5,13 +5,20 @@ import { authComponent } from "./auth";
 export const getUserRoutines = query({
 	args: {},
 	handler: async (ctx) => {
-		//@ts-expect-error
-		const user = await authComponent.getAuthUser(ctx);
-		if (!user) {
-			throw new Error("Unauthorized");
+		let userId: string;
+		try {
+			//@ts-expect-error
+			const user = await authComponent.getAuthUser(ctx);
+			if (!user) {
+				return [];
+			}
+			//@ts-expect-error
+			userId = user._id;
+		} catch (error) {
+			// Auth timeout or error - return empty results
+			console.error("Auth error in getUserRoutines:", error);
+			return [];
 		}
-		//@ts-expect-error
-		const userId = user._id;
 
 		const routines = await ctx.db
 			.query("routines")
@@ -72,9 +79,14 @@ export const getRoutineById = query({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
 
 		const routine = await ctx.db.get(args.routineId);
 		if (!routine) {
+			return null;
+		}
+		if (routine.userId !== userId) {
 			throw new Error("Unauthorized");
 		}
 
@@ -149,6 +161,16 @@ export const deleteRoutine = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const routine = await ctx.db.get(args.routineId);
+		if (!routine) {
+			throw new Error("Routine not found");
+		}
+		if (routine.userId !== userId) {
+			throw new Error("Unauthorized");
+		}
 
 		const routineExercises = await ctx.db
 			.query("routinesExercises")
@@ -173,6 +195,16 @@ export const editRoutine = mutation({
 		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
+			throw new Error("Unauthorized");
+		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const routine = await ctx.db.get(args.routineId);
+		if (!routine) {
+			throw new Error("Routine not found");
+		}
+		if (routine.userId !== userId) {
 			throw new Error("Unauthorized");
 		}
 

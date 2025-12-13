@@ -83,7 +83,9 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 						<Text className="font-bold text-2xl text-text">Přidat cvik</Text>
 					</View>
 
-					<ExercisePicker onSelect={(id) => setSelectedId(id)} selectedId={selectedId} />
+					{sheetVisible && (
+						<ExercisePicker onSelect={(id) => setSelectedId(id)} selectedId={selectedId} />
+					)}
 
 					<View className="mt-4 mb-6 flex-row">
 						<TouchableOpacity

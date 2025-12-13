@@ -72,19 +72,31 @@ export default function Exercise({
 				</Text>
 			</View>
 			{sets && sets.length > 0 ? (
-				<FlatList
-					data={sets}
-					keyExtractor={(item) => item._id}
-					renderItem={({ item }) => (
-						<ExerciseSet
-							isEdit={isEdit}
-							order={item.order}
-							reps={item.reps}
-							setId={item._id}
-							weight={item.weight}
-						/>
+				<>
+					<FlatList
+						data={sets}
+						keyExtractor={(item) => item._id}
+						renderItem={({ item }) => (
+							<ExerciseSet
+								isEdit={isEdit}
+								order={item.order}
+								reps={item.reps}
+								setId={item._id}
+								weight={item.weight}
+							/>
+						)}
+					/>
+					{isEdit && (
+						<TouchableOpacity
+							activeOpacity={0.7}
+							className="mt-2 flex-row items-center justify-center gap-2 rounded-xl border border-secondary py-2"
+							onPress={() => setAddSetModal(true)}
+						>
+							<Plus color={COLORS.muted} size={20} />
+							<Text className="text-base text-muted">Přidat sérii</Text>
+						</TouchableOpacity>
 					)}
-				/>
+				</>
 			) : (
 				<TouchableOpacity
 					activeOpacity={0.7}

@@ -1,6 +1,6 @@
 import { useQuery } from "convex/react";
 import { Link } from "expo-router";
-import { ActivityIndicator, KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { COLORS } from "@/constants/COLORS";
 import { authClient } from "@/src/lib/auth-client";
@@ -24,8 +24,8 @@ export default function Edit() {
 	}
 
 	return (
-		<KeyboardAvoidingView behavior="padding" className="flex-1 bg-primary px-4" keyboardVerticalOffset={60}>
-			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Upravit profil" />
+		<View className="flex-1 bg-primary px-4">
+			<ComponentHeader fallbackRoute="/profile" text="Upravit profil" />
 			<ScrollView
 				style={{
 					flex: 1,
@@ -109,6 +109,6 @@ export default function Edit() {
 					)}
 				</View>
 			</ScrollView>
-		</KeyboardAvoidingView>
+		</View>
 	);
 }

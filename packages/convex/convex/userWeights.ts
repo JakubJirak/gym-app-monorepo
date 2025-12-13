@@ -53,6 +53,16 @@ export const updateUserWeight = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const weightRecord = await ctx.db.get(args.weightId);
+		if (!weightRecord) {
+			throw new Error("Weight record not found");
+		}
+		if (weightRecord.userId !== userId) {
+			throw new Error("Unauthorized");
+		}
 
 		await ctx.db.patch(args.weightId, {
 			weight: args.changeWeight,

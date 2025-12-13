@@ -54,6 +54,22 @@ export const updateUserGoals = mutation({
 		deadlift: v.string(),
 	},
 	handler: async (ctx, args) => {
+		// @ts-expect-error
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return null; // Uživatel není přihlášen
+		}
+		// @ts-expect-error
+		const userId = user._id;
+
+		const goal = await ctx.db.get(args.goalId);
+		if (!goal) {
+			throw new Error("Goals not found");
+		}
+		if (goal.userId !== userId) {
+			throw new Error("Unauthorized");
+		}
+
 		await ctx.db.patch(args.goalId, {
 			bench: args.bench,
 			squat: args.squat,

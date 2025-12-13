@@ -54,6 +54,17 @@ export const editFilter = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const filter = await ctx.db.get(filterId);
+		if (!filter) {
+			throw new Error("Filter not found");
+		}
+
+		if (filter.userId !== userId) {
+			throw new Error("Cannot edit default filter");
+		}
 
 		await ctx.db.patch(filterId, {
 			name,
@@ -71,6 +82,17 @@ export const deleteFilter = mutation({
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
+		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const filter = await ctx.db.get(filterId);
+		if (!filter) {
+			throw new Error("Filter not found");
+		}
+
+		if (filter.userId !== userId) {
+			throw new Error("Cannot delete default filter");
 		}
 
 		await ctx.db.delete(filterId);

@@ -17,11 +17,11 @@ export const getAllExercises = query({
 			.query("exercises")
 			.withIndex("by_userId", (q) => q.eq("userId", userId))
 			.collect();
+
 		const defaultExercises = await ctx.db
 			.query("exercises")
 			.withIndex("by_userId", (q) => q.eq("userId", "default"))
 			.collect();
-
 		const allExercises = [...userExercises, ...defaultExercises];
 
 		// Unikátní muscleGroupId
@@ -97,6 +97,17 @@ export const editExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const ex = await ctx.db.get(args.exerciseId);
+		if (!ex) {
+			throw new Error("Exercise not found");
+		}
+
+		if (ex.userId !== userId) {
+			throw new Error("Cannot edit default exercise");
+		}
 
 		await ctx.db.patch(args.exerciseId, {
 			name: args.name,
@@ -113,6 +124,17 @@ export const deleteExercise = mutation({
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
+		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		const ex = await ctx.db.get(args.exerciseId);
+		if (!ex) {
+			throw new Error("Exercise not found");
+		}
+
+		if (ex.userId !== userId) {
+			throw new Error("Cannot delete default exercise");
 		}
 
 		await ctx.db.delete(args.exerciseId);

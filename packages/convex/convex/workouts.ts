@@ -5,13 +5,20 @@ import { authComponent } from "./auth";
 export const getUserWorkouts = query({
 	args: {},
 	async handler(ctx) {
-		//@ts-expect-error
-		const user = await authComponent.getAuthUser(ctx);
-		if (!user) {
-			throw new Error("Unauthorized");
+		let userId: string;
+		try {
+			//@ts-expect-error
+			const user = await authComponent.getAuthUser(ctx);
+			if (!user) {
+				return [];
+			}
+			//@ts-expect-error
+			userId = user._id;
+		} catch (error) {
+			// Auth timeout or error - return empty results
+			console.error("Auth error in getUserWorkouts:", error);
+			return [];
 		}
-		//@ts-expect-error
-		const userId = user._id;
 
 		const workouts = await ctx.db
 			.query("workouts")
@@ -97,22 +104,29 @@ export const getWorkoutById = query({
 		workoutId: v.id("workouts"),
 	},
 	async handler(ctx, args) {
-		//@ts-expect-error
-		const user = await authComponent.getAuthUser(ctx);
-		if (!user) {
-			throw new Error("Unauthorized");
+		let userId: string;
+		try {
+			//@ts-expect-error
+			const user = await authComponent.getAuthUser(ctx);
+			if (!user) {
+				return null;
+			}
+			//@ts-expect-error
+			userId = user._id;
+		} catch (error) {
+			// Auth timeout or error - return null
+			console.error("Auth error in getWorkoutById:", error);
+			return null;
 		}
-		//@ts-expect-error
-		const userId = user._id;
 
 		// Načti trénink podle ID
 		const workout = await ctx.db.get(args.workoutId);
 		if (!workout) {
-			throw new Error("Trénink nenalezen");
+			return null;
 		}
 
 		if (workout.userId !== userId) {
-			throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
+			return null;
 		}
 
 		// Načti filtr a cviky se sériemi, stejně jako v předchozím kódu
@@ -125,38 +139,56 @@ export const getWorkoutById = query({
 
 		const sortedExercises = workoutExercises.sort((a, b) => a.order - b.order);
 
-		const exercisesWithSets = await Promise.all(
-			sortedExercises.map(async (we) => {
-				const exercise = await ctx.db.get(we.exerciseId);
-				const muscleGroup = exercise ? await ctx.db.get(exercise.muscleGroupId) : null;
+		// Batch fetch all exercises and their sets
+		const [exercisesData, allSets] = await Promise.all([
+			Promise.all(sortedExercises.map((we) => ctx.db.get(we.exerciseId))),
+			Promise.all(
+				sortedExercises.map((we) =>
+					ctx.db
+						.query("sets")
+						.withIndex("by_workoutExerciseId", (q) => q.eq("workoutExerciseId", we._id))
+						.collect()
+				)
+			),
+		]);
 
-				const sets = await ctx.db
-					.query("sets")
-					.withIndex("by_workoutExerciseId", (q) => q.eq("workoutExerciseId", we._id))
-					.collect();
-
-				const sortedSets = sets.sort((a, b) => a.order - b.order);
-
-				return {
-					_id: we._id,
-					exercise: exercise
-						? {
-								...exercise,
-								muscleGroup: muscleGroup ? muscleGroup.name : null,
-							}
-						: null,
-					note: we.note,
-					order: we.order,
-					workoutId: we.workoutId,
-					sets: sortedSets.map((set) => ({
-						_id: set._id,
-						reps: set.reps,
-						weight: set.weight,
-						order: set.order,
-					})),
-				};
-			})
+		// Batch fetch all muscle groups
+		const muscleGroupIds = exercisesData
+			.filter((e): e is NonNullable<typeof e> => e !== null)
+			.map((e) => e.muscleGroupId);
+		const uniqueMuscleGroupIds = Array.from(new Set(muscleGroupIds));
+		const muscleGroups = await Promise.all(uniqueMuscleGroupIds.map((id) => ctx.db.get(id)));
+		const muscleGroupMap = new Map(
+			muscleGroups
+				.filter((mg): mg is NonNullable<typeof mg> => mg !== null && "name" in mg)
+				.map((mg) => [mg._id, mg.name])
 		);
+
+		// Build the exercises with sets
+		const exercisesWithSets = sortedExercises.map((we, index) => {
+			const exercise = exercisesData[index];
+			const sets = allSets[index];
+			const sortedSets = sets.sort((a, b) => a.order - b.order);
+
+			return {
+				_id: we._id,
+				exercise: exercise
+					? {
+							...exercise,
+							muscleGroup: muscleGroupMap.get(exercise.muscleGroupId) || null,
+						}
+					: null,
+				note: we.note,
+				order: we.order,
+				workoutId: we.workoutId,
+				sets: sortedSets.map((set) => ({
+					_id: set._id,
+					reps: set.reps,
+					weight: set.weight,
+					order: set.order,
+				})),
+			};
+		});
 
 		return {
 			_id: workout._id,
