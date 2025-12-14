@@ -5,8 +5,11 @@ import { COLORS } from "@/constants/COLORS";
 export default function WelcomeMessage() {
 	const getGreeting = () => {
 		const hour = new Date().getHours();
-		if (hour < 12) {
+		if (hour < 7) {
 			return "Dobré ráno";
+		}
+		if (hour < 12) {
+			return "Dobré dopoledne";
 		}
 		if (hour < 18) {
 			return "Dobré odpoledne";
