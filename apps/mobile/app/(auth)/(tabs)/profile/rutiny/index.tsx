@@ -12,16 +12,9 @@ export default function Rutiny() {
 	const rutiny = useQuery(api.routines.getUserRoutines);
 
 	return (
-		<View className="flex-1 bg-primary px-4">
-			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Rutiny" />
-			<TouchableOpacity
-				className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-2"
-				onPress={() => setAddRutinaVisible(true)}
-			>
-				<Plus color="white" size={44} />
-			</TouchableOpacity>
-
+		<View className="flex-1 bg-primary">
 			<FlatList
+				className="flex-1 px-4"
 				data={rutiny}
 				ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 				keyExtractor={(item) => item._id}
@@ -30,6 +23,7 @@ export default function Rutiny() {
 						<Text className="text-center text-base text-muted">Zatím nemáte žádné rutiny</Text>
 					</View>
 				)}
+				ListHeaderComponent={<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Rutiny" />}
 				renderItem={({ item }) => (
 					<Routine
 						color={item.filter?.color}
@@ -40,6 +34,13 @@ export default function Rutiny() {
 					/>
 				)}
 			/>
+
+			<TouchableOpacity
+				className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-2"
+				onPress={() => setAddRutinaVisible(true)}
+			>
+				<Plus color="white" size={44} />
+			</TouchableOpacity>
 
 			<AddRoutine setSheetVisible={setAddRutinaVisible} sheetVisible={addRutinaVisible} />
 		</View>
