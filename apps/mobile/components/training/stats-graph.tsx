@@ -40,14 +40,14 @@ type StatsGraphProps = {
 };
 
 const MUSCLE_GROUP_COLORS = [
-	COLORS.accent,
-	"#3b82f6",
-	"#8b5cf6",
-	"#ec4899",
-	"#f59e0b",
-	"#10b981",
-	"#06b6d4",
-	"#f43f5e",
+	"#ed782b", // Orange (accent)
+	"#3b82f6", // Blue
+	"#10b981", // Green
+	"#f59e0b", // Amber
+	"#8b5cf6", // Purple
+	"#06b6d4", // Cyan
+	"#ec4899", // Pink
+	"#ef4444", // Red
 ];
 
 export default function StatsGraph({ exercises }: StatsGraphProps) {
