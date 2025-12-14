@@ -1,7 +1,7 @@
 import { useQuery } from "convex/react";
 import { Pencil, Plus } from "lucide-react-native";
 import { useState } from "react";
-import { ActivityIndicator, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import CreateGoals from "@/components/goals/create-goals";
 import EditGoals from "@/components/goals/edit-goals";
@@ -47,37 +47,41 @@ export default function Goals() {
 	}
 
 	return (
-		<View className="flex-1 bg-primary px-4">
+		<View className="flex-1 bg-primary">
 			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Váhy a cíle" />
-			{userGoals ? (
-				<TouchableOpacity
-					className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-3.5"
-					onPress={() => setEditGoalsVisible(true)}
-				>
-					<Pencil color="white" size={32} />
-				</TouchableOpacity>
-			) : (
-				<TouchableOpacity
-					className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-2"
-					onPress={() => setCreateGoalsVisible(true)}
-				>
-					<Plus color="white" size={44} />
-				</TouchableOpacity>
-			)}
+			<ScrollView className="flex-1 px-3 pb-16" showsVerticalScrollIndicator={false}>
+				<PowerliftingStats benchPR={benchPR} deadliftPR={deadliftPR} squatPR={squatPR} />
+				<UserGoals benchPR={benchPR} deadliftPR={deadliftPR} squatPR={squatPR} />
+				<View className="h-30" />
+			</ScrollView>
 
-			<PowerliftingStats benchPR={benchPR} deadliftPR={deadliftPR} squatPR={squatPR} />
-			<UserGoals benchPR={benchPR} deadliftPR={deadliftPR} squatPR={squatPR} />
 			{userGoals ? (
-				<EditGoals
-					benchDef={userGoals.bench}
-					deadliftDef={userGoals.deadlift}
-					goalId={userGoals._id}
-					setVisible={setEditGoalsVisible}
-					squatDef={userGoals.squat}
-					visible={editGoalsVisible}
-				/>
+				<>
+					<TouchableOpacity
+						className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-3.5"
+						onPress={() => setEditGoalsVisible(true)}
+					>
+						<Pencil color="white" size={32} />
+					</TouchableOpacity>
+					<EditGoals
+						benchDef={userGoals.bench}
+						deadliftDef={userGoals.deadlift}
+						goalId={userGoals._id}
+						setVisible={setEditGoalsVisible}
+						squatDef={userGoals.squat}
+						visible={editGoalsVisible}
+					/>
+				</>
 			) : (
-				<CreateGoals setVisible={setCreateGoalsVisible} visible={createGoalsVisible} />
+				<>
+					<TouchableOpacity
+						className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-2"
+						onPress={() => setCreateGoalsVisible(true)}
+					>
+						<Plus color="white" size={44} />
+					</TouchableOpacity>
+					<CreateGoals setVisible={setCreateGoalsVisible} visible={createGoalsVisible} />
+				</>
 			)}
 		</View>
 	);

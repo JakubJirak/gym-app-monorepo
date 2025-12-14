@@ -33,18 +33,17 @@ export default function Filtry() {
 	}, {});
 
 	return (
-		<View className="flex-1 bg-primary px-2">
-			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Kategorie" />
-			<TouchableOpacity
-				className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-2"
-				onPress={() => setAddFilter(true)}
-			>
-				<Plus color="white" size={44} />
-			</TouchableOpacity>
+		<View className="flex-1 bg-primary">
 			<FlatList
-				className="mx-2 mt-4"
+				className="flex-1 px-2"
+				contentContainerClassName="mx-2"
 				data={filtry}
 				keyExtractor={(item) => item._id}
+				ListHeaderComponent={
+					<View className="mb-4">
+						<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Kategorie" />
+					</View>
+				}
 				renderItem={({ item }) => (
 					<Filter
 						color={item.color}
@@ -53,8 +52,15 @@ export default function Filtry() {
 						usageCount={filterUsageCount[item._id] || 0}
 					/>
 				)}
-				showsHorizontalScrollIndicator={false}
+				showsVerticalScrollIndicator={false}
 			/>
+
+			<TouchableOpacity
+				className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-2"
+				onPress={() => setAddFilter(true)}
+			>
+				<Plus color="white" size={44} />
+			</TouchableOpacity>
 			<AddFilterModal setSheetVisible={setAddFilter} sheetVisible={addFilter} />
 		</View>
 	);

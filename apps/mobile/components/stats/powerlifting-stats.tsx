@@ -51,7 +51,7 @@ export default function PowerliftingStats() {
 	}
 
 	return (
-		<View className="-mt-2 rounded-xl bg-darker px-2 py-4">
+		<View className="-mt-2 rounded-xl bg-secondary px-2 py-5">
 			<View className="flex-row">
 				<View className="w-1/3 items-center gap-1">
 					<Text className="text-text text-xl">{squatPR}kg</Text>
@@ -81,7 +81,7 @@ export default function PowerliftingStats() {
 					)}
 				</View>
 			</View>
-			<View className="my-4 h-0.5 w-full bg-secondary" />
+			<View className="my-5 h-0.5 w-full bg-border" />
 			<View className="w-full items-center gap-1">
 				<Text className="font-bold text-2xl text-text">{total}kg</Text>
 				<Text className="text-lg text-muted">Total</Text>
