@@ -1,32 +1,28 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Layers } from "lucide-react-native";
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
+import CreateTrainingModal from "./create-training-modal";
+import TrainingRoutineModal from "./training-routine-modal";
 
 type MenuModalProps = {
 	sheetVisible: boolean;
 	setSheetVisible: (visible: boolean) => void;
-	setCreateModalVisible: (visible: boolean) => void;
-	setTrainingRoutineModalVisible: (visible: boolean) => void;
 };
 
-export default function MenuModal({
-	sheetVisible,
-	setSheetVisible,
-	setCreateModalVisible,
-	setTrainingRoutineModalVisible,
-}: MenuModalProps) {
+export default function MenuModal({ sheetVisible, setSheetVisible }: MenuModalProps) {
+	const [createModalVisible, setCreateModalVisible] = useState(false);
+	const [trainingRoutineModalVisible, setTrainingRoutineModalVisible] = useState(false);
 	const closeSheet = () => setSheetVisible(false);
 
 	const selectNewTraining = () => {
 		setCreateModalVisible(true);
-		closeSheet();
 	};
 
 	const selectRutina = () => {
 		setTrainingRoutineModalVisible(true);
-		closeSheet();
 	};
 
 	return (
@@ -67,6 +63,17 @@ export default function MenuModal({
 					</Pressable>
 				</View>
 			</View>
+
+			<CreateTrainingModal
+				closeParentSheet={closeSheet}
+				createModalVisible={createModalVisible}
+				setCreateModalVisible={setCreateModalVisible}
+			/>
+			<TrainingRoutineModal
+				closeParentSheet={closeSheet}
+				setTrainingRoutineModalVisible={setTrainingRoutineModalVisible}
+				trainingRoutineModalVisible={trainingRoutineModalVisible}
+			/>
 		</Modal>
 	);
 }

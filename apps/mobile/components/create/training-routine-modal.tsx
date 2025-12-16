@@ -10,12 +10,14 @@ import CreateFromRoutineDialog from "./create-from-routine-dialog";
 
 type TrainingRoutineModalProps = {
 	trainingRoutineModalVisible: boolean;
-	setTrainingRoutineModalVisible: (visible: boolean) => void;
+	setTrainingRoutineModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+	closeParentSheet: () => void;
 };
 
 export default function TrainingRoutineModal({
 	trainingRoutineModalVisible,
 	setTrainingRoutineModalVisible,
+	closeParentSheet,
 }: TrainingRoutineModalProps) {
 	const router = useRouter();
 	const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
@@ -130,6 +132,7 @@ export default function TrainingRoutineModal({
 				routineName={selectedRoutine?.name || null}
 				setVisible={setConfirmDialogVisible}
 				visible={confirmDialogVisible}
+				closeParentSheet={closeParentSheet}
 			/>
 		</>
 	);

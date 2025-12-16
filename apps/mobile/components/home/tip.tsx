@@ -1,14 +1,15 @@
-import { useQuery } from "convex/react";
 import { type Href, Link } from "expo-router";
 import { ChevronRight, Lightbulb } from "lucide-react-native";
 import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../packages/convex/convex/_generated/api";
+import type { api } from "../../../../packages/convex/convex/_generated/api";
 
-export default function Tip() {
-	const tips = useQuery(api.tips.getTips);
+type TipProps = {
+	tips: typeof api.tips.getTips._returnType;
+};
 
+export default function Tip({ tips }: TipProps) {
 	const randomTip = useMemo(() => {
 		if (!tips || tips.length === 0) {
 			return null;

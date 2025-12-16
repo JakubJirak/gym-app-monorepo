@@ -11,8 +11,9 @@ import { api } from "../../../../../packages/convex/convex/_generated/api";
 
 export default function Index() {
 	const workouts = useQuery(api.workouts.getUserWorkouts);
+	const tips = useQuery(api.tips.getTips);
 
-	if (workouts === undefined) {
+	if (workouts === undefined || tips === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -20,7 +21,7 @@ export default function Index() {
 		);
 	}
 
-	if (!workouts) {
+	if (!(workouts && tips)) {
 		return null;
 	}
 
@@ -28,7 +29,7 @@ export default function Index() {
 		<ScrollView className="flex flex-1 bg-primary px-4 pt-4" showsVerticalScrollIndicator={false}>
 			<View className="flex-1 gap-10 pb-8">
 				<WelcomeMessage />
-				<Tip />
+				<Tip tips={tips} />
 				<WeeklyStats trainings={workouts} />
 				{workouts.length > 0 ? (
 					<LastTraining workoutDate={workouts[0].workoutDate} workoutId={workouts[0]._id} />

@@ -1,15 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { useState } from "react";
-import CreateTrainingModal from "@/components/create/create-training-modal";
 import MenuModal from "@/components/create/menu-modal";
-import TrainingRoutineModal from "@/components/create/training-routine-modal";
 import { COLORS } from "@/constants/COLORS";
 
 export default function TabsLayout() {
 	const [sheetVisible, setSheetVisible] = useState(false);
-	const [createModalVisible, setCreateModalVisible] = useState(false);
-	const [trainingRoutineModalVisible, setTrainingRoutineModalVisible] = useState(false);
 	const openSheet = () => setSheetVisible(true);
 
 	return (
@@ -100,20 +96,7 @@ export default function TabsLayout() {
 				/>
 			</Tabs>
 
-			<MenuModal
-				setCreateModalVisible={setCreateModalVisible}
-				setSheetVisible={setSheetVisible}
-				setTrainingRoutineModalVisible={setTrainingRoutineModalVisible}
-				sheetVisible={sheetVisible}
-			/>
-			<CreateTrainingModal
-				createModalVisible={createModalVisible}
-				setCreateModalVisible={setCreateModalVisible}
-			/>
-			<TrainingRoutineModal
-				setTrainingRoutineModalVisible={setTrainingRoutineModalVisible}
-				trainingRoutineModalVisible={trainingRoutineModalVisible}
-			/>
+			<MenuModal setSheetVisible={setSheetVisible} sheetVisible={sheetVisible} />
 		</>
 	);
 }

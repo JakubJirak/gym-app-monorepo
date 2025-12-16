@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
-import CreateTrainingModal from "../create/create-training-modal";
+import MenuModal from "../create/menu-modal";
 
 export default function EmptyList() {
 	const [modalVisible, setModalVisible] = useState(false);
@@ -15,7 +15,7 @@ export default function EmptyList() {
 					<Ionicons color={COLORS.muted} name="add-circle-outline" size={24} />
 				</View>
 			</View>
-			<CreateTrainingModal createModalVisible={modalVisible} setCreateModalVisible={setModalVisible} />
+			<MenuModal setSheetVisible={setModalVisible} sheetVisible={modalVisible} />
 		</TouchableOpacity>
 	);
 }

@@ -14,9 +14,10 @@ import FilterDropdown from "../forms/filters-dropdown";
 type CreateTrainingModalProps = {
 	createModalVisible: boolean;
 	setCreateModalVisible: (visible: boolean) => void;
+	closeParentSheet: () => void;
 };
 
-export default function CreateTrainingModal({ createModalVisible, setCreateModalVisible }: CreateTrainingModalProps) {
+export default function CreateTrainingModal({ createModalVisible, setCreateModalVisible, closeParentSheet }: CreateTrainingModalProps) {
 	const closeSheet = () => setCreateModalVisible(false);
 	const [filterId, setFilterId] = useState<string | undefined>(undefined);
 	const [date, setDate] = useState(new Date());
@@ -34,6 +35,7 @@ export default function CreateTrainingModal({ createModalVisible, setCreateModal
 			});
 			if (workoutId) {
 				closeSheet();
+				closeParentSheet();
 				setFilterId(undefined);
 				setDate(new Date());
 				router.navigate({ pathname: "/(auth)/training/[id]", params: { id: workoutId.workoutId } });

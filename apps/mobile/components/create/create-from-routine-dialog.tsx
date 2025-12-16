@@ -16,6 +16,7 @@ type CreateFromRoutineDialogProps = {
 	routineId: string | null;
 	routineName: string | null;
 	routineColor: string | null;
+	closeParentSheet: () => void;
 };
 
 export default function CreateFromRoutineDialog({
@@ -24,6 +25,7 @@ export default function CreateFromRoutineDialog({
 	routineId,
 	routineName,
 	routineColor,
+	closeParentSheet,
 }: CreateFromRoutineDialogProps) {
 	const [date, setDate] = useState(new Date());
 	const router = useRouter();
@@ -46,6 +48,7 @@ export default function CreateFromRoutineDialog({
 		}
 
 		closeSheet();
+		closeParentSheet();
 	};
 
 	return (
