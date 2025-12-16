@@ -24,7 +24,6 @@ export default function EditExerciseModal({
 	usageCount,
 }: EditExerciseProps) {
 	const closeSheet = () => {
-		setIsClosing(true);
 		setSheetVisible(false);
 	};
 	const [name, setName] = useState(exerciseName || "");
@@ -44,8 +43,6 @@ export default function EditExerciseModal({
 			localStore.setQuery(api.exercises.getAllExercises, {}, filteredExercises);
 		}
 	});
-	const [keyboardHeight, setKeyboardHeight] = useState(0);
-	const [isClosing, setIsClosing] = useState(false);
 	const inputRef = useRef<TextInput>(null);
 
 	useEffect(() => {
@@ -53,42 +50,6 @@ export default function EditExerciseModal({
 			setName(exerciseName);
 		}
 	}, [sheetVisible, exerciseName]);
-
-	useEffect(() => {
-		const showListeners = [
-			Keyboard.addListener("keyboardWillShow", (e) => {
-				if (!isClosing) {
-					setKeyboardHeight(e.endCoordinates.height);
-				}
-			}),
-			Keyboard.addListener("keyboardDidShow", (e) => {
-				if (!isClosing) {
-					setKeyboardHeight(e.endCoordinates.height);
-				}
-			}),
-		];
-		const hideListeners = [
-			Keyboard.addListener("keyboardWillHide", () => {
-				if (!isClosing) {
-					setKeyboardHeight(0);
-				}
-			}),
-			Keyboard.addListener("keyboardDidHide", () => {
-				if (!isClosing) {
-					setKeyboardHeight(0);
-				}
-			}),
-		];
-
-		return () => {
-			for (const listener of showListeners) {
-				listener.remove();
-			}
-			for (const listener of hideListeners) {
-				listener.remove();
-			}
-		};
-	}, [isClosing]);
 
 	useEffect(() => {
 		if (sheetVisible) {
@@ -101,7 +62,6 @@ export default function EditExerciseModal({
 	const disabled = name === "" || name === exerciseName;
 
 	const handleEditExercise = () => {
-		setIsClosing(true);
 		if (name !== "") {
 			editExercise({
 				exerciseId: exerciseId as Id<"exercises">,
@@ -112,7 +72,6 @@ export default function EditExerciseModal({
 	};
 
 	const handleDeleteExercise = () => {
-		setIsClosing(true);
 		deleteExercise({
 			exerciseId: exerciseId as Id<"exercises">,
 		});
@@ -121,8 +80,6 @@ export default function EditExerciseModal({
 
 	const handleModalHide = () => {
 		Keyboard.dismiss();
-		setKeyboardHeight(0);
-		setIsClosing(false);
 	};
 
 	return (
@@ -138,22 +95,22 @@ export default function EditExerciseModal({
 			onModalHide={handleModalHide}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
+			style={{ justifyContent: "flex-end", margin: 0 }}
 			swipeDirection={["down"]}
 			useNativeDriver
 			useNativeDriverForBackdrop
 		>
-			<View className="h-[40%] rounded-t-xl bg-darker p-4">
+			<View className="h-[80%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
-				<View className="flex-1 justify-between">
+				<View className="flex-">
 					<View className="mt-2 flex-row items-center gap-3 self-center">
 						<Pencil color="white" size={22} />
 						<Text className="font-bold text-2xl text-text">Upravit cvik</Text>
 					</View>
 
 					<View>
-						<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
+						<Text className="mt-4 mb-2 font-semibold text-lg text-text">Název</Text>
 						<TextInput
 							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 							cursorColorClassName="accent-text"
@@ -170,7 +127,7 @@ export default function EditExerciseModal({
 						/>
 					</View>
 
-					<View className="mt-4 mb-6 flex-row">
+					<View className="mt-8 mb-6 flex-row">
 						{usageCount === 0 ? (
 							<View className="mt-8 mb-6 flex-row">
 								<TouchableOpacity

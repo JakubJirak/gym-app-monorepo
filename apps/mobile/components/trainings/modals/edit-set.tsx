@@ -57,45 +57,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 			}
 		}
 	});
-	const [keyboardHeight, setKeyboardHeight] = useState(0);
-	const [isClosing, setIsClosing] = useState(false);
 	const inputRef = useRef<TextInput>(null);
-
-	useEffect(() => {
-		const showListeners = [
-			Keyboard.addListener("keyboardWillShow", (e) => {
-				if (!isClosing) {
-					setKeyboardHeight(e.endCoordinates.height);
-				}
-			}),
-			Keyboard.addListener("keyboardDidShow", (e) => {
-				if (!isClosing) {
-					setKeyboardHeight(e.endCoordinates.height);
-				}
-			}),
-		];
-		const hideListeners = [
-			Keyboard.addListener("keyboardWillHide", () => {
-				if (!isClosing) {
-					setKeyboardHeight(0);
-				}
-			}),
-			Keyboard.addListener("keyboardDidHide", () => {
-				if (!isClosing) {
-					setKeyboardHeight(0);
-				}
-			}),
-		];
-
-		return () => {
-			for (const listener of showListeners) {
-				listener.remove();
-			}
-			for (const listener of hideListeners) {
-				listener.remove();
-			}
-		};
-	}, [isClosing]);
 
 	useEffect(() => {
 		if (visible) {
@@ -109,7 +71,6 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 		weight === "" || reps === "" || (Number(weight) === defaultWeight && Number(reps) === defaultReps);
 
 	const handleAddSet = () => {
-		setIsClosing(true);
 		editSet({
 			setId: setId as Id<"sets">,
 			weight: Number(weight),
@@ -119,7 +80,6 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 	};
 
 	const handleDeleteSet = () => {
-		setIsClosing(true);
 		deleteSet({
 			setId: setId as Id<"sets">,
 		});
@@ -128,8 +88,6 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 
 	const handleModalHide = () => {
 		Keyboard.dismiss();
-		setKeyboardHeight(0);
-		setIsClosing(false);
 		setWeight(String(defaultWeight));
 		setReps(String(defaultReps));
 	};
@@ -147,12 +105,12 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 			onModalHide={handleModalHide}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
+			style={{ justifyContent: "flex-end", margin: 0 }}
 			swipeDirection={["down"]}
 			useNativeDriver
 			useNativeDriverForBackdrop
 		>
-			<View className="h-[45%] rounded-t-xl bg-darker p-4">
+			<View className="h-[80%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
 				<View className="flex-1">

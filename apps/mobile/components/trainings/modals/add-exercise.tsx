@@ -57,6 +57,16 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 		closeSheet();
 	};
 
+	const handleExerciseSelect = (id: string) => {
+		addExercise({
+			workoutId: trainingId as Id<"workouts">,
+			exerciseId: id as Id<"exercises">,
+			order: exercises,
+		});
+		setSelectedId(undefined);
+		closeSheet();
+	};
+
 	return (
 		<Modal
 			animationIn="slideInUp"
@@ -84,7 +94,7 @@ export default function AddExerciseModal({ sheetVisible, setSheetVisible, traini
 					</View>
 
 					{sheetVisible && (
-						<ExercisePicker onSelect={(id) => setSelectedId(id)} selectedId={selectedId} />
+						<ExercisePicker onSelect={handleExerciseSelect} selectedId={selectedId} />
 					)}
 
 					<View className="mt-4 mb-6 flex-row">

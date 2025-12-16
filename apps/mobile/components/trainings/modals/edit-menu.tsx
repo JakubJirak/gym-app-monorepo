@@ -8,7 +8,6 @@ import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 import AddSetModal from "./edit-menu-modals/add-set";
-import DeleteWorkoutExerciseModal from "./edit-menu-modals/delete-exercise";
 import EditExerciseModal from "./edit-menu-modals/edit-exercise";
 import EditNoteModal from "./edit-menu-modals/edit-note";
 
@@ -36,8 +35,28 @@ export default function EditMenuModal({
 	const [set, setSet] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const [note, setNote] = useState(false);
-	const [remove, setRemove] = useState(false);
 	const closeSheet = () => setSheetVisible(false);
+
+	const deleteWorkoutExercise = useMutation(api.workoutExercises.deleteWorkoutExercise).withOptimisticUpdate(
+		(localStore, args) => {
+			const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
+			for (const query of queries) {
+				const currentData = query.value;
+				if (currentData?.exercises && query.args.workoutId === args.workoutId) {
+					const updatedExercises = currentData.exercises
+						.filter((exercise) => exercise._id !== args.workoutExerciseId)
+						.map((exercise) => ({
+							...exercise,
+							order: exercise.order > args.order ? exercise.order - 1 : exercise.order,
+						}));
+					localStore.setQuery(api.workouts.getWorkoutById, query.args, {
+						...currentData,
+						exercises: updatedExercises,
+					});
+				}
+			}
+		}
+	);
 	const moveUp = useMutation(api.workoutExercises.moveUp).withOptimisticUpdate((localStore, args) => {
 		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
 		for (const query of queries) {
@@ -99,6 +118,15 @@ export default function EditMenuModal({
 			});
 			closeSheet();
 		}
+	};
+
+	const handleDeleteExercise = () => {
+		deleteWorkoutExercise({
+			workoutExerciseId: exerciseId as Id<"workoutExercises">,
+			workoutId: trainingId as Id<"workouts">,
+			order,
+		});
+		closeSheet();
 	};
 
 	return (
@@ -165,7 +193,7 @@ export default function EditMenuModal({
 					</TouchableOpacity>
 					<TouchableOpacity
 						className="w-full flex-row items-center gap-2 rounded-xl bg-destructive px-3 py-2.5 pl-[24%]"
-						onPress={() => setRemove(true)}
+						onPress={handleDeleteExercise}
 					>
 						<Ionicons color="white" name="trash-outline" size={24} />
 						<Text className="text-lg text-white">Odstranit cvik</Text>
@@ -192,15 +220,6 @@ export default function EditMenuModal({
 				closeParent={closeSheet}
 				setVisible={setNote}
 				visible={note}
-				workoutExerciseId={exerciseId}
-			/>
-
-			<DeleteWorkoutExerciseModal
-				closeParent={closeSheet}
-				order={order}
-				setVisible={setRemove}
-				trainingId={trainingId}
-				visible={remove}
 				workoutExerciseId={exerciseId}
 			/>
 		</Modal>

@@ -7,7 +7,6 @@ import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
-import DeleteRoutineExerciseModal from "./edit-menu-modals/delete-routine-exercise";
 import EditExerciseModal from "./edit-menu-modals/edit-exercise";
 import EditNoteModal from "./edit-menu-modals/edit-note";
 
@@ -32,8 +31,28 @@ export default function RoutineMenuModal({
 }: RoutineMenuProps) {
 	const [edit, setEdit] = useState(false);
 	const [note, setNote] = useState(false);
-	const [remove, setRemove] = useState(false);
 	const closeSheet = () => setSheetVisible(false);
+
+	const deleteRoutineExercise = useMutation(api.routineExercises.deleteRoutineExercise).withOptimisticUpdate(
+		(localStore, args) => {
+			const queries = localStore.getAllQueries(api.routines.getRoutineById);
+			for (const query of queries) {
+				const currentData = query.value;
+				if (currentData?.exercises && query.args.routineId === args.routineId) {
+					const updatedExercises = currentData.exercises
+						.filter((exercise) => exercise._id !== args.routineExerciseId)
+						.map((exercise) => ({
+							...exercise,
+							order: exercise.order > args.order ? exercise.order - 1 : exercise.order,
+						}));
+					localStore.setQuery(api.routines.getRoutineById, query.args, {
+						...currentData,
+						exercises: updatedExercises,
+					});
+				}
+			}
+		}
+	);
 	const moveUp = useMutation(api.routineExercises.moveUp).withOptimisticUpdate((localStore, args) => {
 		const queries = localStore.getAllQueries(api.routines.getRoutineById);
 		for (const query of queries) {
@@ -97,6 +116,15 @@ export default function RoutineMenuModal({
 		}
 	};
 
+	const handleDeleteExercise = () => {
+		deleteRoutineExercise({
+			routineExerciseId: exerciseId as Id<"routinesExercises">,
+			routineId: routineId as Id<"routines">,
+			order,
+		});
+		closeSheet();
+	};
+
 	return (
 		<Modal
 			animationIn="slideInUp"
@@ -156,7 +184,7 @@ export default function RoutineMenuModal({
 					</TouchableOpacity>
 					<TouchableOpacity
 						className="w-full flex-row items-center gap-2 rounded-xl bg-destructive px-3 py-2.5 pl-[24%]"
-						onPress={() => setRemove(true)}
+						onPress={handleDeleteExercise}
 					>
 						<Ionicons color="white" name="trash-outline" size={24} />
 						<Text className="text-lg text-white">Odstranit cvik</Text>
@@ -176,15 +204,6 @@ export default function RoutineMenuModal({
 				routineExerciseId={exerciseId}
 				setVisible={setNote}
 				visible={note}
-			/>
-
-			<DeleteRoutineExerciseModal
-				closeParent={closeSheet}
-				order={order}
-				routineExerciseId={exerciseId}
-				routineId={routineId}
-				setVisible={setRemove}
-				visible={remove}
 			/>
 		</Modal>
 	);

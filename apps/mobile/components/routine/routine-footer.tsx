@@ -1,10 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
+import { api } from "../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
+import { ExercisePicker } from "../forms/exercise-picker";
 import DeleteRoutineModal from "./modals/delete-routine";
-import RoutineAddExerciseModal from "./modals/routine-add-exercise";
 
 type RoutineFooterProps = {
 	id: string;
@@ -16,6 +19,15 @@ type RoutineFooterProps = {
 export default function RoutineFooter({ id, exercises, isEdit, setIsEdit }: RoutineFooterProps) {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [addExerciseModal, setAddExerciseModal] = useState(false);
+	const addExercise = useMutation(api.routineExercises.addRoutineExercise);
+
+	const handleExerciseSelect = (exerciseId: string) => {
+		addExercise({
+			routineId: id as Id<"routines">,
+			exerciseId: exerciseId as Id<"exercises">,
+			order: exercises,
+		});
+	};
 
 	return (
 		<View className="h-[72px] flex-row items-center border-[#1a1a1a] border-t bg-darker pr-2 pb-8">
@@ -32,14 +44,13 @@ export default function RoutineFooter({ id, exercises, isEdit, setIsEdit }: Rout
 				<Pencil color={isEdit ? COLORS.accent : "white"} size={22} />
 			</TouchableOpacity>
 
-			<RoutineAddExerciseModal
-				exercises={exercises}
-				routineId={id}
-				setSheetVisible={setAddExerciseModal}
-				sheetVisible={addExerciseModal}
-			/>
-
 			<DeleteRoutineModal routineId={id} setSheetVisible={setDeleteModal} sheetVisible={deleteModal} />
+			<ExercisePicker
+				onSelect={handleExerciseSelect}
+				setVisible={setAddExerciseModal}
+				standalone
+				visible={addExerciseModal}
+			/>
 		</View>
 	);
 }

@@ -12,19 +12,52 @@ type Exercise = {
 	name: string;
 };
 
+const EmptyComponent = ({
+	input,
+	onExerciseCreated,
+}: {
+	input: string;
+	onExerciseCreated: (exerciseId: string) => void;
+}) => {
+	const [sheetVisible, setSheetVisible] = useState(false);
+	return (
+		<View className="items-center py-4">
+			<TouchableOpacity
+				className="flex flex-row items-center gap-2 rounded-xl bg-secondary px-4 py-3"
+				onPress={() => setSheetVisible(true)}
+			>
+				<Plus color="white" size={24} />
+				<Text className="text-lg text-text">Přidat nový cvik</Text>
+			</TouchableOpacity>
+			<AddNewExerciseModal
+				defaultName={input}
+				onExerciseCreated={onExerciseCreated}
+				setSheetVisible={setSheetVisible}
+				sheetVisible={sheetVisible}
+			/>
+		</View>
+	);
+};
+
 type ExercisePickerProps = {
 	selectedId?: string | null;
 	onSelect: (id: string) => void;
+	standalone?: boolean;
+	visible?: boolean;
+	setVisible?: (visible: boolean) => void;
 };
 
-export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
+export function ExercisePicker({ selectedId, onSelect, standalone = false, visible, setVisible }: ExercisePickerProps) {
 	const [internalSelectedId, setInternalSelectedId] = useState<string | null>(null);
-	const [modalVisible, setModalVisible] = useState(false);
+	const [internalModalVisible, setInternalModalVisible] = useState(false);
+	const modalVisible = standalone && visible !== undefined ? visible : internalModalVisible;
+	const setModalVisible = standalone && setVisible !== undefined ? setVisible : setInternalModalVisible;
 	const [query, setQuery] = useState("");
 	const exercises = useQuery(api.exercises.getAllExercises);
 	const inputRef = useRef<TextInput>(null);
 
-	const chosenId = selectedId ?? internalSelectedId;
+	// In standalone mode, don't show any selection (used for adding new exercises)
+	const chosenId = standalone ? null : (selectedId ?? internalSelectedId);
 	const chosenExercise = useMemo(() => exercises?.find((e) => e._id === chosenId) ?? null, [exercises, chosenId]);
 
 	useEffect(() => {
@@ -70,6 +103,66 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 			</TouchableOpacity>
 		);
 	};
+
+	if (standalone) {
+		return (
+			<Modal
+				animationIn="slideInUp"
+				animationOut="slideOutDown"
+				backdropOpacity={0.5}
+				backdropTransitionOutTiming={0}
+				hideModalContentWhileAnimating={true}
+				isVisible={modalVisible}
+				onBackButtonPress={closeModal}
+				onBackdropPress={closeModal}
+				onModalWillHide={() => Keyboard.dismiss()}
+				onSwipeComplete={closeModal}
+				propagateSwipe
+				style={{ justifyContent: "flex-end", margin: 0 }}
+				swipeDirection={["down"]}
+				useNativeDriver
+				useNativeDriverForBackdrop
+			>
+				<View className="h-[90%] rounded-t-xl bg-darker p-4">
+					<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />
+					<View className="mb-3 flex-row items-center justify-between">
+						<View className="flex-1">
+							<TextInput
+								className="rounded-xl bg-secondary px-4 py-3 text-base text-text"
+								clearButtonMode="while-editing"
+								onChangeText={setQuery}
+								placeholder="Hledej cvik..."
+								placeholderTextColorClassName="accent-muted"
+								ref={inputRef}
+								value={query}
+							/>
+						</View>
+					</View>
+
+					<FlatList
+						data={filtered}
+						keyboardShouldPersistTaps="handled"
+						keyExtractor={(item) => item._id}
+						ListEmptyComponent={() => (
+							<EmptyComponent
+								input={query}
+								onExerciseCreated={(exerciseId) => {
+									onSelect(exerciseId);
+									if (selectedId === undefined) {
+										setInternalSelectedId(exerciseId);
+									}
+									setQuery("");
+									setModalVisible(false);
+								}}
+							/>
+						)}
+						renderItem={renderItem}
+						showsVerticalScrollIndicator={false}
+					/>
+				</View>
+			</Modal>
+		);
+	}
 
 	return (
 		<>
@@ -144,30 +237,3 @@ export function ExercisePicker({ selectedId, onSelect }: ExercisePickerProps) {
 		</>
 	);
 }
-
-const EmptyComponent = ({
-	input,
-	onExerciseCreated,
-}: {
-	input: string;
-	onExerciseCreated: (exerciseId: string) => void;
-}) => {
-	const [sheetVisible, setSheetVisible] = useState(false);
-	return (
-		<View className="items-center py-4">
-			<TouchableOpacity
-				className="flex flex-row items-center gap-2 rounded-xl bg-secondary px-4 py-3"
-				onPress={() => setSheetVisible(true)}
-			>
-				<Plus color="white" size={24} />
-				<Text className="text-lg text-text">Přidat nový cvik</Text>
-			</TouchableOpacity>
-			<AddNewExerciseModal
-				defaultName={input}
-				onExerciseCreated={onExerciseCreated}
-				setSheetVisible={setSheetVisible}
-				sheetVisible={sheetVisible}
-			/>
-		</View>
-	);
-};

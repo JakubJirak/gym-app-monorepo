@@ -1,9 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
-import AddExerciseModal from "./modals/add-exercise";
+import { api } from "../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
+import { ExercisePicker } from "../forms/exercise-picker";
 import DeleteTrainingModal from "./modals/delete-training";
 
 type TrainingFooterProps = {
@@ -16,6 +19,15 @@ type TrainingFooterProps = {
 export default function TrainingFooter({ id, exercises, isEdit, setIsEdit }: TrainingFooterProps) {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [addExerciseModal, setAddExerciseModal] = useState(false);
+	const addExercise = useMutation(api.workoutExercises.addWorkoutExercise);
+
+	const handleExerciseSelect = (exerciseId: string) => {
+		addExercise({
+			workoutId: id as Id<"workouts">,
+			exerciseId: exerciseId as Id<"exercises">,
+			order: exercises,
+		});
+	};
 
 	return (
 		<View className="h-[72px] flex-row items-center border-[#1a1a1a] border-t bg-darker pr-2 pb-8">
@@ -33,11 +45,11 @@ export default function TrainingFooter({ id, exercises, isEdit, setIsEdit }: Tra
 			</TouchableOpacity>
 
 			<DeleteTrainingModal setSheetVisible={setDeleteModal} sheetVisible={deleteModal} trainingId={id} />
-			<AddExerciseModal
-				exercises={exercises} // order of the new exercise
-				setSheetVisible={setAddExerciseModal}
-				sheetVisible={addExerciseModal}
-				trainingId={id}
+			<ExercisePicker
+				onSelect={handleExerciseSelect}
+				setVisible={setAddExerciseModal}
+				standalone
+				visible={addExerciseModal}
 			/>
 		</View>
 	);

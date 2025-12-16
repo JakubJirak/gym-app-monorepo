@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
-import { useEffect, useState } from "react";
-import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../packages/convex/convex/_generated/api";
@@ -40,49 +40,21 @@ export default function AddNewExerciseModal({
 			localStore.setQuery(api.exercises.getAllExercises, {}, [...current, optimisticExercise]);
 		}
 	});
-	const [keyboardHeight, setKeyboardHeight] = useState(0);
-
-	useEffect(() => {
-		const showListeners = [
-			Keyboard.addListener("keyboardWillShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
-			}),
-			Keyboard.addListener("keyboardDidShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
-			}),
-		];
-		const hideListeners = [
-			Keyboard.addListener("keyboardWillHide", () => {
-				setKeyboardHeight(0);
-			}),
-			Keyboard.addListener("keyboardDidHide", () => {
-				setKeyboardHeight(0);
-			}),
-		];
-
-		return () => {
-			for (const listener of showListeners) {
-				listener.remove();
-			}
-			for (const listener of hideListeners) {
-				listener.remove();
-			}
-		};
-	}, []);
 
 	const disabled = name === "" || muscleGroupId === undefined;
 
 	const handleAddExercise = async () => {
-		const exerciseId = await addExercise({
+		closeSheet();
+		await addExercise({
 			name,
 			muscleGroupId: muscleGroupId as Id<"muscleGroups">,
+		}).then((exerciseId) => {
+			if (exerciseId && onExerciseCreated && !exerciseId.startsWith("temp-")) {
+				onExerciseCreated(exerciseId);
+			}
 		});
 		setName("");
 		setMuscleGroupId(undefined);
-		closeSheet();
-		if (exerciseId && onExerciseCreated) {
-			onExerciseCreated(exerciseId);
-		}
 	};
 
 	return (
@@ -97,16 +69,16 @@ export default function AddNewExerciseModal({
 			onBackdropPress={closeSheet}
 			onSwipeComplete={closeSheet}
 			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
+			style={{ justifyContent: "flex-end", margin: 0 }}
 			swipeDirection={["down"]}
 			useNativeDriver
 			useNativeDriverForBackdrop
 		>
-			<View className="h-[55%] rounded-t-xl bg-darker p-4">
+			<View className="h-[80%] rounded-t-xl bg-darker p-4">
 				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
 
-				<View className="flex-1 justify-between">
-					<View className="mt-2 flex-row items-center gap-2 self-center">
+				<View className="flex-1">
+					<View className="mt-2 mb-4 flex-row items-center gap-2 self-center">
 						<Ionicons color="white" name="add-outline" size={32} />
 						<Text className="font-bold text-2xl text-text">Přidat cvik</Text>
 					</View>
@@ -134,7 +106,7 @@ export default function AddNewExerciseModal({
 						</View>
 					</View>
 
-					<View className="mt-4 mb-6 flex-row">
+					<View className="mt-8 mb-6 flex-row">
 						<TouchableOpacity
 							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
 							onPress={closeSheet}
