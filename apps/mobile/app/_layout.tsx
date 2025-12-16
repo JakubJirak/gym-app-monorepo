@@ -89,4 +89,5 @@ DONE - FEATURES
 - lehci pridavani serii - mit + button kdyz nemam zadnou serii nebo je edit aktivni
 - pridani menu na hold pro trenink a rutinu
 - set je nyni cele tlacitko pro editaci, ne jen tuzka
+- pridani historie cviku v treninku na podrzeni jmena cviku (posledni 3 treninky s timto cvikem)
 */
