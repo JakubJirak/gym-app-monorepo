@@ -5,6 +5,7 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import EditMenuModal from "./modals/edit-menu";
 import AddSetModal from "./modals/edit-menu-modals/add-set";
+import ExerciseHistoryModal from "./modals/exercise-history-modal";
 import ExerciseSet from "./set";
 
 type ExerciseProps = {
@@ -41,6 +42,7 @@ export default function Exercise({
 }: ExerciseProps) {
 	const [editMenu, setEditMenu] = useState(false);
 	const [addSetModal, setAddSetModal] = useState(false);
+	const [historyModal, setHistoryModal] = useState(false);
 	const router = useRouter();
 
 	const handleNavigateToHistory = () => {
@@ -50,11 +52,15 @@ export default function Exercise({
 		});
 	};
 
+	const handleLongPress = () => {
+		setHistoryModal(true);
+	};
+
 	return (
 		<View className="py-4">
 			<View className="mb-2 flex-row items-center">
 				<View className="flex-1 flex-row items-center">
-					<TouchableOpacity onPress={handleNavigateToHistory}>
+					<TouchableOpacity onLongPress={handleLongPress} onPress={handleNavigateToHistory}>
 						<Text className="flex font-semibold text-[19px] text-text">{name}</Text>
 					</TouchableOpacity>
 					{isEdit && (
@@ -124,6 +130,13 @@ export default function Exercise({
 				setsLength={sets?.length}
 				sheetVisible={editMenu}
 				trainingId={trainingId}
+			/>
+			<ExerciseHistoryModal
+				currentTrainingId={trainingId}
+				exerciseId={exerciseId}
+				exerciseName={name}
+				setVisible={setHistoryModal}
+				visible={historyModal}
 			/>
 		</View>
 	);
