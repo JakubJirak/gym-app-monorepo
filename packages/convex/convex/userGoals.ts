@@ -5,13 +5,20 @@ import { authComponent } from "./auth";
 export const getUserGoals = query({
 	args: {},
 	handler: async (ctx) => {
-		//@ts-expect-error
-		const user = await authComponent.getAuthUser(ctx);
-		if (!user) {
-			throw new Error("Unauthorized");
+		let userId: string;
+		try {
+			//@ts-expect-error
+			const user = await authComponent.getAuthUser(ctx);
+			if (!user) {
+				return null;
+			}
+			//@ts-expect-error
+			userId = user._id;
+		} catch (error) {
+			// Auth timeout or error - return null
+			console.error("Auth error in getUserGoals:", error);
+			return null;
 		}
-		//@ts-expect-error
-		const userId = user._id;
 
 		return await ctx.db
 			.query("userGoals")

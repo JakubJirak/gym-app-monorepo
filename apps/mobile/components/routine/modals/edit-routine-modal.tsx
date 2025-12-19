@@ -45,8 +45,8 @@ export default function EditRoutineModal({
 
 	const disabled = filterId === undefined || (name === defaultName && filterId === defaultFilterId);
 
-	const handleEditRoutine = async () => {
-		await editRoutine({
+	const handleEditRoutine = () => {
+		editRoutine({
 			routineId: routineId as Id<"routines">,
 			name,
 			filterId: filterId as Id<"filters">,

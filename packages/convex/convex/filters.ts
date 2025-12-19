@@ -5,13 +5,20 @@ import { authComponent } from "./auth";
 export const getAllFilters = query({
 	args: {},
 	handler: async (ctx) => {
-		//@ts-expect-error
-		const user = await authComponent.getAuthUser(ctx);
-		if (!user) {
-			throw new Error("Unauthorized");
+		let userId: string;
+		try {
+			//@ts-expect-error
+			const user = await authComponent.getAuthUser(ctx);
+			if (!user) {
+				return [];
+			}
+			//@ts-expect-error
+			userId = user._id;
+		} catch (error) {
+			// Auth timeout or error - return empty results
+			console.error("Auth error in getAllFilters:", error);
+			return [];
 		}
-		//@ts-expect-error
-		const userId = user._id;
 
 		return await ctx.db
 			.query("filters")
@@ -56,7 +63,6 @@ export const editFilter = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
-
 		const filter = await ctx.db.get(filterId);
 		if (!filter) {
 			throw new Error("Filter not found");
@@ -85,7 +91,6 @@ export const deleteFilter = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
-
 		const filter = await ctx.db.get(filterId);
 		if (!filter) {
 			throw new Error("Filter not found");

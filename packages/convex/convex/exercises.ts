@@ -5,13 +5,20 @@ import { authComponent } from "./auth";
 export const getAllExercises = query({
 	args: {},
 	handler: async (ctx) => {
-		//@ts-expect-error
-		const user = await authComponent.getAuthUser(ctx);
-		if (!user) {
-			throw new Error("Unauthorized");
+		let userId: string;
+		try {
+			//@ts-expect-error
+			const user = await authComponent.getAuthUser(ctx);
+			if (!user) {
+				return [];
+			}
+			//@ts-expect-error
+			userId = user._id;
+		} catch (error) {
+			// Auth timeout or error - return empty results
+			console.error("Auth error in getAllExercises:", error);
+			return [];
 		}
-		//@ts-expect-error
-		const userId = user._id;
 
 		const userExercises = await ctx.db
 			.query("exercises")

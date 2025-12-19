@@ -48,7 +48,10 @@ export default function Goals() {
 
 	return (
 		<View className="flex-1 bg-primary">
-			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Váhy a cíle" />
+			<View className="px-3">
+				<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Váhy a cíle" />
+			</View>
+
 			<ScrollView className="flex-1 px-3 pb-16" showsVerticalScrollIndicator={false}>
 				<PowerliftingStats benchPR={benchPR} deadliftPR={deadliftPR} squatPR={squatPR} />
 				<UserGoals benchPR={benchPR} deadliftPR={deadliftPR} squatPR={squatPR} />

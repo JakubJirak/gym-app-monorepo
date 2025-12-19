@@ -1,15 +1,28 @@
 import { useQuery } from "convex/react";
 import { Plus } from "lucide-react-native";
 import { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import AddRoutine from "@/components/routine/add-routine";
 import Routine from "@/components/routine/routine";
+import { COLORS } from "@/constants/COLORS";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Rutiny() {
 	const [addRutinaVisible, setAddRutinaVisible] = useState(false);
 	const rutiny = useQuery(api.routines.getUserRoutines);
+
+	if (rutiny === undefined) {
+		return (
+			<View className="flex-1 items-center justify-center bg-primary">
+				<ActivityIndicator color={COLORS.accent} size="large" />
+			</View>
+		);
+	}
+
+	if (!rutiny) {
+		return null;
+	}
 
 	return (
 		<View className="flex-1 bg-primary">

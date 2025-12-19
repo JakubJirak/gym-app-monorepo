@@ -49,8 +49,8 @@ export default function EditTrainingModal({
 		filterId === undefined ||
 		(name === defaultName && filterId === defaultFilterId && toLocalISODateString(date) === defaultDate);
 
-	const handleEditTraining = async () => {
-		await editWorkout({
+	const handleEditTraining = () => {
+		editWorkout({
 			workoutId: trainingId as Id<"workouts">,
 			name,
 			workoutDate: toLocalISODateString(date),

@@ -74,13 +74,20 @@ export const getRoutineById = query({
 		routineId: v.id("routines"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
-		const user = await authComponent.getAuthUser(ctx);
-		if (!user) {
-			throw new Error("Unauthorized");
+		let userId: string;
+		try {
+			//@ts-expect-error
+			const user = await authComponent.getAuthUser(ctx);
+			if (!user) {
+				return null;
+			}
+			//@ts-expect-error
+			userId = user._id;
+		} catch (error) {
+			// Auth timeout or error - return null
+			console.error("Auth error in getRoutineById:", error);
+			return null;
 		}
-		//@ts-expect-error
-		const userId = user._id;
 
 		const routine = await ctx.db.get(args.routineId);
 		if (!routine) {
@@ -140,7 +147,6 @@ export const addRoutine = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
-
 		const id = await ctx.db.insert("routines", {
 			name: args.name,
 			filterId: args.filterId,

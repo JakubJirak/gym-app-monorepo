@@ -7,10 +7,16 @@ export const getRoutineExerciseById = query({
 		routineExerciseId: v.id("routinesExercises"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
-		const user = await authComponent.getAuthUser(ctx);
-		if (!user) {
-			throw new Error("Unauthorized");
+		try {
+			//@ts-expect-error
+			const user = await authComponent.getAuthUser(ctx);
+			if (!user) {
+				return null;
+			}
+		} catch (error) {
+			// Auth timeout or error - return null
+			console.error("Auth error in getRoutineExerciseById:", error);
+			return null;
 		}
 
 		return ctx.db.get(args.routineExerciseId);
@@ -30,7 +36,6 @@ export const addRoutineExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-
 		await ctx.db.insert("routinesExercises", {
 			exerciseId: args.exerciseId,
 			routineId: args.routineId,
@@ -51,7 +56,6 @@ export const editExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-
 		await ctx.db.patch(args.routineExerciseId, {
 			exerciseId: args.exerciseId,
 		});
@@ -69,7 +73,6 @@ export const editNote = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-
 		await ctx.db.patch(args.routineExerciseId, {
 			note: args.note,
 		});
@@ -88,7 +91,6 @@ export const deleteRoutineExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-
 		// Delete the routineExercise itself
 		await ctx.db.delete(args.routineExerciseId);
 
