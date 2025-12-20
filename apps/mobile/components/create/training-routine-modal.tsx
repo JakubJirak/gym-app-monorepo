@@ -76,6 +76,7 @@ export default function TrainingRoutineModal({
 									className="mx-auto flex flex-row items-center gap-2 rounded-xl bg-secondary px-6 py-3"
 									onPress={() => {
 										closeSheet();
+										closeParentSheet();
 										router.push("/(auth)/(tabs)/profile/rutiny");
 									}}
 								>
@@ -127,12 +128,12 @@ export default function TrainingRoutineModal({
 			</Modal>
 
 			<CreateFromRoutineDialog
+				closeParentSheet={closeParentSheet}
 				routineColor={selectedRoutine?.color || null}
 				routineId={selectedRoutine?.id || null}
 				routineName={selectedRoutine?.name || null}
 				setVisible={setConfirmDialogVisible}
 				visible={confirmDialogVisible}
-				closeParentSheet={closeParentSheet}
 			/>
 		</>
 	);
