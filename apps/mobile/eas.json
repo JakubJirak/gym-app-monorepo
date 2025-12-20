@@ -17,8 +17,8 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_CONVEX_URL": "https://api.convex.jirak.dev",
-        "EXPO_PUBLIC_CONVEX_SITE_URL": "https://convex.jirak.dev"
+        "EXPO_PUBLIC_CONVEX_URL": "https://efficient-cricket-974.convex.cloud",
+        "EXPO_PUBLIC_CONVEX_SITE_URL": "https://efficient-cricket-974.convex.site"
       }
     }
   },
