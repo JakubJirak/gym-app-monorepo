@@ -229,20 +229,6 @@ eas submit --platform all
 ### Convex
 Convex se automaticky deployuje při push do production branch.
 
-## 🤝 Přispívání
-
-Příspěvky jsou vítány!  Prosím: 
-
-1. Forkněte projekt
-2. Vytvořte feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commitněte změny (`git commit -m 'Add some AmazingFeature'`)
-4. Pushněte do branch (`git push origin feature/AmazingFeature`)
-5. Otevřete Pull Request
-
-## 📄 Licence
-
-Tento projekt je licencován pod MIT licencí - viz [LICENSE](LICENSE) soubor pro detaily.
-
 ## 👨‍💻 Autor
 
 **Jakub Jirak** - [@JakubJirak](https://github.com/JakubJirak)
