@@ -27,7 +27,7 @@ Moderní aplikace pro sledování tréninků s plnohodnotnou webovou a mobilní 
 
 ### Monorepo Management
 - **Build System**: [Turborepo](https://turbo.build/repo)
-- **Package Manager**: npm/pnpm/yarn
+- **Package Manager**: npm/pnpm/yarn/bun (zde použit)
 
 ## 📁 Struktura Projektu
 
