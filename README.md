@@ -2,10 +2,6 @@
 
 Moderní aplikace pro sledování tréninků s plnohodnotnou webovou a mobilní verzí.  Vše v jednom monorepu s sdíleným backendem a autentizací.
 
-![TypeScript](https://img.shields.io/badge/TypeScript-97. 8%25-blue)
-![JavaScript](https://img.shields.io/badge/JavaScript-1.2%25-yellow)
-![CSS](https://img.shields.io/badge/CSS-1.0%25-purple)
-
 ## ✨ Hlavní Funkce
 
 - 📱 **Multiplatformní** - Plně funkční webová a mobilní aplikace
