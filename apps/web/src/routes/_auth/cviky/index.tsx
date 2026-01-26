@@ -12,6 +12,7 @@ import { api } from "../../../../../../packages/convex/convex/_generated/api";
 type ExerciseType = {
 	_id: string;
 	name: string;
+	userId: string;
 	muscleGroup: string;
 };
 
@@ -38,9 +39,10 @@ function RouteComponent() {
 	const sortedExercises = useMemo<SortedExercises>(
 		() =>
 			(exercises ?? []).reduce<SortedExercises>((acc, exercise) => {
-				if (!acc[exercise.muscleGroup]) {
-					acc[exercise.muscleGroup] = [];
+				if (!acc[exercise.muscleGroup as string]) {
+					acc[exercise.muscleGroup as string] = [];
 				}
+				//@ts-expect-error - exercise.muscleGroup is string
 				acc[exercise.muscleGroup].push(exercise);
 				return acc;
 			}, {}),
@@ -95,6 +97,7 @@ function RouteComponent() {
 								<div className="mt-2 space-y-2">
 									{ex.map((exercise) => (
 										<Exercise
+											editable={exercise.userId !== "default"}
 											id={exercise._id}
 											key={exercise._id}
 											name={exercise.name}
