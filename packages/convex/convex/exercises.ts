@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getAllExercises = query({
 	args: {},
@@ -84,6 +85,9 @@ export const addExercise = mutation({
 		// @ts-expect-error
 		const userId = user._id;
 
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addExercise", { key: userId, throws: true });
+
 		const exerciseId = await ctx.db.insert("exercises", {
 			userId,
 			name: args.name,
@@ -106,6 +110,9 @@ export const editExercise = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateExercise", { key: userId, throws: true });
 
 		const ex = await ctx.db.get(args.exerciseId);
 		if (!ex) {
@@ -134,6 +141,9 @@ export const deleteExercise = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "deleteExercise", { key: userId, throws: true });
 
 		const ex = await ctx.db.get(args.exerciseId);
 		if (!ex) {

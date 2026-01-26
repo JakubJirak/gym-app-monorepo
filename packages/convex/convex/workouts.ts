@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getUserWorkouts = query({
 	args: {},
@@ -238,6 +239,9 @@ export const createWorkout = mutation({
 		//@ts-expect-error
 		const userId = user._id;
 
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addWorkout", { key: userId, throws: true });
+
 		// 1. Vytvoření tréninku
 		const workoutId = await ctx.db.insert("workouts", {
 			userId,
@@ -287,6 +291,9 @@ export const deleteWorkout = mutation({
 		//@ts-expect-error
 		const userId = user._id;
 
+		// Rate limiting
+		await rateLimiter.limit(ctx, "deleteWorkout", { key: userId, throws: true });
+
 		const workout = await ctx.db.get(args.workoutId);
 		if (!workout) {
 			throw new Error("Trénink nenalezen");
@@ -333,6 +340,9 @@ export const editWorkout = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateWorkout", { key: userId, throws: true });
 
 		const workout = await ctx.db.get(args.workoutId);
 		if (!workout) {

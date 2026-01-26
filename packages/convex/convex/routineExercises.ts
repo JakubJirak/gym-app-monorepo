@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getRoutineExerciseById = query({
 	args: {
@@ -36,6 +37,12 @@ export const addRoutineExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addRoutineExercise", { key: userId, throws: true });
+
 		await ctx.db.insert("routinesExercises", {
 			exerciseId: args.exerciseId,
 			routineId: args.routineId,
@@ -56,6 +63,12 @@ export const editExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateRoutineExercise", { key: userId, throws: true });
+
 		await ctx.db.patch(args.routineExerciseId, {
 			exerciseId: args.exerciseId,
 		});
@@ -73,6 +86,12 @@ export const editNote = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateRoutineExercise", { key: userId, throws: true });
+
 		await ctx.db.patch(args.routineExerciseId, {
 			note: args.note,
 		});
@@ -91,6 +110,12 @@ export const deleteRoutineExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "deleteRoutineExercise", { key: userId, throws: true });
+
 		// Delete the routineExercise itself
 		await ctx.db.delete(args.routineExerciseId);
 

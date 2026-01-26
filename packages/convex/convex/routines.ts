@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getUserRoutines = query({
 	args: {},
@@ -147,6 +148,10 @@ export const addRoutine = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addRoutine", { key: userId, throws: true });
+
 		const id = await ctx.db.insert("routines", {
 			name: args.name,
 			filterId: args.filterId,
@@ -169,6 +174,9 @@ export const deleteRoutine = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "deleteRoutine", { key: userId, throws: true });
 
 		const routine = await ctx.db.get(args.routineId);
 		if (!routine) {
@@ -205,6 +213,9 @@ export const editRoutine = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateRoutine", { key: userId, throws: true });
 
 		const routine = await ctx.db.get(args.routineId);
 		if (!routine) {

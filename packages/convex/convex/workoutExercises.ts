@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getWorkoutExerciseById = query({
 	args: {
@@ -36,6 +37,12 @@ export const addSet = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addWorkoutSet", { key: userId, throws: true });
+
 		await ctx.db.insert("sets", {
 			workoutExerciseId: args.workoutExerciseId,
 			weight: args.weight,
@@ -58,6 +65,12 @@ export const addWorkoutExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addWorkoutExercise", { key: userId, throws: true });
+
 		await ctx.db.insert("workoutExercises", {
 			exerciseId: args.exerciseId,
 			workoutId: args.workoutId,
@@ -78,6 +91,12 @@ export const editExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateWorkoutExercise", { key: userId, throws: true });
+
 		await ctx.db.patch(args.workoutExerciseId, {
 			exerciseId: args.exerciseId,
 		});
@@ -95,6 +114,12 @@ export const editNote = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateWorkoutExercise", { key: userId, throws: true });
+
 		await ctx.db.patch(args.workoutExerciseId, {
 			note: args.note,
 		});
@@ -113,6 +138,12 @@ export const editSet = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateWorkoutExercise", { key: userId, throws: true });
+
 		await ctx.db.patch(args.setId, {
 			reps: args.reps,
 			weight: args.weight,
@@ -130,6 +161,12 @@ export const deleteSet = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "deleteWorkoutExercise", { key: userId, throws: true });
+
 		await ctx.db.delete(args.setId);
 	},
 });
@@ -146,6 +183,12 @@ export const deleteWorkoutExercise = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "deleteWorkoutExercise", { key: userId, throws: true });
+
 		// Delete all sets for this workoutExercise
 		const sets = await ctx.db
 			.query("sets")

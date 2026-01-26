@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getUserGoals = query({
 	args: {},
@@ -42,6 +43,9 @@ export const addUserGoals = mutation({
 		// @ts-expect-error
 		const userId = user._id;
 
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addUserGoal", { key: userId, throws: true });
+
 		await ctx.db.insert("userGoals", {
 			userId,
 			bench: args.bench,
@@ -68,6 +72,9 @@ export const updateUserGoals = mutation({
 		}
 		// @ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateUserGoal", { key: userId, throws: true });
 
 		const goal = await ctx.db.get(args.goalId);
 		if (!goal) {

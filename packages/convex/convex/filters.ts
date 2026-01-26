@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getAllFilters = query({
 	args: {},
@@ -41,6 +42,9 @@ export const addFilter = mutation({
 		//@ts-expect-error
 		const userId = user._id;
 
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addFilter", { key: userId, throws: true });
+
 		await ctx.db.insert("filters", {
 			name,
 			color,
@@ -63,6 +67,10 @@ export const editFilter = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateFilter", { key: userId, throws: true });
+
 		const filter = await ctx.db.get(filterId);
 		if (!filter) {
 			throw new Error("Filter not found");
@@ -91,6 +99,10 @@ export const deleteFilter = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "deleteFilter", { key: userId, throws: true });
+
 		const filter = await ctx.db.get(filterId);
 		if (!filter) {
 			throw new Error("Filter not found");

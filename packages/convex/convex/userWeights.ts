@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getUserWeight = query({
 	args: {},
@@ -40,6 +41,9 @@ export const addUserWeight = mutation({
 		//@ts-expect-error
 		const userId = user._id;
 
+		// Rate limiting
+		await rateLimiter.limit(ctx, "addUserWeight", { key: userId, throws: true });
+
 		await ctx.db.insert("userWeights", {
 			userId,
 			weight: args.weight,
@@ -62,6 +66,9 @@ export const updateUserWeight = mutation({
 		}
 		//@ts-expect-error
 		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateUserWeight", { key: userId, throws: true });
 
 		const weightRecord = await ctx.db.get(args.weightId);
 		if (!weightRecord) {

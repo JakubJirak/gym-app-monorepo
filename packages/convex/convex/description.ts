@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import { rateLimiter } from "./rateLimit";
 
 export const getUserDescription = query({
 	args: {},
@@ -40,6 +41,9 @@ export const addUserDescription = mutation({
 		//@ts-expect-error
 		const userId = user._id;
 
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateDescription", { key: userId, throws: true });
+
 		await ctx.db.insert("userDescription", {
 			description,
 			userId,
@@ -59,6 +63,12 @@ export const editUserDescription = mutation({
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
+		//@ts-expect-error
+		const userId = user._id;
+
+		// Rate limiting
+		await rateLimiter.limit(ctx, "updateDescription", { key: userId, throws: true });
+
 		await ctx.db.patch(args.descriptionId, {
 			description: args.description,
 		});
