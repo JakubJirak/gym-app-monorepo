@@ -1,7 +1,10 @@
 import { Button } from "../ui/button";
 
 const Contact = () => (
-	<section className="w-full bg-background px-6 py-16 md:px-20 md:py-28 lg:px-64 lg:py-40">
+	<section
+		className="w-full scroll-mt-20 bg-background px-6 py-16 md:px-20 md:py-28 lg:px-64 lg:py-40"
+		id="kontakt"
+	>
 		<p className="w-full font-light text-base leading-relaxed md:w-3/4 md:text-xl lg:w-1/2 lg:text-2xl/9">
 			Repozitář této aplikace je dostupný na GitHubu. Pokud najdete v aplikaci nějaké chyby, můžete založit
 			issue. Pokud vás napadne způsob, jak aplikaci vylepšit nebo nová funkcionalita, obraťte se na mě.
@@ -16,7 +19,7 @@ const Contact = () => (
 				</Button>
 			</a>
 			<a href="https://github.com/JakubJirak" rel="noopener noreferrer" target="_blank">
-				<Button className="w-full md:w-auto" size="lg" variant="outline">
+				<Button className="w-full md:w-auto" size="lg" variant="outline-accent">
 					Github profil
 				</Button>
 			</a>

@@ -1,5 +1,5 @@
 const Footer = () => (
-	<footer className="flex w-full items-center justify-center gap-2 bg-secondary py-6">
+	<footer className="flex w-full items-center justify-center gap-2 bg-bg py-6">
 		<a className="text-lg tracking-wider hover:underline" href="https://jakub.jirak.dev/">
 			Jakub Jirák
 		</a>

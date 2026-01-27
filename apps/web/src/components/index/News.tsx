@@ -1,5 +1,8 @@
 const News = () => (
-	<section className="w-full space-y-12 bg-secondary px-6 py-16 md:space-y-20 md:px-20 md:py-28 lg:space-y-26 lg:px-64 lg:py-40">
+	<section
+		className="w-full scroll-mt-20 space-y-12 bg-bg px-6 py-16 md:space-y-20 md:px-20 md:py-28 lg:space-y-26 lg:px-64 lg:py-40"
+		id="novinky"
+	>
 		<div className="">
 			<p className="mb-3 font-bold text-xl uppercase md:mb-4 md:text-2xl lg:text-3xl">
 				mobilní aplikace - 20.12.2025

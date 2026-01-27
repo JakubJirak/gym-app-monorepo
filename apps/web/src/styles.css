@@ -69,7 +69,7 @@ code {
 .dark {
 	--background: oklch(0.141 0.005 285.823);
 	--foreground: oklch(0.985 0 0);
-	--card: oklch(0.141 0.005 285.823);
+	--card: oklch(14.077% 0.0044 285.776);
 	--card-foreground: oklch(0.985 0 0);
 	--popover: oklch(0.141 0.005 285.823);
 	--popover-foreground: oklch(0.985 0 0);
@@ -113,6 +113,7 @@ code {
 @theme {
 	--font-inter: "Inter", sans-serif;
 	--color-orange: #ed782b;
+	--color-bg: #0d0d0d;
 }
 
 @theme inline {

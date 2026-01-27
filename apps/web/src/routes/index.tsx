@@ -4,6 +4,7 @@ import Download from "@/components/index/Download";
 import Footer from "@/components/index/Footer";
 import Functions from "@/components/index/Functions";
 import HeroSection from "@/components/index/HeroSection";
+import Navbar from "@/components/index/Navbar";
 import News from "@/components/index/News";
 
 export const Route = createFileRoute("/")({
@@ -12,7 +13,8 @@ export const Route = createFileRoute("/")({
 
 function App() {
 	return (
-		<div className="scroll-smooth">
+		<div>
+			<Navbar />
 			<HeroSection />
 			<Functions />
 			<Download />
