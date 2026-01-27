@@ -15,6 +15,7 @@ import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AuthTreninkyIndexRouteImport } from './routes/_auth/treninky/index'
 import { Route as AuthStatistikyIndexRouteImport } from './routes/_auth/statistiky/index'
+import { Route as AuthRutinyIndexRouteImport } from './routes/_auth/rutiny/index'
 import { Route as AuthProfilIndexRouteImport } from './routes/_auth/profil/index'
 import { Route as AuthPowerliftingIndexRouteImport } from './routes/_auth/powerlifting/index'
 import { Route as AuthMenuIndexRouteImport } from './routes/_auth/menu/index'
@@ -23,6 +24,7 @@ import { Route as AuthKalendarIndexRouteImport } from './routes/_auth/kalendar/i
 import { Route as AuthCvikyIndexRouteImport } from './routes/_auth/cviky/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AuthTreninkyTrainingIdRouteImport } from './routes/_auth/treninky/$trainingId'
+import { Route as AuthRutinyRoutineIdRouteImport } from './routes/_auth/rutiny/$routineId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -51,6 +53,11 @@ const AuthTreninkyIndexRoute = AuthTreninkyIndexRouteImport.update({
 const AuthStatistikyIndexRoute = AuthStatistikyIndexRouteImport.update({
   id: '/statistiky/',
   path: '/statistiky/',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthRutinyIndexRoute = AuthRutinyIndexRouteImport.update({
+  id: '/rutiny/',
+  path: '/rutiny/',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthProfilIndexRoute = AuthProfilIndexRouteImport.update({
@@ -93,11 +100,17 @@ const AuthTreninkyTrainingIdRoute = AuthTreninkyTrainingIdRouteImport.update({
   path: '/treninky/$trainingId',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthRutinyRoutineIdRoute = AuthRutinyRoutineIdRouteImport.update({
+  id: '/rutiny/$routineId',
+  path: '/rutiny/$routineId',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/cviky': typeof AuthCvikyIndexRoute
@@ -106,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/menu': typeof AuthMenuIndexRoute
   '/powerlifting': typeof AuthPowerliftingIndexRoute
   '/profil': typeof AuthProfilIndexRoute
+  '/rutiny': typeof AuthRutinyIndexRoute
   '/statistiky': typeof AuthStatistikyIndexRoute
   '/treninky': typeof AuthTreninkyIndexRoute
 }
@@ -113,6 +127,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/cviky': typeof AuthCvikyIndexRoute
@@ -121,6 +136,7 @@ export interface FileRoutesByTo {
   '/menu': typeof AuthMenuIndexRoute
   '/powerlifting': typeof AuthPowerliftingIndexRoute
   '/profil': typeof AuthProfilIndexRoute
+  '/rutiny': typeof AuthRutinyIndexRoute
   '/statistiky': typeof AuthStatistikyIndexRoute
   '/treninky': typeof AuthTreninkyIndexRoute
 }
@@ -130,6 +146,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/_auth/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/_auth/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/cviky/': typeof AuthCvikyIndexRoute
@@ -138,6 +155,7 @@ export interface FileRoutesById {
   '/_auth/menu/': typeof AuthMenuIndexRoute
   '/_auth/powerlifting/': typeof AuthPowerliftingIndexRoute
   '/_auth/profil/': typeof AuthProfilIndexRoute
+  '/_auth/rutiny/': typeof AuthRutinyIndexRoute
   '/_auth/statistiky/': typeof AuthStatistikyIndexRoute
   '/_auth/treninky/': typeof AuthTreninkyIndexRoute
 }
@@ -147,6 +165,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
     | '/cviky'
@@ -155,6 +174,7 @@ export interface FileRouteTypes {
     | '/menu'
     | '/powerlifting'
     | '/profil'
+    | '/rutiny'
     | '/statistiky'
     | '/treninky'
   fileRoutesByTo: FileRoutesByTo
@@ -162,6 +182,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
     | '/cviky'
@@ -170,6 +191,7 @@ export interface FileRouteTypes {
     | '/menu'
     | '/powerlifting'
     | '/profil'
+    | '/rutiny'
     | '/statistiky'
     | '/treninky'
   id:
@@ -178,6 +200,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/login/'
     | '/register/'
+    | '/_auth/rutiny/$routineId'
     | '/_auth/treninky/$trainingId'
     | '/api/auth/$'
     | '/_auth/cviky/'
@@ -186,6 +209,7 @@ export interface FileRouteTypes {
     | '/_auth/menu/'
     | '/_auth/powerlifting/'
     | '/_auth/profil/'
+    | '/_auth/rutiny/'
     | '/_auth/statistiky/'
     | '/_auth/treninky/'
   fileRoutesById: FileRoutesById
@@ -240,6 +264,13 @@ declare module '@tanstack/react-router' {
       path: '/statistiky'
       fullPath: '/statistiky'
       preLoaderRoute: typeof AuthStatistikyIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/rutiny/': {
+      id: '/_auth/rutiny/'
+      path: '/rutiny'
+      fullPath: '/rutiny'
+      preLoaderRoute: typeof AuthRutinyIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/profil/': {
@@ -298,10 +329,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTreninkyTrainingIdRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/rutiny/$routineId': {
+      id: '/_auth/rutiny/$routineId'
+      path: '/rutiny/$routineId'
+      fullPath: '/rutiny/$routineId'
+      preLoaderRoute: typeof AuthRutinyRoutineIdRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
 interface AuthRouteChildren {
+  AuthRutinyRoutineIdRoute: typeof AuthRutinyRoutineIdRoute
   AuthTreninkyTrainingIdRoute: typeof AuthTreninkyTrainingIdRoute
   AuthCvikyIndexRoute: typeof AuthCvikyIndexRoute
   AuthKalendarIndexRoute: typeof AuthKalendarIndexRoute
@@ -309,11 +348,13 @@ interface AuthRouteChildren {
   AuthMenuIndexRoute: typeof AuthMenuIndexRoute
   AuthPowerliftingIndexRoute: typeof AuthPowerliftingIndexRoute
   AuthProfilIndexRoute: typeof AuthProfilIndexRoute
+  AuthRutinyIndexRoute: typeof AuthRutinyIndexRoute
   AuthStatistikyIndexRoute: typeof AuthStatistikyIndexRoute
   AuthTreninkyIndexRoute: typeof AuthTreninkyIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthRutinyRoutineIdRoute: AuthRutinyRoutineIdRoute,
   AuthTreninkyTrainingIdRoute: AuthTreninkyTrainingIdRoute,
   AuthCvikyIndexRoute: AuthCvikyIndexRoute,
   AuthKalendarIndexRoute: AuthKalendarIndexRoute,
@@ -321,6 +362,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthMenuIndexRoute: AuthMenuIndexRoute,
   AuthPowerliftingIndexRoute: AuthPowerliftingIndexRoute,
   AuthProfilIndexRoute: AuthProfilIndexRoute,
+  AuthRutinyIndexRoute: AuthRutinyIndexRoute,
   AuthStatistikyIndexRoute: AuthStatistikyIndexRoute,
   AuthTreninkyIndexRoute: AuthTreninkyIndexRoute,
 }

@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_auth/statistiky/")({
 function RouteComponent() {
 	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
 
-	if (trainings === undefined || trainings?.length === 0)
+	if (trainings === undefined || trainings?.length === 0) {
 		return (
 			<>
 				<Header page="STATISTIKY" />
@@ -33,6 +33,7 @@ function RouteComponent() {
 				</div>
 			</>
 		);
+	}
 
 	return (
 		<>

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_auth/powerlifting/")({
 	component: RouteComponent,
 	head: () => ({
 		meta: [
-			{ title: "Powerlifting| GYM APPLICATION" },
+			{ title: "Powerlifting | GYM APPLICATION" },
 			{ name: "description", content: "Powerlifting statistiky uživatele." },
 		],
 	}),
@@ -32,7 +32,9 @@ function RouteComponent() {
 	};
 
 	const maxWeight = (arr: number[]): number => {
-		if (arr.length === 0) return 0;
+		if (arr.length === 0) {
+			return 0;
+		}
 		return Math.max(...arr);
 	};
 
@@ -40,7 +42,9 @@ function RouteComponent() {
 	const benchPR = maxWeight(getSetsById("k978awwr2wv1edjy57tmb1ncex7serqt") ?? []);
 	const deadliftPR = maxWeight(getSetsById("k971nc4hm5cfvk9rqxs86j1zqh7se6zv") ?? []);
 
-	if (isLoading) return <Header page="POWERLIFTING" />;
+	if (isLoading) {
+		return <Header page="POWERLIFTING" />;
+	}
 
 	return (
 		<>

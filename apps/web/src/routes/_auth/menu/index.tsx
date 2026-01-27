@@ -12,7 +12,9 @@ export const Route = createFileRoute("/_auth/menu/")({
 
 function RouteComponent() {
 	const { data: session } = authClient.useSession();
-	if (!session) return null;
+	if (!session) {
+		return null;
+	}
 
 	return (
 		<>
