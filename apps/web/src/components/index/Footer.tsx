@@ -1,9 +1,14 @@
 const Footer = () => (
 	<footer className="flex w-full items-center justify-center gap-2 bg-bg py-6">
-		<a className="text-lg tracking-wider hover:underline" href="https://jakub.jirak.dev/">
+		<a
+			className="text-lg hover:underline"
+			href="https://jakub.jirak.dev/"
+			rel="noopener noreferrer"
+			target="_blank"
+		>
 			Jakub Jirák
 		</a>
-		<p className="text-lg tracking-wider">| {new Date().getFullYear()}</p>
+		<p className="text-lg">| {new Date().getFullYear()}</p>
 	</footer>
 );
 

@@ -5,7 +5,7 @@ const Download = () => (
 		<h3 className="mb-6 w-full pt-20 font-bold text-2xl leading-tight md:mb-8 md:w-3/4 md:pt-32 md:text-4xl lg:pt-42 lg:text-5xl/14 xl:w-1/2">
 			Stáhněte si ZDARMA mobilní aplikaci GYM TRACKER
 		</h3>
-		<p className="mb-12 w-full text-left font-light text-base leading-relaxed md:mb-16 md:w-3/4 md:text-xl lg:mb-24 lg:w-[45%] lg:text-2xl/9">
+		<p className="font mb-12 w-full text-left font-light text-base leading-relaxed md:mb-16 md:w-3/4 md:text-xl lg:mb-24 lg:w-[45%] lg:text-2xl/9">
 			Aplikace je prozatím dostupná pouze pro Android zařízení, na verzi pro IOS se pracuje. Aplikace
 			bohužel není na Google Play.
 		</p>
