@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import About from "@/components/index/About";
 import Contact from "@/components/index/Contact";
+import Download from "@/components/index/Download";
 import Footer from "@/components/index/Footer";
 import Functions from "@/components/index/Functions";
 import HeroSection from "@/components/index/HeroSection";
@@ -12,10 +12,10 @@ export const Route = createFileRoute("/")({
 
 function App() {
 	return (
-		<div className="relative mx-auto flex max-w-[500px] flex-col items-center text-center">
+		<div className="scroll-smooth">
 			<HeroSection />
 			<Functions />
-			<About />
+			<Download />
 			<News />
 			<Contact />
 			<Footer />
