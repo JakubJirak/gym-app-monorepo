@@ -23,12 +23,10 @@ const FunctionRow = ({ imageSrc, imageAlt, heading, desc, ticks, reverse = false
 			/>
 		</div>
 		<div className="flex w-[75%] flex-col md:w-full">
-			<h5 className="mb-4 font-semibold text-lg sm:text-xl md:mb-6 md:text-2xl lg:text-3xl xl:text-4xl">
+			<h5 className="mb-4 font-semibold text-lg sm:text-xl md:mb-8 md:text-2xl lg:text-3xl xl:text-4xl">
 				{heading}
 			</h5>
-			<p className="mb-6 text-muted-foreground text-sm sm:text-base md:mb-8 md:text-lg lg:text-xl">
-				{desc}
-			</p>
+			<p className="mb-6 text-muted-foreground text-sm sm:text-base md:mb-10 md:text-lg">{desc}</p>
 			<div className="space-y-4 md:space-y-5">
 				{ticks.map((tick) => (
 					<div className="flex items-center gap-3 sm:gap-4" key={tick}>
