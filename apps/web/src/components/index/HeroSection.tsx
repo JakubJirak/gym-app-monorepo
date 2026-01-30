@@ -17,7 +17,7 @@ const HeroSection = () => {
 			</p>
 			<h1 className="mx-auto text-center font-bold text-5xl md:text-7xl lg:text-[100px]">GYM TRACKER</h1>
 			<div className="mx-auto mt-10 flex flex-col gap-4 md:mt-16 md:flex-row md:gap-6 lg:mt-20">
-				<Link className="inline-flex" to="/login">
+				<Link className="inline-flex" to="/register">
 					<Button
 						className="w-full cursor-pointer bg-orange font-semibold text-white hover:bg-orange/80 md:w-auto"
 						size="lg"
