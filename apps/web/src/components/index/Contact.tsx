@@ -8,9 +8,9 @@ const Contact = () => (
 		<div className="mx-auto flex max-w-[75%] flex-col xl:max-w-[900px]">
 			<h3 className="mb-8 font-bold text-2xl md:mb-12 md:text-4xl lg:text-5xl/14">KONTAKT</h3>
 			<p className="w-full font-light text-base leading-relaxed md:text-xl">
-				Repozitář této aplikace je dostupný na GitHubu. Pokud najdete v aplikaci nějaké chyby, můžete
-				založit issue. Pokud vás napadne způsob, jak aplikaci vylepšit nebo nová funkcionalita,
-				kontaktujte mě.
+				Tato aplikace je open source a její repozitář je dostupný na GitHubu. Pokud najdete v aplikaci
+				nějaké chyby, můžete založit issue. Pokud vás napadne způsob, jak aplikaci vylepšit nebo nová
+				funkcionalita, kontaktujte mě.
 			</p>
 			<div className="mt-10 flex flex-col gap-4 md:mt-16 md:flex-row md:gap-6 lg:mt-20">
 				<a
