@@ -11,7 +11,7 @@ const HeroSection = () => {
 	};
 
 	return (
-		<section className="items-cente my-20 flex flex-col px-6 pt-20 md:my-50 lg:my-70 lg:px-0" id="home">
+		<section className="items-cente my-20 flex flex-col px-6 md:my-50 lg:my-70 lg:px-0 xl:pt-20" id="home">
 			<p className="mx-auto mb-2 text-center text-lg md:text-2xl lg:text-3xl">
 				Získejte kontrolu nad svým tréninkem pomocí aplikace
 			</p>

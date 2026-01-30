@@ -14,7 +14,7 @@ const Navbar = () => {
 	};
 
 	return (
-		<nav className="fixed top-0 z-50 hidden w-full bg-secondary px-6 py-4 shadow-md lg:block">
+		<nav className="fixed top-0 z-50 hidden w-full bg-secondary px-6 py-3 shadow-md lg:block">
 			<div className="relative flex items-center">
 				<div className="flex items-center gap-2">
 					<span className="font-semibold text-lg">GYM TRACKER</span>
@@ -24,7 +24,7 @@ const Navbar = () => {
 				<ul className="-translate-x-1/2 absolute left-1/2 flex items-center gap-6">
 					<li>
 						<button
-							className="cursor-pointer text-foreground transition-colors hover:text-primary"
+							className="cursor-pointer text-primary/90 transition-colors hover:text-primary"
 							onClick={() => scrollToSection("home")}
 							type="button"
 						>
@@ -34,7 +34,7 @@ const Navbar = () => {
 					<li className="h-4 w-px bg-muted-foreground/30" />
 					<li>
 						<button
-							className="cursor-pointer text-foreground transition-colors hover:text-primary"
+							className="cursor-pointer text-primary/90 transition-colors hover:text-primary"
 							onClick={() => scrollToSection("funkce")}
 							type="button"
 						>
@@ -44,7 +44,7 @@ const Navbar = () => {
 					<li className="h-4 w-px bg-muted-foreground/30" />
 					<li>
 						<button
-							className="cursor-pointer text-foreground transition-colors hover:text-primary"
+							className="cursor-pointer text-primary/90 transition-colors hover:text-primary"
 							onClick={() => scrollToSection("download")}
 							type="button"
 						>
@@ -54,7 +54,7 @@ const Navbar = () => {
 					<li className="h-4 w-px bg-muted-foreground/30" />
 					<li>
 						<button
-							className="cursor-pointer text-foreground transition-colors hover:text-primary"
+							className="cursor-pointer text-primary/90 transition-colors hover:text-primary"
 							onClick={() => scrollToSection("novinky")}
 							type="button"
 						>
@@ -64,7 +64,7 @@ const Navbar = () => {
 					<li className="h-4 w-px bg-muted-foreground/30" />
 					<li>
 						<button
-							className="cursor-pointer text-foreground transition-colors hover:text-primary"
+							className="cursor-pointer text-primary/90 transition-colors hover:text-primary"
 							onClick={() => scrollToSection("kontakt")}
 							type="button"
 						>
