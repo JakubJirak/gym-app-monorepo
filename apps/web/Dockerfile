@@ -1,7 +1,7 @@
 # Prune stage (jen pro Turbo v monorepu)
 FROM oven/bun:1 AS pruner
 WORKDIR /app
-COPY package.json bun.lockb turbo.json ./
+COPY package.json bun.lock turbo.json ./
 COPY apps/web/package.json ./apps/web/
 RUN bun install
 COPY . .
