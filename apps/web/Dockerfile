@@ -8,7 +8,6 @@ WORKDIR /app
 COPY package.json bun.lock turbo.json ./
 COPY packages ./packages
 COPY apps/web ./apps/web
-COPY apps/mobile/package.json ./apps/mobile/package.json
 
 # Nyní může Bun správně vyřešit workspace
 RUN bun install --frozen-lockfile
