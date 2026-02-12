@@ -108,20 +108,20 @@ const AuthRutinyRoutineIdRoute = AuthRutinyRoutineIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login': typeof LoginIndexRoute
-  '/register': typeof RegisterIndexRoute
+  '/login/': typeof LoginIndexRoute
+  '/register/': typeof RegisterIndexRoute
   '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/cviky': typeof AuthCvikyIndexRoute
-  '/kalendar': typeof AuthKalendarIndexRoute
-  '/kategorie': typeof AuthKategorieIndexRoute
-  '/menu': typeof AuthMenuIndexRoute
-  '/powerlifting': typeof AuthPowerliftingIndexRoute
-  '/profil': typeof AuthProfilIndexRoute
-  '/rutiny': typeof AuthRutinyIndexRoute
-  '/statistiky': typeof AuthStatistikyIndexRoute
-  '/treninky': typeof AuthTreninkyIndexRoute
+  '/cviky/': typeof AuthCvikyIndexRoute
+  '/kalendar/': typeof AuthKalendarIndexRoute
+  '/kategorie/': typeof AuthKategorieIndexRoute
+  '/menu/': typeof AuthMenuIndexRoute
+  '/powerlifting/': typeof AuthPowerliftingIndexRoute
+  '/profil/': typeof AuthProfilIndexRoute
+  '/rutiny/': typeof AuthRutinyIndexRoute
+  '/statistiky/': typeof AuthStatistikyIndexRoute
+  '/treninky/': typeof AuthTreninkyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -163,20 +163,20 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/login'
-    | '/register'
+    | '/login/'
+    | '/register/'
     | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
-    | '/cviky'
-    | '/kalendar'
-    | '/kategorie'
-    | '/menu'
-    | '/powerlifting'
-    | '/profil'
-    | '/rutiny'
-    | '/statistiky'
-    | '/treninky'
+    | '/cviky/'
+    | '/kalendar/'
+    | '/kategorie/'
+    | '/menu/'
+    | '/powerlifting/'
+    | '/profil/'
+    | '/rutiny/'
+    | '/statistiky/'
+    | '/treninky/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -227,7 +227,7 @@ declare module '@tanstack/react-router' {
     '/_auth': {
       id: '/_auth'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -241,77 +241,77 @@ declare module '@tanstack/react-router' {
     '/register/': {
       id: '/register/'
       path: '/register'
-      fullPath: '/register'
+      fullPath: '/register/'
       preLoaderRoute: typeof RegisterIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login/': {
       id: '/login/'
       path: '/login'
-      fullPath: '/login'
+      fullPath: '/login/'
       preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/treninky/': {
       id: '/_auth/treninky/'
       path: '/treninky'
-      fullPath: '/treninky'
+      fullPath: '/treninky/'
       preLoaderRoute: typeof AuthTreninkyIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/statistiky/': {
       id: '/_auth/statistiky/'
       path: '/statistiky'
-      fullPath: '/statistiky'
+      fullPath: '/statistiky/'
       preLoaderRoute: typeof AuthStatistikyIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/rutiny/': {
       id: '/_auth/rutiny/'
       path: '/rutiny'
-      fullPath: '/rutiny'
+      fullPath: '/rutiny/'
       preLoaderRoute: typeof AuthRutinyIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/profil/': {
       id: '/_auth/profil/'
       path: '/profil'
-      fullPath: '/profil'
+      fullPath: '/profil/'
       preLoaderRoute: typeof AuthProfilIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/powerlifting/': {
       id: '/_auth/powerlifting/'
       path: '/powerlifting'
-      fullPath: '/powerlifting'
+      fullPath: '/powerlifting/'
       preLoaderRoute: typeof AuthPowerliftingIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/menu/': {
       id: '/_auth/menu/'
       path: '/menu'
-      fullPath: '/menu'
+      fullPath: '/menu/'
       preLoaderRoute: typeof AuthMenuIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/kategorie/': {
       id: '/_auth/kategorie/'
       path: '/kategorie'
-      fullPath: '/kategorie'
+      fullPath: '/kategorie/'
       preLoaderRoute: typeof AuthKategorieIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/kalendar/': {
       id: '/_auth/kalendar/'
       path: '/kalendar'
-      fullPath: '/kalendar'
+      fullPath: '/kalendar/'
       preLoaderRoute: typeof AuthKalendarIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/cviky/': {
       id: '/_auth/cviky/'
       path: '/cviky'
-      fullPath: '/cviky'
+      fullPath: '/cviky/'
       preLoaderRoute: typeof AuthCvikyIndexRouteImport
       parentRoute: typeof AuthRoute
     }

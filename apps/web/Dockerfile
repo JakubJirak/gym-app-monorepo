@@ -1,35 +1,18 @@
-FROM oven/bun:1.3.0 AS base
-
-# Install dependencies
-FROM base AS deps
+FROM oven/bun:1.3.0 AS builder
 WORKDIR /app
 
-# Zkopíruj celý workspace strukture před instalací
-COPY package.json bun.lock turbo.json ./
-COPY packages ./packages
-COPY apps/web ./apps/web
+# Zkopíruj vše najednou
+COPY . .
 
-# Nyní může Bun správně vyřešit workspace
-RUN bun install --frozen-lockfile
-
-# Builder
-FROM base AS builder
-WORKDIR /app
-
-# Zkopíruj node_modules z deps
-COPY --from=deps /app/node_modules ./node_modules
-
-# Zkopíruj znovu packages a apps
-COPY packages ./packages
-COPY apps/web ./apps/web
-COPY turbo.json package.json ./
+# Instaluj dependencies
+RUN bun install
 
 # Build argumenty
 ARG VITE_CONVEX_URL
 ENV VITE_CONVEX_URL=${VITE_CONVEX_URL}
 
 # Build
-RUN bun run build --filter=web
+RUN bun run build --filter=gym-app
 
 # Production
 FROM oven/bun:1-alpine AS runner
@@ -38,10 +21,13 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-COPY --from=builder /app/apps/web/.vinxi ./apps/web/.vinxi
+# Zkopíruj build output (.output místo .vinxi)
+COPY --from=builder /app/apps/web/.output ./apps/web/.output
 COPY --from=builder /app/apps/web/package.json ./apps/web/package.json
 
 EXPOSE 3000
 
 WORKDIR /app/apps/web
-CMD ["bun", "run", "serve"]
+
+# Spusť server
+CMD ["bun", ".output/server/index.mjs"]
