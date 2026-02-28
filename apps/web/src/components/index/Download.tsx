@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 
 const Download = () => (
 	<section className="w-full bg-background px-6 pb-20 md:px-20 md:pb-32 lg:px-32 lg:pb-42" id="download">
-		<div className="mx-auto flex max-w-[75%] flex-col xl:max-w-[900px]">
+		<div className="mx-auto flex max-w-[75%] flex-col xl:max-w-225">
 			<h3 className="mb-6 w-full pt-20 font-bold text-2xl md:mb-8 md:pt-32 md:text-4xl lg:pt-42 lg:text-5xl/14">
 				Stáhněte si ZDARMA mobilní aplikaci GYM TRACKER
 			</h3>
