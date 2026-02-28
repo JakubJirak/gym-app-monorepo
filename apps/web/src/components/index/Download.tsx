@@ -10,7 +10,7 @@ const Download = () => (
 				Aplikace je prozatím dostupná pouze pro Android zařízení, na verzi pro IOS se pracuje. Aplikace
 				bohužel není na Google Play.
 			</p>
-			<a href="https://install.gym.jirak.dev/">
+			<a href="https://install.gymtracker.jirak.dev/">
 				<Button
 					className="w-full self-start bg-orange font-semibold text-white hover:bg-orange/80 md:w-auto"
 					size="lg"
