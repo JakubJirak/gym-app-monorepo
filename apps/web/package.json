@@ -61,6 +61,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@repo/eslint-config": "workspace:*",
+    "@tanstack/devtools-vite": "^0.5.5",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^22.10.2",
@@ -71,7 +73,6 @@
     "typescript": "^5.7.2",
     "vite": "^7.1.7",
     "vitest": "^3.0.5",
-    "web-vitals": "^5.1.0",
-    "@repo/eslint-config": "workspace:*"
+    "web-vitals": "^5.1.0"
   }
 }
