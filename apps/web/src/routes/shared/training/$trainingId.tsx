@@ -127,9 +127,10 @@ function RouteComponent() {
 
 	return (
 		<div className="pb-8">
-			<header className="mx-auto mt-3 mb-6 w-[90%] max-w-125 rounded-xl bg-secondary px-4 py-3 text-center">
-				<p className="font-bold text-xl">{formatDate(new Date(training.workoutDate), "dd.MM.yyyy")}</p>
-				<p className="text-muted-foreground text-xs">Sdileny trenink</p>
+			<header className="mx-auto mb-6 w-[90%] max-w-125 rounded-b-xl bg-white px-4 py-3 text-center">
+				<p className="font-bold text-black text-xl">
+					{formatDate(new Date(training.workoutDate), "dd.MM.yyyy")}
+				</p>
 			</header>
 
 			<Tabs className="mx-auto w-[90%] max-w-125 space-y-3" defaultValue="cviky">
