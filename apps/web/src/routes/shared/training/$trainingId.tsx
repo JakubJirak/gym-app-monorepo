@@ -127,7 +127,7 @@ function RouteComponent() {
 
 	return (
 		<div className="pb-8">
-			<header className="mx-auto mb-6 w-[90%] max-w-125 rounded-b-xl bg-white px-4 py-3 text-center">
+			<header className="mx-auto mb-6 max-w-125 rounded-b-xl bg-white px-4 py-3 text-center">
 				<p className="font-bold text-black text-xl">
 					{formatDate(new Date(training.workoutDate), "dd.MM.yyyy")}
 				</p>
