@@ -11,10 +11,9 @@ export function getRouter() {
 	// 	console.error("missing envar VITE_CONVEX_URL");
 	// }
 	const convex = new ConvexReactClient(CONVEX_URL, {
-		expectAuth: true,
+		expectAuth: false,
 		unsavedChangesWarning: false,
 	});
-	//@ts-expect-error // convex splnuje typ
 	const convexQueryClient = new ConvexQueryClient(convex);
 
 	const queryClient: QueryClient = new QueryClient({
@@ -34,7 +33,6 @@ export function getRouter() {
 			context: { queryClient, convexClient: convex, convexQueryClient },
 			scrollRestoration: true,
 			Wrap: ({ children }) => (
-				//@ts-expect-error // nejaky problemy s verzema, ale vse funguje
 				<ConvexProvider client={convexQueryClient.convexClient}>{children}</ConvexProvider>
 			),
 		}),

@@ -1,5 +1,5 @@
-import { RegisterForm } from "@/components/register/RegisterForm";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { RegisterForm } from "@/components/register/RegisterForm";
 
 export const Route = createFileRoute("/register/")({
 	beforeLoad: ({ context }) => {
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/register/")({
 
 function RouteComponent() {
 	return (
-		<div className="flex mt-10 items-center justify-center">
+		<div className="mt-10 flex items-center justify-center">
 			<RegisterForm />
 		</div>
 	);

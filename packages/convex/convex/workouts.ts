@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import type { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 import { rateLimiter } from "./rateLimit";
@@ -207,21 +208,29 @@ export const getWorkoutById = query({
 
 export const getSharedWorkoutById = query({
 	args: {
-		workoutId: v.id("workouts"),
+		workoutId: v.string(),
 	},
 	async handler(ctx, args) {
-		const workout = await ctx.db.get(args.workoutId);
+		const workoutId = args.workoutId as Id<"workouts">;
+		const workout = await ctx.db.get(workoutId);
 		if (!workout?.isShared) {
 			return null;
 		}
 
-		const author = await authComponent.getAnyUserById(ctx, workout.userId);
+		let authorName: string | null = null;
+		try {
+			const author = await authComponent.getAnyUserById(ctx, workout.userId);
+			authorName = author?.name ?? null;
+		} catch {
+			// Shared workout must remain readable even for anonymous users.
+			authorName = null;
+		}
 
 		const filter = workout.filterId ? await ctx.db.get(workout.filterId) : null;
 
 		const workoutExercises = await ctx.db
 			.query("workoutExercises")
-			.withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
+			.withIndex("by_workoutId", (q) => q.eq("workoutId", workoutId))
 			.collect();
 
 		const sortedExercises = workoutExercises.sort((a, b) => a.order - b.order);
@@ -279,7 +288,7 @@ export const getSharedWorkoutById = query({
 			name: workout.name,
 			workoutDate: workout.workoutDate,
 			isShared: workout.isShared,
-			authorName: author?.name ?? null,
+			authorName,
 			filter: filter
 				? {
 						_id: filter._id,

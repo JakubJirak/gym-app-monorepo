@@ -15,13 +15,11 @@ import { useMemo } from "react";
 import { Pie, PieChart } from "recharts";
 import { formatDate } from "utils/date-utils";
 import { formatSetInfo } from "utils/training-format";
-import Header from "@/components/Header.tsx";
 import { Badge } from "@/components/ui/badge";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 const chartConfig = {
 	visitors: {
@@ -66,7 +64,7 @@ function RouteComponent() {
 	const { trainingId } = Route.useParams();
 	const { data: training } = useSuspenseQuery(
 		convexQuery(api.workouts.getSharedWorkoutById, {
-			workoutId: trainingId as Id<"workouts">,
+			workoutId: trainingId,
 		})
 	);
 
@@ -129,7 +127,10 @@ function RouteComponent() {
 
 	return (
 		<div className="pb-8">
-			<Header page={formatDate(new Date(training.workoutDate), "dd.MM.yyyy")} />
+			<header className="mx-auto mt-3 mb-6 w-[90%] max-w-125 rounded-xl bg-secondary px-4 py-3 text-center">
+				<p className="font-bold text-xl">{formatDate(new Date(training.workoutDate), "dd.MM.yyyy")}</p>
+				<p className="text-muted-foreground text-xs">Sdileny trenink</p>
+			</header>
 
 			<Tabs className="mx-auto w-[90%] max-w-125 space-y-3" defaultValue="cviky">
 				<TabsList className="w-full bg-secondary">

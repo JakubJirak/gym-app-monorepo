@@ -1,5 +1,5 @@
-import { LoginForm } from "@/components/login/LoginForm.tsx";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { LoginForm } from "@/components/login/LoginForm.tsx";
 
 export const Route = createFileRoute("/login/")({
 	beforeLoad: ({ context }) => {
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/login/")({
 
 function RouteComponent() {
 	return (
-		<div className="flex mt-10 items-center justify-center">
+		<div className="mt-10 flex items-center justify-center">
 			<LoginForm />
 		</div>
 	);
