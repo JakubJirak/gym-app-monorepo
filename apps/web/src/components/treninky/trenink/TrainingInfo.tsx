@@ -51,7 +51,6 @@ const TrainingInfo = ({ trainingId }: { trainingId: string }) => {
 						<Share2 className="size-4" />
 					</div>
 				)}
-				s
 			</div>
 
 			<div className="relative flex flex-col items-stretch">

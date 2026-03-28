@@ -1,5 +1,5 @@
 import { useMutation } from "convex/react";
-import { Share2 } from "lucide-react";
+import { Copy, Share2 } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
@@ -13,6 +13,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
+import { Input } from "@/components/ui/input";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
@@ -22,11 +23,33 @@ type DialogEditSet = {
 
 export function DialogShareTraining({ trainingId }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
+	const [copied, setCopied] = useState(false);
 	const shareTraining = useMutation(api.workouts.shareWorkout);
+	const sharedUrl = `https://gymtracker.jirak.dev/shared/training/${trainingId}`;
 
 	function handleShareTraining() {
 		shareTraining({ workoutId: trainingId as Id<"workouts"> });
 	}
+
+	const handleCopy = async () => {
+		try {
+			if (navigator.clipboard?.writeText) {
+				await navigator.clipboard.writeText(sharedUrl);
+			} else {
+				const tempInput = document.createElement("input");
+				tempInput.value = sharedUrl;
+				document.body.appendChild(tempInput);
+				tempInput.select();
+				document.execCommand("copy");
+				document.body.removeChild(tempInput);
+			}
+		} catch {
+			// Keep visual feedback even if clipboard API is restricted.
+		}
+
+		setCopied(true);
+		setTimeout(() => setCopied(false), 1500);
+	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -50,6 +73,17 @@ export function DialogShareTraining({ trainingId }: DialogEditSet) {
 							Zde můžete sdílet trénink s ostatními uživateli.
 						</DialogDescription>
 					</DialogHeader>
+					<div className="mt-2 flex items-center gap-2">
+						<Input readOnly value={sharedUrl} />
+						<Button
+							className={`${copied && "bg-green-400"}`}
+							onClick={handleCopy}
+							type="button"
+							variant="outline"
+						>
+							<Copy color={`${copied ? "green" : "white"}`} />
+						</Button>
+					</div>
 					<DialogFooter className="mt-4">
 						<DialogClose asChild>
 							<Button variant="outline">Zrušit</Button>
