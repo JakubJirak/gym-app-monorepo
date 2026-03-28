@@ -8,12 +8,10 @@ export const getUserWorkouts = query({
 	async handler(ctx) {
 		let userId: string;
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return [];
 			}
-			//@ts-expect-error
 			userId = user._id;
 		} catch (error) {
 			// Auth timeout or error - return empty results
@@ -84,6 +82,7 @@ export const getUserWorkouts = query({
 					_id: workout._id,
 					name: workout.name,
 					workoutDate: workout.workoutDate,
+					isShared: workout.isShared,
 					filter: filter
 						? {
 								_id: filter._id,
@@ -107,12 +106,10 @@ export const getWorkoutById = query({
 	async handler(ctx, args) {
 		let userId: string;
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return null;
 			}
-			//@ts-expect-error
 			userId = user._id;
 		} catch (error) {
 			// Auth timeout or error - return null
@@ -195,6 +192,91 @@ export const getWorkoutById = query({
 			_id: workout._id,
 			name: workout.name,
 			workoutDate: workout.workoutDate,
+			isShared: workout.isShared,
+			filter: filter
+				? {
+						_id: filter._id,
+						name: filter.name,
+						color: filter.color,
+					}
+				: null,
+			exercises: exercisesWithSets,
+		};
+	},
+});
+
+export const getSharedWorkoutById = query({
+	args: {
+		workoutId: v.id("workouts"),
+	},
+	async handler(ctx, args) {
+		const workout = await ctx.db.get(args.workoutId);
+		if (!workout || !workout.isShared) {
+			return null;
+		}
+
+		const filter = workout.filterId ? await ctx.db.get(workout.filterId) : null;
+
+		const workoutExercises = await ctx.db
+			.query("workoutExercises")
+			.withIndex("by_workoutId", (q) => q.eq("workoutId", args.workoutId))
+			.collect();
+
+		const sortedExercises = workoutExercises.sort((a, b) => a.order - b.order);
+
+		const [exercisesData, allSets] = await Promise.all([
+			Promise.all(sortedExercises.map((we) => ctx.db.get(we.exerciseId))),
+			Promise.all(
+				sortedExercises.map((we) =>
+					ctx.db
+						.query("sets")
+						.withIndex("by_workoutExerciseId", (q) => q.eq("workoutExerciseId", we._id))
+						.collect()
+				)
+			),
+		]);
+
+		const muscleGroupIds = exercisesData
+			.filter((e): e is NonNullable<typeof e> => e !== null)
+			.map((e) => e.muscleGroupId);
+		const uniqueMuscleGroupIds = Array.from(new Set(muscleGroupIds));
+		const muscleGroups = await Promise.all(uniqueMuscleGroupIds.map((id) => ctx.db.get(id)));
+		const muscleGroupMap = new Map(
+			muscleGroups
+				.filter((mg): mg is NonNullable<typeof mg> => mg !== null && "name" in mg)
+				.map((mg) => [mg._id, mg.name])
+		);
+
+		const exercisesWithSets = sortedExercises.map((we, index) => {
+			const exercise = exercisesData[index];
+			const sets = allSets[index];
+			const sortedSets = sets.sort((a, b) => a.order - b.order);
+
+			return {
+				_id: we._id,
+				exercise: exercise
+					? {
+							...exercise,
+							muscleGroup: muscleGroupMap.get(exercise.muscleGroupId) || null,
+						}
+					: null,
+				note: we.note,
+				order: we.order,
+				workoutId: we.workoutId,
+				sets: sortedSets.map((set) => ({
+					_id: set._id,
+					reps: set.reps,
+					weight: set.weight,
+					order: set.order,
+				})),
+			};
+		});
+
+		return {
+			_id: workout._id,
+			name: workout.name,
+			workoutDate: workout.workoutDate,
+			isShared: workout.isShared,
 			filter: filter
 				? {
 						_id: filter._id,
@@ -231,12 +313,10 @@ export const createWorkout = mutation({
 		),
 	},
 	async handler(ctx, args) {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -248,6 +328,7 @@ export const createWorkout = mutation({
 			name: "",
 			workoutDate: args.workoutDate,
 			filterId: args.filterId,
+			isShared: false,
 		});
 
 		// 2. Pokud existují cviky, vytvoříme je
@@ -283,12 +364,10 @@ export const deleteWorkout = mutation({
 		workoutId: v.id("workouts"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -333,12 +412,10 @@ export const editWorkout = mutation({
 		filterId: v.id("filters"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -357,6 +434,62 @@ export const editWorkout = mutation({
 			name: args.name,
 			workoutDate: args.workoutDate,
 			filterId: args.filterId,
+		});
+	},
+});
+
+export const shareWorkout = mutation({
+	args: {
+		workoutId: v.id("workouts"),
+	},
+	handler: async (ctx, args) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+		const userId = user._id;
+
+		await rateLimiter.limit(ctx, "updateWorkout", { key: userId, throws: true });
+
+		const workout = await ctx.db.get(args.workoutId);
+		if (!workout) {
+			throw new Error("Trénink nenalezen");
+		}
+
+		if (workout.userId !== userId) {
+			throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
+		}
+
+		await ctx.db.patch(args.workoutId, {
+			isShared: true,
+		});
+	},
+});
+
+export const disableWorkoutSharing = mutation({
+	args: {
+		workoutId: v.id("workouts"),
+	},
+	handler: async (ctx, args) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			throw new Error("Unauthorized");
+		}
+		const userId = user._id;
+
+		await rateLimiter.limit(ctx, "updateWorkout", { key: userId, throws: true });
+
+		const workout = await ctx.db.get(args.workoutId);
+		if (!workout) {
+			throw new Error("Trénink nenalezen");
+		}
+
+		if (workout.userId !== userId) {
+			throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
+		}
+
+		await ctx.db.patch(args.workoutId, {
+			isShared: false,
 		});
 	},
 });

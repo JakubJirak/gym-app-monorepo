@@ -9,7 +9,6 @@ export const getWorkoutExerciseById = query({
 	},
 	handler: async (ctx, args) => {
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return null;
@@ -32,12 +31,10 @@ export const addSet = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -60,12 +57,10 @@ export const addWorkoutExercise = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -86,12 +81,10 @@ export const editExercise = mutation({
 		exerciseId: v.id("exercises"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -109,12 +102,10 @@ export const editNote = mutation({
 		note: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -133,12 +124,10 @@ export const editSet = mutation({
 		weight: v.number(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -156,12 +145,10 @@ export const deleteSet = mutation({
 		setId: v.id("sets"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -178,12 +165,12 @@ export const deleteWorkoutExercise = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
+
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
+
 		const userId = user._id;
 
 		// Rate limiting
@@ -223,7 +210,7 @@ export const moveUp = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
+
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
@@ -256,7 +243,7 @@ export const moveDown = mutation({
 		order: v.number(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
+
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");

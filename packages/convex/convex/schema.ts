@@ -7,6 +7,7 @@ export default defineSchema({
 		name: v.string(),
 		workoutDate: v.string(),
 		filterId: v.id("filters"),
+		isShared: v.boolean(),
 	})
 		.index("by_userId", ["userId"])
 		.index("by_filterId", ["filterId"]),

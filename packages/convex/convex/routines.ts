@@ -8,12 +8,10 @@ export const getUserRoutines = query({
 	handler: async (ctx) => {
 		let userId: string;
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return [];
 			}
-			//@ts-expect-error
 			userId = user._id;
 		} catch (error) {
 			// Auth timeout or error - return empty results
@@ -77,12 +75,10 @@ export const getRoutineById = query({
 	handler: async (ctx, args) => {
 		let userId: string;
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return null;
 			}
-			//@ts-expect-error
 			userId = user._id;
 		} catch (error) {
 			// Auth timeout or error - return null
@@ -141,12 +137,10 @@ export const addRoutine = mutation({
 		filterId: v.id("filters"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -167,12 +161,10 @@ export const deleteRoutine = mutation({
 		routineId: v.id("routines"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -206,12 +198,10 @@ export const editRoutine = mutation({
 		filterId: v.id("filters"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -239,12 +229,10 @@ export const createWorkoutFromRoutine = mutation({
 		workoutDate: v.string(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Get the routine with its filter
@@ -259,6 +247,7 @@ export const createWorkoutFromRoutine = mutation({
 			name: args.name,
 			workoutDate: args.workoutDate,
 			filterId: routine.filterId,
+			isShared: false,
 		});
 
 		// Get all routine exercises
