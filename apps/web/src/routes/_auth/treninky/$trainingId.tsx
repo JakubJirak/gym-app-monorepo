@@ -30,7 +30,7 @@ function RouteComponent() {
 		<div className="pb-8">
 			<Header page={formatDate(new Date(training.workoutDate), "dd.MM.yyyy")} />
 
-			<Tabs className="mx-auto w-[90%] max-w-[500px] space-y-3" defaultValue="cviky">
+			<Tabs className="mx-auto w-[90%] max-w-125 space-y-3" defaultValue="cviky">
 				<TabsList className="w-full bg-secondary">
 					<TabsTrigger value="cviky">Cviky</TabsTrigger>
 					<TabsTrigger value="statistiky">Statistiky</TabsTrigger>

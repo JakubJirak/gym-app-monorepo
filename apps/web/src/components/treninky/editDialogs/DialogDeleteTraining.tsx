@@ -27,7 +27,6 @@ const DialogDeleteTraining = ({ id }: { id: string }) => {
 
 	return (
 		<AlertDialog>
-			{/*@ts-expect-error allright*/}
 			<AlertDialogTrigger asChild>
 				<Button variant="destructive">
 					<FaRegTrashCan />
@@ -44,7 +43,6 @@ const DialogDeleteTraining = ({ id }: { id: string }) => {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Zrušit</AlertDialogCancel>
-					{/*@ts-expect-error allright*/}
 					<AlertDialogAction asChild onClick={() => handleDeleteTraining(id)}>
 						<Button className="text-foreground" variant="destructive">
 							Smazat

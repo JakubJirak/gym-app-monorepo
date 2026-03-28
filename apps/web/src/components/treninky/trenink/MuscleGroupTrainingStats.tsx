@@ -70,7 +70,7 @@ const MuscleGroupTrainingStats = ({ trainingId }: { trainingId: string }) => {
 				Statistiky podle partie
 			</p>
 
-			<ChartContainer className="mx-auto aspect-square max-h-[250px]" config={chartConfig}>
+			<ChartContainer className="mx-auto aspect-square max-h-62.5" config={chartConfig}>
 				<PieChart>
 					<ChartTooltip content={<ChartTooltipContent />} cursor={false} />
 					<Pie data={muscleGroupStats} dataKey="number" nameKey="muscleGroup" />

@@ -22,6 +22,7 @@ import { Route as AuthMenuIndexRouteImport } from './routes/_auth/menu/index'
 import { Route as AuthKategorieIndexRouteImport } from './routes/_auth/kategorie/index'
 import { Route as AuthKalendarIndexRouteImport } from './routes/_auth/kalendar/index'
 import { Route as AuthCvikyIndexRouteImport } from './routes/_auth/cviky/index'
+import { Route as SharedTrainingTrainingIdRouteImport } from './routes/shared/training/$trainingId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AuthTreninkyTrainingIdRouteImport } from './routes/_auth/treninky/$trainingId'
 import { Route as AuthRutinyRoutineIdRouteImport } from './routes/_auth/rutiny/$routineId'
@@ -90,6 +91,12 @@ const AuthCvikyIndexRoute = AuthCvikyIndexRouteImport.update({
   path: '/cviky/',
   getParentRoute: () => AuthRoute,
 } as any)
+const SharedTrainingTrainingIdRoute =
+  SharedTrainingTrainingIdRouteImport.update({
+    id: '/shared/training/$trainingId',
+    path: '/shared/training/$trainingId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/shared/training/$trainingId': typeof SharedTrainingTrainingIdRoute
   '/cviky/': typeof AuthCvikyIndexRoute
   '/kalendar/': typeof AuthKalendarIndexRoute
   '/kategorie/': typeof AuthKategorieIndexRoute
@@ -130,6 +138,7 @@ export interface FileRoutesByTo {
   '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/shared/training/$trainingId': typeof SharedTrainingTrainingIdRoute
   '/cviky': typeof AuthCvikyIndexRoute
   '/kalendar': typeof AuthKalendarIndexRoute
   '/kategorie': typeof AuthKategorieIndexRoute
@@ -149,6 +158,7 @@ export interface FileRoutesById {
   '/_auth/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/_auth/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/shared/training/$trainingId': typeof SharedTrainingTrainingIdRoute
   '/_auth/cviky/': typeof AuthCvikyIndexRoute
   '/_auth/kalendar/': typeof AuthKalendarIndexRoute
   '/_auth/kategorie/': typeof AuthKategorieIndexRoute
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
+    | '/shared/training/$trainingId'
     | '/cviky/'
     | '/kalendar/'
     | '/kategorie/'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
+    | '/shared/training/$trainingId'
     | '/cviky'
     | '/kalendar'
     | '/kategorie'
@@ -203,6 +215,7 @@ export interface FileRouteTypes {
     | '/_auth/rutiny/$routineId'
     | '/_auth/treninky/$trainingId'
     | '/api/auth/$'
+    | '/shared/training/$trainingId'
     | '/_auth/cviky/'
     | '/_auth/kalendar/'
     | '/_auth/kategorie/'
@@ -220,6 +233,7 @@ export interface RootRouteChildren {
   LoginIndexRoute: typeof LoginIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  SharedTrainingTrainingIdRoute: typeof SharedTrainingTrainingIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -315,6 +329,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCvikyIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/shared/training/$trainingId': {
+      id: '/shared/training/$trainingId'
+      path: '/shared/training/$trainingId'
+      fullPath: '/shared/training/$trainingId'
+      preLoaderRoute: typeof SharedTrainingTrainingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -375,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  SharedTrainingTrainingIdRoute: SharedTrainingTrainingIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

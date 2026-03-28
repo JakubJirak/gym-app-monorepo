@@ -58,7 +58,7 @@ export function DialogAddSet({ order, exerciseId, setOpenParent }: DialogEditSet
 						Přidat sérii
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-[425px]">
+				<DialogContent className="h-auto sm:max-w-106.25">
 					<DialogHeader>
 						<DialogTitle>Přidání série</DialogTitle>
 						<DialogDescription>Zde můžete přidat sérii k vybranému cviku.</DialogDescription>

@@ -1,6 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { NotebookPen } from "lucide-react";
+import { NotebookPen, Share2, } from "lucide-react";
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddExercise.tsx";
@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import { DialogShareTraining } from "../editDialogs/DialogShareTraining";
+import { DialogUnshareTraining } from "../editDialogs/DialogUnshareTraining";
 
 const TrainingInfo = ({ trainingId }: { trainingId: string }) => {
 	const [toggleEdit, setToggleEdit] = useState(false);
@@ -44,6 +46,7 @@ const TrainingInfo = ({ trainingId }: { trainingId: string }) => {
 					{training?.filter?.name || "Žádný"}
 				</div>
 				<Badge variant="secondary">Cviky: {training.exercises.length}</Badge>
+				{training.isShared && <div className="bg-secondary ml-2 p-1.25 rounded-md"><Share2 className="size-4" /></div>}
 			</div>
 
 			<div className="relative flex flex-col items-stretch">
@@ -65,6 +68,13 @@ const TrainingInfo = ({ trainingId }: { trainingId: string }) => {
 							<Toggle onClick={() => setToggleEdit(!toggleEdit)} variant="outline">
 								<FaPencilAlt /> Upravit
 							</Toggle>
+						</div>
+						<div className="mr-auto ml-2">
+							{training.isShared ? (
+								<DialogUnshareTraining trainingId={training._id} />
+							 ) : (
+								<DialogShareTraining trainingId={training._id} />
+							)}
 						</div>
 						<div className="inline-flex self-end">
 							<DialogDelete id={training._id} />

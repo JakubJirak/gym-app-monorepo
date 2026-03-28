@@ -36,7 +36,6 @@ const DialogDeleteTraining = ({ exerciseId, setOpenParent, workoutId, order }: D
 
 	return (
 		<AlertDialog>
-			{/*@ts-expect-error allright*/}
 			<AlertDialogTrigger asChild>
 				<Button className="mx-auto w-40" variant="destructive">
 					<FaRegTrashCan className="size-3" />
@@ -52,7 +51,6 @@ const DialogDeleteTraining = ({ exerciseId, setOpenParent, workoutId, order }: D
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Zrušit</AlertDialogCancel>
-					{/*@ts-expect-error allright*/}
 					<AlertDialogAction
 						asChild
 						onClick={() => {
