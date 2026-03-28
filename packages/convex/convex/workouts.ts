@@ -211,9 +211,11 @@ export const getSharedWorkoutById = query({
 	},
 	async handler(ctx, args) {
 		const workout = await ctx.db.get(args.workoutId);
-		if (!workout || !workout.isShared) {
+		if (!workout?.isShared) {
 			return null;
 		}
+
+		const author = await authComponent.getAnyUserById(ctx, workout.userId);
 
 		const filter = workout.filterId ? await ctx.db.get(workout.filterId) : null;
 
@@ -277,6 +279,7 @@ export const getSharedWorkoutById = query({
 			name: workout.name,
 			workoutDate: workout.workoutDate,
 			isShared: workout.isShared,
+			authorName: author?.name ?? null,
 			filter: filter
 				? {
 						_id: filter._id,
