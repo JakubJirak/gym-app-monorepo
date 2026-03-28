@@ -55,7 +55,7 @@ export function DialogAddExercise({ trainingId, order }: DialogEditSet) {
 						Přidat cvik
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-[425px]">
+				<DialogContent className="h-auto sm:max-w-106.25">
 					<DialogHeader>
 						<DialogTitle>Přidání cviku</DialogTitle>
 						<DialogDescription>Zde můžete přidat nový cvik do tréninku.</DialogDescription>

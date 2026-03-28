@@ -14,15 +14,15 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 type DialogEditSet = {
-  trainingId: string;
+	trainingId: string;
 };
 
 export function DialogUnshareTraining({ trainingId }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
-  const unshareTraining = useMutation(api.workouts.disableWorkoutSharing);
+	const unshareTraining = useMutation(api.workouts.disableWorkoutSharing);
 
 	function handleUnshareTraining() {
 		unshareTraining({ workoutId: trainingId as Id<"workouts"> });
@@ -31,7 +31,7 @@ export function DialogUnshareTraining({ trainingId }: DialogEditSet) {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
-    handleUnshareTraining();
+		handleUnshareTraining();
 		setOpen(false);
 	};
 
@@ -46,14 +46,16 @@ export function DialogUnshareTraining({ trainingId }: DialogEditSet) {
 				<DialogContent className="h-auto sm:max-w-106.25">
 					<DialogHeader>
 						<DialogTitle>Zrušit sdílení tréninku</DialogTitle>
-						<DialogDescription>Zde můžete zrušit sdílení tréninku s ostatními uživateli.</DialogDescription>
+						<DialogDescription>
+							Zde můžete zrušit sdílení tréninku s ostatními uživateli.
+						</DialogDescription>
 					</DialogHeader>
-						<DialogFooter className="mt-4">
-							<DialogClose asChild>
-								<Button variant="outline">Zrušit</Button>
-							</DialogClose>
-							<Button onClick={handleSubmit}>Zrušit sdílení</Button>
-						</DialogFooter>
+					<DialogFooter className="mt-4">
+						<DialogClose asChild>
+							<Button variant="outline">Zrušit</Button>
+						</DialogClose>
+						<Button onClick={handleSubmit}>Zrušit sdílení</Button>
+					</DialogFooter>
 				</DialogContent>
 			</form>
 		</Dialog>

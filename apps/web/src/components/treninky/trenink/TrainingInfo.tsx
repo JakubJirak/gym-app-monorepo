@@ -1,6 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { NotebookPen, Share2, } from "lucide-react";
+import { NotebookPen, Share2 } from "lucide-react";
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddExercise.tsx";
@@ -46,7 +46,12 @@ const TrainingInfo = ({ trainingId }: { trainingId: string }) => {
 					{training?.filter?.name || "Žádný"}
 				</div>
 				<Badge variant="secondary">Cviky: {training.exercises.length}</Badge>
-				{training.isShared && <div className="bg-secondary ml-2 p-1.25 rounded-md"><Share2 className="size-4" /></div>}
+				{training.isShared && (
+					<div className="ml-2 rounded-md bg-secondary p-1.25">
+						<Share2 className="size-4" />
+					</div>
+				)}
+				s
 			</div>
 
 			<div className="relative flex flex-col items-stretch">
@@ -72,7 +77,7 @@ const TrainingInfo = ({ trainingId }: { trainingId: string }) => {
 						<div className="mr-auto ml-2">
 							{training.isShared ? (
 								<DialogUnshareTraining trainingId={training._id} />
-							 ) : (
+							) : (
 								<DialogShareTraining trainingId={training._id} />
 							)}
 						</div>

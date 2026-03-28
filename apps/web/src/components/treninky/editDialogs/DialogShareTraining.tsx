@@ -14,15 +14,15 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
 
 type DialogEditSet = {
-  trainingId: string;
+	trainingId: string;
 };
 
 export function DialogShareTraining({ trainingId }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
-  const shareTraining = useMutation(api.workouts.shareWorkout);
+	const shareTraining = useMutation(api.workouts.shareWorkout);
 
 	function handleShareTraining() {
 		shareTraining({ workoutId: trainingId as Id<"workouts"> });
@@ -31,7 +31,7 @@ export function DialogShareTraining({ trainingId }: DialogEditSet) {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
-    handleShareTraining();
+		handleShareTraining();
 		setOpen(false);
 	};
 
@@ -46,14 +46,16 @@ export function DialogShareTraining({ trainingId }: DialogEditSet) {
 				<DialogContent className="h-auto sm:max-w-106.25">
 					<DialogHeader>
 						<DialogTitle>Sdílet trénink</DialogTitle>
-						<DialogDescription>Zde můžete sdílet trénink s ostatními uživateli.</DialogDescription>
+						<DialogDescription>
+							Zde můžete sdílet trénink s ostatními uživateli.
+						</DialogDescription>
 					</DialogHeader>
-						<DialogFooter className="mt-4">
-							<DialogClose asChild>
-								<Button variant="outline">Zrušit</Button>
-							</DialogClose>
-							<Button onClick={handleSubmit}>Sdílet trénink</Button>
-						</DialogFooter>
+					<DialogFooter className="mt-4">
+						<DialogClose asChild>
+							<Button variant="outline">Zrušit</Button>
+						</DialogClose>
+						<Button onClick={handleSubmit}>Sdílet trénink</Button>
+					</DialogFooter>
 				</DialogContent>
 			</form>
 		</Dialog>

@@ -50,7 +50,7 @@ export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditNote) {
 						Upravit pozn.
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-[425px]">
+				<DialogContent className="h-auto sm:max-w-106.25">
 					<DialogHeader>
 						<DialogTitle>Změna poznámky</DialogTitle>
 						<DialogDescription>

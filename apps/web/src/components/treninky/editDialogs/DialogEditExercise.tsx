@@ -55,7 +55,7 @@ export function DialogEditExercise({ exerciseId, setOpenParent }: DialogEditExer
 						Změnit cvik
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-[425px]">
+				<DialogContent className="h-auto sm:max-w-106.25">
 					<DialogHeader>
 						<DialogTitle>Změna cviku</DialogTitle>
 						<DialogDescription>Zde můžete změnit typ cviku v tréninku.</DialogDescription>
