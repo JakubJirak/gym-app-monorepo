@@ -1,13 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
-import MenuModal from "../create/menu-modal";
+import { NAMES } from "@/constants/NAMES";
 
 export default function EmptyList() {
-	const [modalVisible, setModalVisible] = useState(false);
 	return (
-		<TouchableOpacity activeOpacity={1} onPress={() => setModalVisible(true)}>
+		<TouchableOpacity
+			activeOpacity={1}
+			onPress={() => {
+				TrueSheet.present(NAMES.sheets.createMenu);
+			}}
+		>
 			<View className="w-full items-center justify-center py-8">
 				<Text className="text-base text-muted">Žádné tréninky</Text>
 				<View className="mt-6 w-full flex-row items-center justify-center gap-2">
@@ -15,7 +19,6 @@ export default function EmptyList() {
 					<Ionicons color={COLORS.muted} name="add-circle-outline" size={24} />
 				</View>
 			</View>
-			<MenuModal setSheetVisible={setModalVisible} sheetVisible={modalVisible} />
 		</TouchableOpacity>
 	);
 }

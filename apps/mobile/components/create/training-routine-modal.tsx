@@ -1,68 +1,51 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { useRouter } from "expo-router";
 import { Layers, Plus } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import CreateFromRoutineDialog from "./create-from-routine-dialog";
 
-type TrainingRoutineModalProps = {
-	trainingRoutineModalVisible: boolean;
-	setTrainingRoutineModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-	closeParentSheet: () => void;
-};
-
-export default function TrainingRoutineModal({
-	trainingRoutineModalVisible,
-	setTrainingRoutineModalVisible,
-	closeParentSheet,
-}: TrainingRoutineModalProps) {
+export default function TrainingRoutineModal() {
 	const router = useRouter();
-	const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
 	const [selectedRoutine, setSelectedRoutine] = useState<{
 		id: string;
 		name: string;
 		color?: string;
 	} | null>(null);
 	const routines = useQuery(api.routines.getUserRoutines);
-	const closeSheet = () => setTrainingRoutineModalVisible(false);
+	const closeSheet = () => {
+		TrueSheet.dismiss(NAMES.sheets.trainingRoutine);
+	};
 
-	const handleSelectRoutine = (id: string, name: string, color?: string) => {
+	const handleSelectRoutine = async (id: string, name: string, color?: string) => {
 		setSelectedRoutine({ id, name, color });
-		setConfirmDialogVisible(true);
-		closeSheet();
+		await TrueSheet.dismiss(NAMES.sheets.trainingRoutine);
+		await TrueSheet.present(NAMES.sheets.createFromRoutine);
 	};
 
 	return (
 		<>
-			<Modal
-				animationIn="slideInUp"
-				animationOut="slideOutDown"
-				backdropOpacity={0.5}
-				backdropTransitionOutTiming={0}
-				hideModalContentWhileAnimating
-				isVisible={trainingRoutineModalVisible}
-				onBackButtonPress={closeSheet}
-				onBackdropPress={closeSheet}
-				onSwipeComplete={closeSheet}
-				propagateSwipe
-				style={{ justifyContent: "flex-end", margin: 0 }}
-				swipeDirection={["down"]}
-				useNativeDriver
-				useNativeDriverForBackdrop
+			<TrueSheet
+				backgroundColor={COLORS.darker}
+				cornerRadius={24}
+				detents={[0.7, 1]}
+				dimmedDetentIndex={0.1}
+				name={NAMES.sheets.trainingRoutine}
+				scrollable
 			>
-				<View className="h-[80%] rounded-t-xl bg-darker p-4">
-					<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
+				<View className="flex-1 p-4 pt-8">
+					<View className="tems-center mt-2 mb-4 flex-row gap-3 self-center">
 						<Layers color={COLORS.accent} size={22} />
 						<Text className="font-bold text-text text-xl">Vyberte rutinu</Text>
 					</View>
 
 					<FlatList
 						className="flex-1"
+						contentContainerStyle={{ paddingBottom: 12 }}
 						data={routines}
 						ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 						keyExtractor={(item) => item._id}
@@ -74,9 +57,9 @@ export default function TrainingRoutineModal({
 								<TouchableOpacity
 									activeOpacity={0.7}
 									className="mx-auto flex flex-row items-center gap-2 rounded-xl bg-secondary px-6 py-3"
-									onPress={() => {
+									onPress={async () => {
 										closeSheet();
-										closeParentSheet();
+										await TrueSheet.dismiss(NAMES.sheets.createMenu);
 										router.push("/(auth)/(tabs)/profile/rutiny");
 									}}
 								>
@@ -123,17 +106,15 @@ export default function TrainingRoutineModal({
 								</View>
 							</TouchableOpacity>
 						)}
+						showsVerticalScrollIndicator={false}
 					/>
 				</View>
-			</Modal>
+			</TrueSheet>
 
 			<CreateFromRoutineDialog
-				closeParentSheet={closeParentSheet}
 				routineColor={selectedRoutine?.color || null}
 				routineId={selectedRoutine?.id || null}
 				routineName={selectedRoutine?.name || null}
-				setVisible={setConfirmDialogVisible}
-				visible={confirmDialogVisible}
 			/>
 		</>
 	);

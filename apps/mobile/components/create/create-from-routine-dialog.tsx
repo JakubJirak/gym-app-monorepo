@@ -1,36 +1,34 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { useRouter } from "expo-router";
 import { Layers } from "lucide-react-native";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
 import DatePicker from "@/components/forms/date-picker";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { toLocalISODateString } from "@/src/utils/date-utils";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 
 type CreateFromRoutineDialogProps = {
-	visible: boolean;
-	setVisible: (visible: boolean) => void;
 	routineId: string | null;
 	routineName: string | null;
 	routineColor: string | null;
-	closeParentSheet: () => void;
 };
 
 export default function CreateFromRoutineDialog({
-	visible,
-	setVisible,
 	routineId,
 	routineName,
 	routineColor,
-	closeParentSheet,
 }: CreateFromRoutineDialogProps) {
 	const [date, setDate] = useState(new Date());
 	const router = useRouter();
-	const closeSheet = () => setVisible(false);
+	const closeSheet = () => {
+		TrueSheet.dismiss(NAMES.sheets.createFromRoutine);
+	};
 	const createWorkout = useMutation(api.routines.createWorkoutFromRoutine);
+	const isDisabled = !routineId;
 
 	const handleCreateWorkout = async () => {
 		if (!routineId) {
@@ -48,30 +46,31 @@ export default function CreateFromRoutineDialog({
 		}
 
 		closeSheet();
-		closeParentSheet();
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={visible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.6, 1]}
+			dimmedDetentIndex={0.1}
+			footer={
+				<TouchableOpacity
+					className="mb-6 w-full flex-row items-center justify-center rounded-2xl py-4"
+					disabled={isDisabled}
+					onPress={handleCreateWorkout}
+					style={{ backgroundColor: isDisabled ? COLORS.disabled : COLORS.accent }}
+				>
+					<Layers color="white" size={20} />
+					<Text className="px-2 text-center font-bold text-lg text-text">Vytvořit</Text>
+					<Text className="-ml-0.5 text-center font-bold text-lg text-text">trénink</Text>
+				</TouchableOpacity>
+			}
+			footerStyle={{ paddingHorizontal: 16 }}
+			name={NAMES.sheets.createFromRoutine}
 		>
-			<View className="h-[60%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="flex-1">
+			<View className="px-4 pt-8 pb-2">
+				<View>
 					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
 						<Layers color={COLORS.accent} size={22} />
 						<Text className="font-bold text-text text-xl">Podle rutiny</Text>
@@ -91,26 +90,8 @@ export default function CreateFromRoutineDialog({
 							<DatePicker date={date} setDate={setDate} />
 						</View>
 					</View>
-
-					<View className="mt-8 mb-6 flex-row">
-						<TouchableOpacity
-							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border py-3"
-							onPress={closeSheet}
-						>
-							<Text className="text-lg text-text">Zrušit</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center gap-2 rounded-xl bg-accent"
-							onPress={handleCreateWorkout}
-						>
-							<Layers color="white" size={20} />
-							<Text className="w-[60%] font-semibold text-lg text-text">
-								Vytvořit trénink
-							</Text>
-						</TouchableOpacity>
-					</View>
 				</View>
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }

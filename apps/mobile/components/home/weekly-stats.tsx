@@ -1,11 +1,12 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useRouter } from "expo-router";
 import { Calendar, Repeat, TrendingUp, Weight } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { type GestureResponderEvent, Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { toLocalISODateString } from "@/src/utils/date-utils";
 import type { api } from "../../../../packages/convex/convex/_generated/api";
-import MenuModal from "../create/menu-modal";
 
 type WeeklyStatsProps = {
 	trainings: typeof api.workouts.getUserWorkouts._returnType;
@@ -13,7 +14,6 @@ type WeeklyStatsProps = {
 
 export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 	const router = useRouter();
-	const [menuModalVisible, setMenuModalVisible] = useState(false);
 	const today = new Date();
 	const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
 	const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // Calculate offset to Monday
@@ -103,12 +103,12 @@ export default function WeeklyStats({ trainings }: WeeklyStatsProps) {
 				<TouchableOpacity
 					activeOpacity={0.7}
 					className="rounded-xl bg-secondary px-4 py-6"
-					onPress={() => setMenuModalVisible(true)}
+					onPress={() => {
+						TrueSheet.present(NAMES.sheets.createMenu);
+					}}
 				>
 					<Text className="text-center text-muted">Tento týden nemáte zapsaný žádný trénink</Text>
 				</TouchableOpacity>
-
-				<MenuModal setSheetVisible={setMenuModalVisible} sheetVisible={menuModalVisible} />
 			</View>
 		);
 	}

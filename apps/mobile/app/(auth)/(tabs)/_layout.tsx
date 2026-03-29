@@ -1,12 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { Tabs } from "expo-router";
-import { useState } from "react";
 import MenuModal from "@/components/create/menu-modal";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 
 export default function TabsLayout() {
-	const [sheetVisible, setSheetVisible] = useState(false);
-	const openSheet = () => setSheetVisible(true);
+	const openSheet = () => {
+		TrueSheet.present(NAMES.sheets.createMenu);
+	};
 
 	return (
 		<>
@@ -96,7 +98,7 @@ export default function TabsLayout() {
 				/>
 			</Tabs>
 
-			<MenuModal setSheetVisible={setSheetVisible} sheetVisible={sheetVisible} />
+			<MenuModal />
 		</>
 	);
 }
