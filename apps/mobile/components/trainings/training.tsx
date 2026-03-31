@@ -24,10 +24,10 @@ type TrainingProps = {
 
 export default function Training({ id, note, date, filter }: TrainingProps) {
 	const [menuVisible, setMenuVisible] = useState(false);
-	const [editVisible, setEditVisible] = useState(false);
 	const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 	const trainingRef = useRef<View>(null);
 	const router = useRouter();
+	const editSheetName = `${NAMES.sheets.editTraining}-${id}`;
 	const deleteSheetName = `${NAMES.sheets.deleteTraining}-${id}`;
 
 	const handlePress = () => {
@@ -48,7 +48,7 @@ export default function Training({ id, note, date, filter }: TrainingProps) {
 
 	const handleEdit = () => {
 		closeMenu();
-		setEditVisible(true);
+		TrueSheet.present(editSheetName);
 	};
 
 	const handleDelete = () => {
@@ -131,8 +131,7 @@ export default function Training({ id, note, date, filter }: TrainingProps) {
 				defaultDate={date}
 				defaultFilterId={filter?._id}
 				defaultName={note}
-				setSheetVisible={setEditVisible}
-				sheetVisible={editVisible}
+				sheetName={editSheetName}
 				trainingId={id}
 			/>
 

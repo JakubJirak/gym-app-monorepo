@@ -3,7 +3,7 @@ import { cs } from "date-fns/locale";
 
 export function toLocalISODateString(date: Date | undefined): string {
 	const nechapu = 60_000;
-	if (date === undefined) {
+	if (date === undefined || Number.isNaN(date.getTime())) {
 		return "";
 	}
 	const tzOff = date.getTimezoneOffset() * nechapu;
@@ -12,7 +12,7 @@ export function toLocalISODateString(date: Date | undefined): string {
 }
 
 export function formatDate(date: Date | null, formatString: string) {
-	if (date) {
+	if (date && !Number.isNaN(date.getTime())) {
 		return format(date, formatString, { locale: cs });
 	}
 	return "neplatne datum";

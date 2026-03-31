@@ -4,6 +4,7 @@ export const NAMES = {
 		createTraining: "createTrainingSheet",
 		createFromRoutine: "createFromRoutineSheet",
 		trainingRoutine: "trainingRoutineSheet",
+		editTraining: "editTrainingSheet",
 		deleteTraining: "deleteTrainingSheet",
 	},
 } as const;
