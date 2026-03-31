@@ -1,3 +1,4 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { useRouter } from "expo-router";
@@ -6,6 +7,7 @@ import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import DeleteTrainingModal from "./modals/delete-training";
 import EditTrainingModal from "./modals/edit-training";
 
@@ -22,11 +24,11 @@ type TrainingProps = {
 
 export default function Training({ id, note, date, filter }: TrainingProps) {
 	const [menuVisible, setMenuVisible] = useState(false);
-	const [deleteVisible, setDeleteVisible] = useState(false);
 	const [editVisible, setEditVisible] = useState(false);
 	const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 	const trainingRef = useRef<View>(null);
 	const router = useRouter();
+	const deleteSheetName = `${NAMES.sheets.deleteTraining}-${id}`;
 
 	const handlePress = () => {
 		router.push({
@@ -51,7 +53,7 @@ export default function Training({ id, note, date, filter }: TrainingProps) {
 
 	const handleDelete = () => {
 		closeMenu();
-		setDeleteVisible(true);
+		TrueSheet.present(deleteSheetName);
 	};
 
 	return (
@@ -134,11 +136,7 @@ export default function Training({ id, note, date, filter }: TrainingProps) {
 				trainingId={id}
 			/>
 
-			<DeleteTrainingModal
-				setSheetVisible={setDeleteVisible}
-				sheetVisible={deleteVisible}
-				trainingId={id}
-			/>
+			<DeleteTrainingModal sheetName={deleteSheetName} trainingId={id} />
 		</>
 	);
 }

@@ -13,8 +13,8 @@ import DatePicker from "../forms/date-picker";
 import FilterDropdown from "../forms/filters-dropdown";
 
 export default function CreateTrainingModal() {
-	const closeSheet = () => {
-		TrueSheet.dismiss(NAMES.sheets.createTraining);
+	const closeSheet = async () => {
+		await TrueSheet.dismiss(NAMES.sheets.createTraining);
 	};
 	const [filterId, setFilterId] = useState<string | undefined>(undefined);
 	const [date, setDate] = useState(new Date());
@@ -31,7 +31,8 @@ export default function CreateTrainingModal() {
 				filterId: filterId as Id<"filters">,
 			});
 			if (workoutId) {
-				closeSheet();
+				TrueSheet.dismiss(NAMES.sheets.createMenu);
+				await closeSheet();
 				setFilterId(undefined);
 				setDate(new Date());
 				router.navigate({ pathname: "/(auth)/training/[id]", params: { id: workoutId.workoutId } });

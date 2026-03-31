@@ -50,6 +50,7 @@ export default function TrainingIdLayout() {
 	return (
 		<>
 			<Stack.Screen options={{ headerShown: false }} />
+			{/* @ts-ignore */}
 			<TrainingIdContext.Provider value={id}>
 				<View className="flex-1 bg-primary">
 					<View className="px-4">
