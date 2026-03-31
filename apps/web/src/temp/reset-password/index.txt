@@ -1,0 +1,35 @@
+// import { createFileRoute, redirect } from "@tanstack/react-router";
+// import { z } from "zod";
+// import { ResetPasswordForm } from "@/components/login/ResetPasswordForm";
+
+// const resetPasswordSearchSchema = z.object({
+// 	token: z.string().optional(),
+// });
+
+// export const Route = createFileRoute("/reset-password/")({
+// 	beforeLoad: ({ context }) => {
+// 		if (context.userId) {
+// 			throw redirect({
+// 				to: "/menu",
+// 			});
+// 		}
+// 	},
+// 	validateSearch: (search) => resetPasswordSearchSchema.parse(search),
+// 	component: RouteComponent,
+// 	head: () => ({
+// 		meta: [
+// 			{ title: "Nove heslo | GYM APPLICATION" },
+// 			{ name: "description", content: "Formular pro nastaveni noveho hesla" },
+// 		],
+// 	}),
+// });
+
+// function RouteComponent() {
+// 	const { token } = Route.useSearch();
+
+// 	return (
+// 		<div className="mt-10 flex items-center justify-center">
+// 			<ResetPasswordForm token={token} />
+// 		</div>
+// 	);
+// }

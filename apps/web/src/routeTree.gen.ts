@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ResetPasswordIndexRouteImport } from './routes/reset-password/index'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password/index'
 import { Route as AuthTreninkyIndexRouteImport } from './routes/_auth/treninky/index'
 import { Route as AuthStatistikyIndexRouteImport } from './routes/_auth/statistiky/index'
 import { Route as AuthRutinyIndexRouteImport } from './routes/_auth/rutiny/index'
@@ -36,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordIndexRoute = ResetPasswordIndexRouteImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
@@ -44,6 +51,11 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthTreninkyIndexRoute = AuthTreninkyIndexRouteImport.update({
@@ -115,8 +127,10 @@ const AuthRutinyRoutineIdRoute = AuthRutinyRoutineIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/reset-password/': typeof ResetPasswordIndexRoute
   '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -133,8 +147,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/reset-password': typeof ResetPasswordIndexRoute
   '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -153,8 +169,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/reset-password/': typeof ResetPasswordIndexRoute
   '/_auth/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/_auth/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -173,8 +191,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/forgot-password/'
     | '/login/'
     | '/register/'
+    | '/reset-password/'
     | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
@@ -191,8 +211,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
@@ -210,8 +232,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
+    | '/forgot-password/'
     | '/login/'
     | '/register/'
+    | '/reset-password/'
     | '/_auth/rutiny/$routineId'
     | '/_auth/treninky/$trainingId'
     | '/api/auth/$'
@@ -230,8 +254,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
+  ResetPasswordIndexRoute: typeof ResetPasswordIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   SharedTrainingTrainingIdRoute: typeof SharedTrainingTrainingIdRoute
 }
@@ -252,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password/': {
+      id: '/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password/'
+      preLoaderRoute: typeof ResetPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register/': {
       id: '/register/'
       path: '/register'
@@ -264,6 +297,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login/'
       preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password/': {
+      id: '/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password/'
+      preLoaderRoute: typeof ForgotPasswordIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/treninky/': {
@@ -393,8 +433,10 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
+  ResetPasswordIndexRoute: ResetPasswordIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   SharedTrainingTrainingIdRoute: SharedTrainingTrainingIdRoute,
 }

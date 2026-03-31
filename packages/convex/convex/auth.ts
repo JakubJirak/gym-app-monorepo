@@ -9,6 +9,10 @@ import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL as string;
 
+// const logAuthMessage = (message: string) => {
+// 	globalThis.console?.log(message);
+// };
+
 // The component client has methods needed for integrating Convex with Better Auth,
 // as well as helper methods for general use.
 export const authComponent = createClient<DataModel, typeof authSchema>(components.betterAuth, {
@@ -39,6 +43,19 @@ export const createAuth = (ctx: GenericCtx<DataModel>, { optionsOnly } = { optio
 		emailAndPassword: {
 			enabled: true,
 			requireEmailVerification: false,
+			// sendResetPassword: ({ user, url, token }) => {
+			// 	logAuthMessage(
+			// 		[
+			// 			"[auth] Password reset requested",
+			// 			`email: ${user.email}`,
+			// 			`token: ${token}`,
+			// 			`resetUrl: ${url}`,
+			// 		].join("\n")
+			// 	);
+			// },
+			// onPasswordReset: ({ user }) => {
+			// 	logAuthMessage(`[auth] Password updated for ${user.email}`);
+			// },
 		},
 		plugins: [
 			expo(),

@@ -89,7 +89,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 											</Label>
 											<a
 												className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-												href="/login"
+												href="/forgot-password"
 											>
 												Obnovit heslo
 											</a>

@@ -1,0 +1,27 @@
+// import { createFileRoute, redirect } from "@tanstack/react-router";
+// import { ForgotPasswordForm } from "@/components/login/ForgotPasswordForm";
+
+// export const Route = createFileRoute("/forgot-password/")({
+// 	beforeLoad: ({ context }) => {
+// 		if (context.userId) {
+// 			throw redirect({
+// 				to: "/menu",
+// 			});
+// 		}
+// 	},
+// 	component: RouteComponent,
+// 	head: () => ({
+// 		meta: [
+// 			{ title: "Obnova hesla | GYM APPLICATION" },
+// 			{ name: "description", content: "Formular pro zadost o obnovu hesla" },
+// 		],
+// 	}),
+// });
+
+// function RouteComponent() {
+// 	return (
+// 		<div className="mt-10 flex items-center justify-center">
+// 			<ForgotPasswordForm />
+// 		</div>
+// 	);
+// }
