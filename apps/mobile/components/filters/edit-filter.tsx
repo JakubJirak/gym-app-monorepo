@@ -1,32 +1,32 @@
 import Ionicons from "@expo/vector-icons/build/Ionicons";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import ColorSquarePicker from "@/components/forms/color-picker";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 
 type EditFilterProps = {
-	sheetVisible: boolean;
-	setSheetVisible: (visible: boolean) => void;
 	defaultColor: string;
 	defaultName: string;
 	filterId: string;
 	usageCount: number;
+	sheetName?: string;
 };
 
 export default function EditFilterModal({
-	sheetVisible,
-	setSheetVisible,
 	defaultColor,
 	defaultName,
 	filterId,
 	usageCount,
+	sheetName,
 }: EditFilterProps) {
-	const closeSheet = () => setSheetVisible(false);
+	const sheetId = sheetName ?? NAMES.sheets.editFilter;
+	const closeSheet = () => TrueSheet.dismiss(sheetId);
 	const [name, setName] = useState(defaultName);
 	const [visible, setVisible] = useState(false);
 	const [color, setColor] = useState(defaultColor);
@@ -46,42 +46,10 @@ export default function EditFilterModal({
 			localStore.setQuery(api.filters.getAllFilters, {}, filteredFilters);
 		}
 	});
-	const [keyboardHeight, setKeyboardHeight] = useState(0);
-
 	useEffect(() => {
-		if (sheetVisible) {
-			setName(defaultName);
-			setColor(defaultColor);
-		}
-	}, [sheetVisible, defaultName, defaultColor]);
-
-	useEffect(() => {
-		const showListeners = [
-			Keyboard.addListener("keyboardWillShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
-			}),
-			Keyboard.addListener("keyboardDidShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
-			}),
-		];
-		const hideListeners = [
-			Keyboard.addListener("keyboardWillHide", () => {
-				setKeyboardHeight(0);
-			}),
-			Keyboard.addListener("keyboardDidHide", () => {
-				setKeyboardHeight(0);
-			}),
-		];
-
-		return () => {
-			for (const listener of showListeners) {
-				listener.remove();
-			}
-			for (const listener of hideListeners) {
-				listener.remove();
-			}
-		};
-	}, []);
+		setName(defaultName);
+		setColor(defaultColor);
+	}, [defaultName, defaultColor]);
 
 	const disabled = name === defaultName && color === defaultColor;
 
@@ -102,29 +70,57 @@ export default function EditFilterModal({
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={sheetVisible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.55, 0.8]}
+			dimmedDetentIndex={0.1}
+			footer={
+				usageCount === 0 ? (
+					<View className="mb-6 flex-row gap-3 px-4">
+						<TouchableOpacity
+							className="flex w-16 items-center justify-center rounded-xl bg-destructive"
+							onPress={handleDeleteFilter}
+						>
+							<Ionicons color="white" name="trash-outline" size={24} />
+						</TouchableOpacity>
+						<TouchableOpacity
+							className="flex-1 flex-row items-center justify-center rounded-2xl px-4 py-3"
+							disabled={disabled}
+							onPress={handleEditFilter}
+							style={{
+								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+							}}
+						>
+							<Pencil color="white" size={20} />
+							<Text className="px-3 py-1 text-center font-bold text-lg text-text">
+								Upravit kategorii
+							</Text>
+						</TouchableOpacity>
+					</View>
+				) : (
+					<TouchableOpacity
+						className="mb-6 flex-row items-center justify-center rounded-2xl px-4 py-3"
+						disabled={disabled}
+						onPress={handleEditFilter}
+						style={{
+							backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+						}}
+					>
+						<Pencil color="white" size={20} />
+						<Text className="px-3 py-1 text-center font-bold text-lg text-text">
+							Upravit kategorii
+						</Text>
+					</TouchableOpacity>
+				)
+			}
+			name={sheetId}
 		>
-			<View className="h-[55%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="flex-1 justify-between">
+			<View className="px-4 pt-8 pb-4">
+				<View className="justify-between">
 					<View className="mt-2 flex-row items-center gap-2 self-center">
 						<Pencil color="white" size={20} />
-						<Text className="font-bold text-2xl text-text">Upravit kategorii</Text>
+						<Text className="font-bold text-text text-xl">Upravit kategorii</Text>
 					</View>
 
 					<View className="gap-4">
@@ -159,61 +155,6 @@ export default function EditFilterModal({
 							</TouchableOpacity>
 						</View>
 					</View>
-
-					<View className="mt-4 mb-6 flex-row">
-						{usageCount === 0 ? (
-							<View className="mt-8 mb-6 flex-row">
-								<TouchableOpacity
-									className="mr-3 flex w-[15%] items-center justify-center rounded-xl bg-destructive"
-									onPress={handleDeleteFilter}
-								>
-									<Ionicons color="white" name="trash-outline" size={24} />
-								</TouchableOpacity>
-								<TouchableOpacity
-									className="mr-3 flex w-[25%] items-center justify-center rounded-xl border border-border"
-									onPress={closeSheet}
-								>
-									<Text className="p-2 text-lg text-text">Zrušit</Text>
-								</TouchableOpacity>
-
-								<TouchableOpacity
-									className="flex w-[52%] flex-row items-center justify-center rounded-xl"
-									disabled={disabled}
-									onPress={handleEditFilter}
-									style={{
-										backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-									}}
-								>
-									<Pencil color="white" size={18} />
-									<Text className="p-2 font-semibold text-lg text-text">
-										Upravit cvik
-									</Text>
-								</TouchableOpacity>
-							</View>
-						) : (
-							<>
-								<TouchableOpacity
-									className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
-									onPress={closeSheet}
-								>
-									<Text className="p-2 text-lg text-text">Zrušit</Text>
-								</TouchableOpacity>
-								<TouchableOpacity
-									className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-									disabled={disabled}
-									onPress={handleEditFilter}
-									style={{
-										backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-									}}
-								>
-									<Pencil color="white" size={16} />
-									<Text className="p-2 font-semibold text-lg text-text">
-										Upravit kategorii
-									</Text>
-								</TouchableOpacity>
-							</>
-						)}
-					</View>
 				</View>
 			</View>
 			<ColorSquarePicker
@@ -225,6 +166,6 @@ export default function EditFilterModal({
 				size={320}
 				visible={visible}
 			/>
-		</Modal>
+		</TrueSheet>
 	);
 }

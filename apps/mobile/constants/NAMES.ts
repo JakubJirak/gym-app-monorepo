@@ -6,6 +6,7 @@ export const NAMES = {
 		trainingRoutine: "trainingRoutineSheet",
 		filterDropdown: "filterDropdownSheet",
 		addFilter: "addFilterSheet",
+		editFilter: "editFilterSheet",
 		editTraining: "editTrainingSheet",
 		deleteTraining: "deleteTrainingSheet",
 	},

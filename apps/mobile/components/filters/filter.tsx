@@ -1,6 +1,7 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { Pencil } from "lucide-react-native";
-import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { NAMES } from "@/constants/NAMES";
 import EditFilterModal from "./edit-filter";
 
 export default function Filter({
@@ -14,10 +15,10 @@ export default function Filter({
 	id: string;
 	usageCount: number;
 }) {
-	const [edit, setEdit] = useState(false);
+	const editFilterSheetName = `${NAMES.sheets.editFilter}-${id}`;
 
 	return (
-		<TouchableOpacity activeOpacity={0.7} onPress={() => setEdit(true)}>
+		<TouchableOpacity activeOpacity={0.7} onPress={() => TrueSheet.present(editFilterSheetName)}>
 			<View className="my-1.5 flex-row items-center gap-4 rounded-xl bg-secondary px-3">
 				<View
 					style={{
@@ -37,8 +38,7 @@ export default function Filter({
 					defaultColor={color}
 					defaultName={name}
 					filterId={id}
-					setSheetVisible={setEdit}
-					sheetVisible={edit}
+					sheetName={editFilterSheetName}
 					usageCount={usageCount}
 				/>
 			</View>
