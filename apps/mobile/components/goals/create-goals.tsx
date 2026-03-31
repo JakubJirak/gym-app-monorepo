@@ -1,18 +1,19 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Plus, Target } from "lucide-react-native";
-import { useEffect, useState } from "react";
-import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
+import { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 
 type CreateGoalsProps = {
-	visible: boolean;
-	setVisible: (visible: boolean) => void;
+	sheetName?: string;
 };
 
-export default function EditGoals({ visible, setVisible }: CreateGoalsProps) {
-	const closeSheet = () => setVisible(false);
+export default function CreateGoals({ sheetName }: CreateGoalsProps) {
+	const sheetId = sheetName ?? NAMES.sheets.createGoals;
+	const closeSheet = () => TrueSheet.dismiss(sheetId);
 	const [squat, setSquat] = useState("");
 	const [bench, setBench] = useState("");
 	const [deadlift, setDeadlift] = useState("");
@@ -25,37 +26,7 @@ export default function EditGoals({ visible, setVisible }: CreateGoalsProps) {
 
 	const disabled = !(isValidNumber(squatNum) && isValidNumber(benchNum) && isValidNumber(deadliftNum));
 
-	const [keyboardHeight, setKeyboardHeight] = useState(0);
-
 	const addUserGoals = useMutation(api.userGoals.addUserGoals);
-
-	useEffect(() => {
-		const showListeners = [
-			Keyboard.addListener("keyboardWillShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
-			}),
-			Keyboard.addListener("keyboardDidShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
-			}),
-		];
-		const hideListeners = [
-			Keyboard.addListener("keyboardWillHide", () => {
-				setKeyboardHeight(0);
-			}),
-			Keyboard.addListener("keyboardDidHide", () => {
-				setKeyboardHeight(0);
-			}),
-		];
-
-		return () => {
-			for (const listener of showListeners) {
-				listener.remove();
-			}
-			for (const listener of hideListeners) {
-				listener.remove();
-			}
-		};
-	}, []);
 
 	const handleSave = () => {
 		if (squat !== "" || bench !== "" || deadlift !== "") {
@@ -64,47 +35,59 @@ export default function EditGoals({ visible, setVisible }: CreateGoalsProps) {
 				bench,
 				deadlift,
 			});
+			setSquat("");
+			setBench("");
+			setDeadlift("");
 			closeSheet();
 		}
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={visible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0, marginBottom: keyboardHeight }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.85, 1]}
+			dimmedDetentIndex={0.1}
+			footer={
+				<TouchableOpacity
+					className="mx-4 mb-6 flex-row items-center justify-center rounded-2xl py-3"
+					disabled={disabled}
+					onPress={handleSave}
+					style={{
+						backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+					}}
+				>
+					<Plus color="white" size={20} />
+					<Text className="px-3 py-1 text-center font-bold text-lg text-text">Přidat cíle</Text>
+				</TouchableOpacity>
+			}
+			name={sheetId}
 		>
-			<View className="h-[90%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="flex-1">
+			<View className="px-4 pt-8 pb-4">
+				<View>
 					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
 						<Target color="white" size={24} />
-						<Text className="font-semibold text-text text-xl">Upravit cíle</Text>
+						<Text className="font-bold text-text text-xl">Přidat cíle</Text>
 					</View>
 
 					<View className="mt-2 gap-4">
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Squat (kg)</Text>
 							<TextInput
+								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setSquat}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleSave();
+									}
+								}}
 								placeholder="0"
 								placeholderTextColor={COLORS.muted}
+								returnKeyType="done"
 								value={squat}
 							/>
 						</View>
@@ -116,8 +99,14 @@ export default function EditGoals({ visible, setVisible }: CreateGoalsProps) {
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setBench}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleSave();
+									}
+								}}
 								placeholder="0"
 								placeholderTextColor={COLORS.muted}
+								returnKeyType="done"
 								value={bench}
 							/>
 						</View>
@@ -129,34 +118,20 @@ export default function EditGoals({ visible, setVisible }: CreateGoalsProps) {
 								keyboardType="numeric"
 								maxLength={5}
 								onChangeText={setDeadlift}
+								onSubmitEditing={() => {
+									if (!disabled) {
+										handleSave();
+									}
+								}}
 								placeholder="0"
 								placeholderTextColor={COLORS.muted}
+								returnKeyType="done"
 								value={deadlift}
 							/>
 						</View>
 					</View>
-
-					<View className="mt-8 mb-6 flex-row justify-between">
-						<TouchableOpacity
-							className="flex w-[35%] items-center justify-center rounded-xl border border-border"
-							onPress={closeSheet}
-						>
-							<Text className="p-2 text-lg text-text">Zrušit</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-							disabled={disabled}
-							onPress={handleSave}
-							style={{
-								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-							}}
-						>
-							<Plus color="white" size={18} />
-							<Text className="ml-2 p-2 font-semibold text-lg text-text">Přidat cíle</Text>
-						</TouchableOpacity>
-					</View>
 				</View>
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }

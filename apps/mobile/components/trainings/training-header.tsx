@@ -17,7 +17,7 @@ export default function TrainingHeader({ text, trainingId }: { text: string; tra
 	return (
 		<View className="mt-2 flex-row items-center pr-2 pb-4">
 			<TouchableOpacity className="w-8" onPress={() => router.back()}>
-				<Ionicons color={COLORS.accent} name="chevron-back" size={28} />
+				<Ionicons color={COLORS.accent} name="chevron-back" size={24} />
 			</TouchableOpacity>
 			<Text className="ml-2 flex-1 font-semibold text-text text-xl">{text}</Text>
 			<TouchableOpacity className="w-8" onPress={() => TrueSheet.present(NAMES.sheets.editTraining)}>

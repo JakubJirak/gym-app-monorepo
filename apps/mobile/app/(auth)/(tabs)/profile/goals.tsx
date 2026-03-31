@@ -1,6 +1,6 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Pencil, Plus } from "lucide-react-native";
-import { useState } from "react";
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import CreateGoals from "@/components/goals/create-goals";
@@ -8,11 +8,10 @@ import EditGoals from "@/components/goals/edit-goals";
 import PowerliftingStats from "@/components/goals/powerlifting-stats";
 import UserGoals from "@/components/goals/user-goals";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Goals() {
-	const [editGoalsVisible, setEditGoalsVisible] = useState(false);
-	const [createGoalsVisible, setCreateGoalsVisible] = useState(false);
 	const trainings = useQuery(api.workouts.getUserWorkouts);
 	const userGoals = useQuery(api.userGoals.getUserGoals);
 
@@ -61,29 +60,27 @@ export default function Goals() {
 			{userGoals ? (
 				<>
 					<TouchableOpacity
-						className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-3.5"
-						onPress={() => setEditGoalsVisible(true)}
+						className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-4"
+						onPress={() => TrueSheet.present(NAMES.sheets.editGoals)}
 					>
-						<Pencil color="white" size={32} />
+						<Pencil color="white" size={24} />
 					</TouchableOpacity>
 					<EditGoals
 						benchDef={userGoals.bench}
 						deadliftDef={userGoals.deadlift}
 						goalId={userGoals._id}
-						setVisible={setEditGoalsVisible}
 						squatDef={userGoals.squat}
-						visible={editGoalsVisible}
 					/>
 				</>
 			) : (
 				<>
 					<TouchableOpacity
-						className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-2"
-						onPress={() => setCreateGoalsVisible(true)}
+						className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-3.5"
+						onPress={() => TrueSheet.present(NAMES.sheets.createGoals)}
 					>
-						<Plus color="white" size={44} />
+						<Plus color="white" size={32} />
 					</TouchableOpacity>
-					<CreateGoals setVisible={setCreateGoalsVisible} visible={createGoalsVisible} />
+					<CreateGoals />
 				</>
 			)}
 		</View>

@@ -21,11 +21,11 @@ export default function ComponentHeader({ text, fallbackRoute }: ComponentHeader
 	};
 
 	return (
-		<View className="mt-2 flex-row items-center gap-6 pb-2">
+		<View className="mt-1 flex-row items-center gap-2 pb-2">
 			<TouchableOpacity className="w-8" onPress={handleBack}>
-				<Ionicons color={COLORS.accent} name="chevron-back" size={28} />
+				<Ionicons color={COLORS.accent} name="chevron-back" size={24} />
 			</TouchableOpacity>
-			<Text className="flex-1 font-semibold text-2xl text-text">{text}</Text>
+			<Text className="flex-1 font-semibold text-text text-xl">{text}</Text>
 		</View>
 	);
 }

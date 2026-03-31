@@ -1,23 +1,24 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 
 type EditGoalsProps = {
-	visible: boolean;
-	setVisible: (visible: boolean) => void;
 	squatDef: string;
 	benchDef: string;
 	deadliftDef: string;
 	goalId: string;
+	sheetName?: string;
 };
 
-export default function EditGoals({ visible, setVisible, squatDef, benchDef, deadliftDef, goalId }: EditGoalsProps) {
-	const closeSheet = () => setVisible(false);
+export default function EditGoals({ squatDef, benchDef, deadliftDef, goalId, sheetName }: EditGoalsProps) {
+	const sheetId = sheetName ?? NAMES.sheets.editGoals;
+	const closeSheet = () => TrueSheet.dismiss(sheetId);
 	const [squat, setSquat] = useState(squatDef);
 	const [bench, setBench] = useState(benchDef);
 	const [deadlift, setDeadlift] = useState(deadliftDef);
@@ -32,37 +33,13 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 		!(isValidNumber(squatNum) && isValidNumber(benchNum) && isValidNumber(deadliftNum)) ||
 		(squat === squatDef && bench === benchDef && deadlift === deadliftDef);
 
-	const [keyboardHeight, setKeyboardHeight] = useState(0);
-
 	const updateUserGoals = useMutation(api.userGoals.updateUserGoals);
 
 	useEffect(() => {
-		const showListeners = [
-			Keyboard.addListener("keyboardWillShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
-			}),
-			Keyboard.addListener("keyboardDidShow", (e) => {
-				setKeyboardHeight(e.endCoordinates.height);
-			}),
-		];
-		const hideListeners = [
-			Keyboard.addListener("keyboardWillHide", () => {
-				setKeyboardHeight(0);
-			}),
-			Keyboard.addListener("keyboardDidHide", () => {
-				setKeyboardHeight(0);
-			}),
-		];
-
-		return () => {
-			for (const listener of showListeners) {
-				listener.remove();
-			}
-			for (const listener of hideListeners) {
-				listener.remove();
-			}
-		};
-	}, []);
+		setSquat(squatDef);
+		setBench(benchDef);
+		setDeadlift(deadliftDef);
+	}, [squatDef, benchDef, deadliftDef]);
 
 	const handleSave = () => {
 		if (squatDef || benchDef || deadliftDef) {
@@ -77,39 +54,38 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={visible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{
-				justifyContent: "flex-end",
-				margin: 0,
-				marginBottom: keyboardHeight,
-			}}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.8, 1]}
+			dimmedDetentIndex={0.1}
+			footer={
+				<TouchableOpacity
+					className="mx-4 mb-6 flex-row items-center justify-center rounded-2xl py-3"
+					disabled={disabled}
+					onPress={handleSave}
+					style={{
+						backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+					}}
+				>
+					<Pencil color="white" size={20} />
+					<Text className="px-3 py-1 text-center font-bold text-lg text-text">Upravit cíle</Text>
+				</TouchableOpacity>
+			}
+			name={sheetId}
 		>
-			<View className="h-[90%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="flex-1">
+			<View className="px-4 pt-8 pb-4">
+				<View>
 					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
 						<Pencil color="white" size={20} />
-						<Text className="font-semibold text-text text-xl">Upravit cíle</Text>
+						<Text className="font-bold text-text text-xl">Upravit cíle</Text>
 					</View>
 
 					<View className="mt-2 gap-4">
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Squat (kg)</Text>
 							<TextInput
+								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								keyboardType="numeric"
@@ -165,28 +141,8 @@ export default function EditGoals({ visible, setVisible, squatDef, benchDef, dea
 							/>
 						</View>
 					</View>
-
-					<View className="mt-8 mb-6 flex-row justify-between">
-						<TouchableOpacity
-							className="flex w-[35%] items-center justify-center rounded-xl border border-border"
-							onPress={closeSheet}
-						>
-							<Text className="p-2 text-lg text-text">Zrušit</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-							disabled={disabled}
-							onPress={handleSave}
-							style={{
-								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-							}}
-						>
-							<Pencil color="white" size={18} />
-							<Text className="ml-2 p-2 font-semibold text-lg text-text">Upravit cíle</Text>
-						</TouchableOpacity>
-					</View>
 				</View>
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }
