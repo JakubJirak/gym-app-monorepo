@@ -94,7 +94,7 @@ export default function EditTrainingModal({
 						backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
 					}}
 				>
-					<Pencil color="white" size={28} />
+					<Pencil color="white" size={20} />
 					<Text className="px-2 py-1 text-center font-bold text-lg text-text">Upravit trénink</Text>
 				</TouchableOpacity>
 			}
@@ -104,7 +104,7 @@ export default function EditTrainingModal({
 		>
 			<View className="px-4 pt-8 pb-2">
 				<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
-					<Pencil color="white" size={18} />
+					<Pencil color="white" size={20} />
 					<Text className="font-bold text-text text-xl">Upravit trénink</Text>
 				</View>
 

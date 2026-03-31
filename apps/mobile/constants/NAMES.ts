@@ -27,6 +27,7 @@ export const NAMES = {
 		trainingAddSet: "trainingAddSetSheet",
 		trainingEditNote: "trainingEditNoteSheet",
 		trainingEditSet: "trainingEditSetSheet",
+		trainingShare: "trainingShareSheet",
 		exerciseHistory: "exerciseHistorySheet",
 		colorPicker: "colorPickerSheet",
 		deleteRoutine: "deleteRoutineSheet",

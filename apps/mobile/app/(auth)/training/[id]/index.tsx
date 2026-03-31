@@ -1,6 +1,6 @@
 import { useQuery } from "convex/react";
 import { useLocalSearchParams } from "expo-router";
-import { NotebookPen } from "lucide-react-native";
+import { NotebookPen, Share2 } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import Exercise from "@/components/trainings/exercise";
@@ -22,7 +22,7 @@ export default function TrainingById() {
 
 	return (
 		<>
-			<View className="flex-1 bg-primary px-5 pt-2">
+			<View className="flex-1 bg-primary px-4 pt-2">
 				<FlatList
 					data={workout.exercises}
 					ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
@@ -36,11 +36,11 @@ export default function TrainingById() {
 										<Text className="text-muted text-sm">{workout.name}</Text>
 									</View>
 								)}
-								<Text className="ml-auto rounded-full bg-secondary px-3 py-2 text-text">
+								<Text className="ml-auto rounded-full bg-secondary px-3 py-1.5 text-sm text-text">
 									Cviky: {workout.exercises.length}
 								</Text>
 								<Text
-									className="rounded-xl border px-2.5 py-1.5 text-base text-text"
+									className="rounded-xl border px-2.5 py-1.5 text-sm text-text"
 									style={{
 										borderColor: `${workout?.filter?.color}CC`,
 										color: "white",
@@ -55,6 +55,11 @@ export default function TrainingById() {
 								>
 									{workout.filter?.name}
 								</Text>
+								{workout.isShared && (
+									<View className="h-7.5 w-7.5 items-center justify-center rounded-full bg-secondary pr-0.5">
+										<Share2 className="" color={COLORS.muted} size={16} />
+									</View>
+								)}
 							</View>
 						</>
 					)}
