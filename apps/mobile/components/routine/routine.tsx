@@ -1,9 +1,11 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useRouter } from "expo-router";
 import { Pencil, Trash } from "lucide-react-native";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import DeleteRoutineModal from "./modals/delete-routine";
 import EditRoutineModal from "./modals/edit-routine-modal";
 
@@ -16,11 +18,11 @@ type RoutineProps = {
 };
 export default function Routine({ name, color, filterName, filterId, id }: RoutineProps) {
 	const [menuVisible, setMenuVisible] = useState(false);
-	const [deleteVisible, setDeleteVisible] = useState(false);
-	const [editVisible, setEditVisible] = useState(false);
 	const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 	const routineRef = useRef<View>(null);
 	const router = useRouter();
+	const editSheetName = `${NAMES.sheets.editRoutine}-${id}`;
+	const deleteSheetName = `${NAMES.sheets.deleteRoutine}-${id}`;
 
 	const handlePress = () => {
 		router.push({
@@ -40,12 +42,12 @@ export default function Routine({ name, color, filterName, filterId, id }: Routi
 
 	const handleEdit = () => {
 		closeMenu();
-		setEditVisible(true);
+		TrueSheet.present(editSheetName);
 	};
 
 	const handleDelete = () => {
 		closeMenu();
-		setDeleteVisible(true);
+		TrueSheet.present(deleteSheetName);
 	};
 
 	return (
@@ -116,11 +118,10 @@ export default function Routine({ name, color, filterName, filterId, id }: Routi
 				defaultFilterId={filterId}
 				defaultName={name}
 				routineId={id}
-				setSheetVisible={setEditVisible}
-				sheetVisible={editVisible}
+				sheetName={editSheetName}
 			/>
 
-			<DeleteRoutineModal routineId={id} setSheetVisible={setDeleteVisible} sheetVisible={deleteVisible} />
+			<DeleteRoutineModal routineId={id} sheetName={deleteSheetName} />
 		</>
 	);
 }

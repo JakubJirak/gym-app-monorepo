@@ -1,31 +1,32 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
 import FilterDropdown from "@/components/forms/filters-dropdown";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
 type EditRoutineProps = {
-	sheetVisible: boolean;
-	setSheetVisible: (visible: boolean) => void;
+	sheetName?: string;
 	routineId: string;
 	defaultName: string | undefined;
 	defaultFilterId: string | undefined;
 };
 
-export default function EditRoutineModal({
-	sheetVisible,
-	setSheetVisible,
-	routineId,
-	defaultName,
-	defaultFilterId,
-}: EditRoutineProps) {
+export default function EditRoutineModal({ sheetName, routineId, defaultName, defaultFilterId }: EditRoutineProps) {
+	const sheetId = sheetName ?? NAMES.sheets.editRoutine;
 	const [filterId, setFilterId] = useState<string | undefined>(defaultFilterId);
 	const [name, setName] = useState(defaultName ?? "");
-	const closeSheet = () => setSheetVisible(false);
+	const closeSheet = () => TrueSheet.dismiss(sheetId);
+
+	useEffect(() => {
+		setName(defaultName ?? "");
+		setFilterId(defaultFilterId);
+	}, [defaultFilterId, defaultName]);
+
 	const editRoutine = useMutation(api.routines.editRoutine).withOptimisticUpdate((localStore, args) => {
 		const queries = localStore.getAllQueries(api.routines.getRoutineById);
 		for (const query of queries) {
@@ -55,29 +56,31 @@ export default function EditRoutineModal({
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={sheetVisible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.7, 1]}
+			dimmedDetentIndex={0.1}
+			footer={
+				<TouchableOpacity
+					className="mx-4 mb-6 flex-row items-center justify-center rounded-2xl px-4 py-3"
+					disabled={disabled}
+					onPress={handleEditRoutine}
+					style={{
+						backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+					}}
+				>
+					<Pencil color="white" size={20} />
+					<Text className="px-2 py-1 text-center font-bold text-lg text-text">Upravit rutinu</Text>
+				</TouchableOpacity>
+			}
+			name={sheetId}
 		>
-			<View className="h-[65%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="flex-1">
+			<View className="px-4 pt-8 pb-4">
+				<View>
 					<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
 						<Pencil color="white" size={22} />
-						<Text className="font-bold text-2xl text-text">Upravit rutinu</Text>
+						<Text className="font-bold text-text text-xl">Upravit rutinu</Text>
 					</View>
 
 					<View className="gap-4">
@@ -102,28 +105,8 @@ export default function EditRoutineModal({
 							<FilterDropdown onChange={setFilterId} value={filterId} />
 						</View>
 					</View>
-
-					<View className="mt-8 mb-6 flex-row">
-						<TouchableOpacity
-							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
-							onPress={closeSheet}
-						>
-							<Text className="p-2 text-lg text-text">Zrušit</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-							disabled={disabled}
-							onPress={handleEditRoutine}
-							style={{
-								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-							}}
-						>
-							<Pencil color="white" size={16} />
-							<Text className="p-2 font-semibold text-lg text-text">Upravit rutinu</Text>
-						</TouchableOpacity>
-					</View>
 				</View>
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }

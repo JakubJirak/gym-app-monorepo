@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 import { ExercisePicker } from "../forms/exercise-picker";
@@ -17,7 +19,6 @@ type RoutineFooterProps = {
 };
 
 export default function RoutineFooter({ id, exercises, isEdit, setIsEdit }: RoutineFooterProps) {
-	const [deleteModal, setDeleteModal] = useState(false);
 	const [addExerciseModal, setAddExerciseModal] = useState(false);
 	const addExercise = useMutation(api.routineExercises.addRoutineExercise);
 
@@ -30,11 +31,14 @@ export default function RoutineFooter({ id, exercises, isEdit, setIsEdit }: Rout
 	};
 
 	return (
-		<View className="h-[72px] flex-row items-center border-[#1a1a1a] border-t bg-darker pr-2 pb-8">
+		<View className="h-18 flex-row items-center border-[#1a1a1a] border-t bg-darker pr-2 pb-8">
 			{/* <TouchableOpacity className="flex w-1/4 items-center pt-2">
 				<Ionicons color="white" name="share-social-outline" size={24} />
 			</TouchableOpacity> */}
-			<TouchableOpacity className="flex w-1/3 items-center pt-2" onPress={() => setDeleteModal(true)}>
+			<TouchableOpacity
+				className="flex w-1/3 items-center pt-2"
+				onPress={() => TrueSheet.present(NAMES.sheets.deleteRoutine)}
+			>
 				<Ionicons color="white" name="trash-outline" size={24} />
 			</TouchableOpacity>
 			<TouchableOpacity className="flex w-1/3 items-center pt-2" onPress={() => setAddExerciseModal(true)}>
@@ -44,7 +48,7 @@ export default function RoutineFooter({ id, exercises, isEdit, setIsEdit }: Rout
 				<Pencil color={isEdit ? COLORS.accent : "white"} size={22} />
 			</TouchableOpacity>
 
-			<DeleteRoutineModal routineId={id} setSheetVisible={setDeleteModal} sheetVisible={deleteModal} />
+			<DeleteRoutineModal routineId={id} sheetName={NAMES.sheets.deleteRoutine} />
 			<ExercisePicker
 				onSelect={handleExerciseSelect}
 				setVisible={setAddExerciseModal}

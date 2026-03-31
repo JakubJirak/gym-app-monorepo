@@ -1,9 +1,8 @@
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Check, ChevronDown, Plus } from "lucide-react-native";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, Keyboard, type ListRenderItem, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
+import { useEffect, useMemo, useState } from "react";
+import { FlatList, type ListRenderItem, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
@@ -43,28 +42,39 @@ type ExercisePickerProps = {
 	standalone?: boolean;
 	visible?: boolean;
 	setVisible?: (visible: boolean) => void;
+	sheetName?: string;
 };
 
-export function ExercisePicker({ selectedId, onSelect, standalone = false, visible, setVisible }: ExercisePickerProps) {
+export function ExercisePicker({
+	selectedId,
+	onSelect,
+	standalone = false,
+	visible,
+	setVisible,
+	sheetName,
+}: ExercisePickerProps) {
 	const [internalSelectedId, setInternalSelectedId] = useState<string | null>(null);
 	const [internalModalVisible, setInternalModalVisible] = useState(false);
+	const [isPresented, setIsPresented] = useState(false);
 	const modalVisible = standalone && visible !== undefined ? visible : internalModalVisible;
 	const setModalVisible = standalone && setVisible !== undefined ? setVisible : setInternalModalVisible;
+	const pickerSheetName = sheetName ?? NAMES.sheets.exercisePicker;
 	const [query, setQuery] = useState("");
 	const exercises = useQuery(api.exercises.getAllExercises);
-	const inputRef = useRef<TextInput>(null);
 
-	// In standalone mode, don't show any selection (used for adding new exercises)
 	const chosenId = standalone ? null : (selectedId ?? internalSelectedId);
 	const chosenExercise = useMemo(() => exercises?.find((e) => e._id === chosenId) ?? null, [exercises, chosenId]);
 
 	useEffect(() => {
-		if (modalVisible) {
-			setTimeout(() => {
-				inputRef.current?.focus();
-			}, 100);
+		if (modalVisible && !isPresented) {
+			TrueSheet.present(pickerSheetName);
+			setIsPresented(true);
 		}
-	}, [modalVisible]);
+		if (!modalVisible && isPresented) {
+			TrueSheet.dismiss(pickerSheetName);
+			setIsPresented(false);
+		}
+	}, [isPresented, modalVisible, pickerSheetName]);
 
 	const filtered = useMemo(() => {
 		const q = query.trim().toLowerCase();
@@ -80,12 +90,17 @@ export function ExercisePicker({ selectedId, onSelect, standalone = false, visib
 			setInternalSelectedId(item._id);
 		}
 		setQuery("");
-		Keyboard.dismiss();
-		setModalVisible(false);
+		closeModal();
 	}
 
 	const closeModal = () => {
-		Keyboard.dismiss();
+		TrueSheet.dismiss(pickerSheetName);
+		setIsPresented(false);
+		setModalVisible(false);
+	};
+
+	const handleDidDismiss = () => {
+		setIsPresented(false);
 		setModalVisible(false);
 	};
 
@@ -102,63 +117,62 @@ export function ExercisePicker({ selectedId, onSelect, standalone = false, visib
 		);
 	};
 
-	if (standalone) {
-		return (
-			<Modal
-				animationIn="slideInUp"
-				animationOut="slideOutDown"
-				backdropOpacity={0.5}
-				backdropTransitionOutTiming={0}
-				hideModalContentWhileAnimating={true}
-				isVisible={modalVisible}
-				onBackButtonPress={closeModal}
-				onBackdropPress={closeModal}
-				onModalWillHide={() => Keyboard.dismiss()}
-				onSwipeComplete={closeModal}
-				propagateSwipe
-				style={{ justifyContent: "flex-end", margin: 0 }}
-				swipeDirection={["down"]}
-				useNativeDriver
-				useNativeDriverForBackdrop
-			>
-				<View className="h-[90%] rounded-t-xl bg-darker p-4">
-					<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />
-					<View className="mb-3 flex-row items-center justify-between">
-						<View className="flex-1">
-							<TextInput
-								className="rounded-xl bg-secondary px-4 py-3 text-base text-text"
-								clearButtonMode="while-editing"
-								onChangeText={setQuery}
-								placeholder="Hledej cvik..."
-								placeholderTextColorClassName="accent-muted"
-								ref={inputRef}
-								value={query}
-							/>
-						</View>
-					</View>
-
-					<FlatList
-						data={filtered}
-						keyboardShouldPersistTaps="handled"
-						keyExtractor={(item) => item._id}
-						ListEmptyComponent={() => (
-							<EmptyComponent
-								input={query}
-								onExerciseCreated={(exerciseId) => {
-									onSelect(exerciseId);
-									if (selectedId === undefined) {
-										setInternalSelectedId(exerciseId);
-									}
-									setQuery("");
-									setModalVisible(false);
-								}}
-							/>
-						)}
-						renderItem={renderItem}
-						showsVerticalScrollIndicator={false}
+	const sheetContent = (
+		<View className="flex-1 p-4 pt-8">
+			<View className="mb-3 flex-row items-center justify-between">
+				<View className="flex-1">
+					<TextInput
+						autoFocus
+						className="rounded-xl bg-secondary px-4 py-3 text-base text-text"
+						clearButtonMode="while-editing"
+						onChangeText={setQuery}
+						placeholder="Hledej cvik..."
+						placeholderTextColorClassName="accent-muted"
+						value={query}
 					/>
 				</View>
-			</Modal>
+			</View>
+
+			<FlatList
+				className="flex-1"
+				contentContainerStyle={{ paddingBottom: 12 }}
+				data={filtered}
+				keyboardShouldPersistTaps="handled"
+				keyExtractor={(item) => item._id}
+				ListEmptyComponent={() => (
+					<EmptyComponent
+						input={query}
+						onExerciseCreated={(exerciseId) => {
+							onSelect(exerciseId);
+							if (selectedId === undefined) {
+								setInternalSelectedId(exerciseId);
+							}
+							setQuery("");
+							closeModal();
+						}}
+					/>
+				)}
+				nestedScrollEnabled
+				renderItem={renderItem}
+				scrollEnabled
+				showsVerticalScrollIndicator={false}
+			/>
+		</View>
+	);
+
+	if (standalone) {
+		return (
+			<TrueSheet
+				backgroundColor={COLORS.darker}
+				cornerRadius={24}
+				detents={[0.7, 1]}
+				dimmedDetentIndex={0.1}
+				name={pickerSheetName}
+				onDidDismiss={handleDidDismiss}
+				scrollable
+			>
+				{sheetContent}
+			</TrueSheet>
 		);
 	}
 
@@ -167,7 +181,11 @@ export function ExercisePicker({ selectedId, onSelect, standalone = false, visib
 			<TouchableOpacity
 				accessibilityRole="button"
 				className="w-full flex-row items-center justify-between rounded-lg bg-secondary px-4 py-3"
-				onPress={() => setModalVisible(true)}
+				onPress={() => {
+					setModalVisible(true);
+					TrueSheet.present(pickerSheetName);
+					setIsPresented(true);
+				}}
 			>
 				<View>
 					<Text className={`${chosenExercise ? "text-white" : "text-muted"} text-base`}>
@@ -176,62 +194,17 @@ export function ExercisePicker({ selectedId, onSelect, standalone = false, visib
 				</View>
 				<ChevronDown color={COLORS.muted} size={20} />
 			</TouchableOpacity>
-
-			<Modal
-				animationIn="slideInUp"
-				animationOut="slideOutDown"
-				backdropOpacity={0.5}
-				backdropTransitionOutTiming={0}
-				hideModalContentWhileAnimating={true}
-				isVisible={modalVisible}
-				onBackButtonPress={closeModal}
-				onBackdropPress={closeModal}
-				onModalWillHide={() => Keyboard.dismiss()}
-				onSwipeComplete={closeModal}
-				propagateSwipe
-				style={{ justifyContent: "flex-end", margin: 0 }}
-				swipeDirection={["down"]}
-				useNativeDriver
-				useNativeDriverForBackdrop
+			<TrueSheet
+				backgroundColor={COLORS.darker}
+				cornerRadius={24}
+				detents={[0.7, 1]}
+				dimmedDetentIndex={0.1}
+				name={pickerSheetName}
+				onDidDismiss={handleDidDismiss}
+				scrollable
 			>
-				<View className="h-[90%] rounded-t-xl bg-darker p-4">
-					<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />
-					<View className="mb-3 flex-row items-center justify-between">
-						<View className="flex-1">
-							<TextInput
-								className="rounded-xl bg-secondary px-4 py-3 text-base text-text"
-								clearButtonMode="while-editing"
-								onChangeText={setQuery}
-								placeholder="Hledej cvik..."
-								placeholderTextColorClassName="accent-muted"
-								ref={inputRef}
-								value={query}
-							/>
-						</View>
-					</View>
-
-					<FlatList
-						data={filtered}
-						keyboardShouldPersistTaps="handled"
-						keyExtractor={(item) => item._id}
-						ListEmptyComponent={() => (
-							<EmptyComponent
-								input={query}
-								onExerciseCreated={(exerciseId) => {
-									onSelect(exerciseId);
-									if (selectedId === undefined) {
-										setInternalSelectedId(exerciseId);
-									}
-									setQuery("");
-									setModalVisible(false);
-								}}
-							/>
-						)}
-						renderItem={renderItem}
-						showsVerticalScrollIndicator={false}
-					/>
-				</View>
-			</Modal>
+				{sheetContent}
+			</TrueSheet>
 		</>
 	);
 }

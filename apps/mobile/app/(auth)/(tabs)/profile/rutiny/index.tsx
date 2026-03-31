@@ -1,16 +1,20 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Plus } from "lucide-react-native";
-import { useState } from "react";
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import AddRoutine from "@/components/routine/add-routine";
 import Routine from "@/components/routine/routine";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Rutiny() {
-	const [addRutinaVisible, setAddRutinaVisible] = useState(false);
 	const rutiny = useQuery(api.routines.getUserRoutines);
+
+	const openAddRutinaModal = () => {
+		TrueSheet.present(NAMES.sheets.addRoutine);
+	};
 
 	if (rutiny === undefined) {
 		return (
@@ -49,13 +53,13 @@ export default function Rutiny() {
 			/>
 
 			<TouchableOpacity
-				className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-2"
-				onPress={() => setAddRutinaVisible(true)}
+				className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-3.5"
+				onPress={openAddRutinaModal}
 			>
-				<Plus color="white" size={44} />
+				<Plus color="white" size={32} />
 			</TouchableOpacity>
 
-			<AddRoutine setSheetVisible={setAddRutinaVisible} sheetVisible={addRutinaVisible} />
+			<AddRoutine />
 		</View>
 	);
 }
