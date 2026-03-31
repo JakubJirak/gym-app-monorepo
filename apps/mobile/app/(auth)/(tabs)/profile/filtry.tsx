@@ -1,17 +1,17 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Plus } from "lucide-react-native";
-import { useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import AddFilterModal from "@/components/filters/add-filter";
 import Filter from "@/components/filters/filter";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Filtry() {
 	const filtry = useQuery(api.filters.getAllFilters);
 	const workouts = useQuery(api.workouts.getUserWorkouts);
-	const [addFilter, setAddFilter] = useState(false);
 
 	if (filtry === undefined || workouts === undefined) {
 		return (
@@ -57,11 +57,11 @@ export default function Filtry() {
 
 			<TouchableOpacity
 				className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-2"
-				onPress={() => setAddFilter(true)}
+				onPress={() => TrueSheet.present(NAMES.sheets.addFilter)}
 			>
 				<Plus color="white" size={44} />
 			</TouchableOpacity>
-			<AddFilterModal setSheetVisible={setAddFilter} sheetVisible={addFilter} />
+			<AddFilterModal />
 		</View>
 	);
 }

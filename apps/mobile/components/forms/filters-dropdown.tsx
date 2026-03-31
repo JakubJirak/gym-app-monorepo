@@ -1,10 +1,11 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Check, ChevronDown, Plus } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { FlatList, type ListRenderItem, Text, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
 import AddFilterModal from "@/components/filters/add-filter";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 
 export type Option = {
@@ -19,16 +20,13 @@ type Props = {
 };
 
 export default function FilterDropdown({ value, onChange }: Props) {
-	const [modalVisible, setModalVisible] = useState(false);
-	const [addFilterVisible, setAddFilterVisible] = useState(false);
-
 	const options = useQuery(api.filters.getAllFilters) || [];
 
 	const selected = useMemo(() => options.find((o: Option) => o._id === value), [options, value]);
 
 	function handleSelect(opt: Option) {
 		onChange(opt._id);
-		setModalVisible(false);
+		TrueSheet.dismiss(NAMES.sheets.filterDropdown);
 	}
 
 	const renderItem: ListRenderItem<Option> = ({ item }) => {
@@ -62,7 +60,7 @@ export default function FilterDropdown({ value, onChange }: Props) {
 			<TouchableOpacity
 				activeOpacity={0.85}
 				className="flex-row items-center justify-between rounded-xl bg-secondary px-3 py-3.5"
-				onPress={() => setModalVisible(true)}
+				onPress={() => TrueSheet.present(NAMES.sheets.filterDropdown)}
 			>
 				<View className="flex-row items-center">
 					{selected ? (
@@ -85,25 +83,15 @@ export default function FilterDropdown({ value, onChange }: Props) {
 				<ChevronDown color={COLORS.muted} size={20} />
 			</TouchableOpacity>
 
-			<Modal
-				animationIn="slideInUp"
-				animationOut="slideOutDown"
-				backdropOpacity={0.5}
-				backdropTransitionOutTiming={0}
-				hideModalContentWhileAnimating={true}
-				isVisible={modalVisible}
-				onBackButtonPress={() => setModalVisible(false)}
-				onBackdropPress={() => setModalVisible(false)}
-				onSwipeComplete={() => setModalVisible(false)}
-				propagateSwipe
-				style={{ justifyContent: "flex-end", margin: 0 }}
-				swipeDirection={["down"]}
-				useNativeDriver
-				useNativeDriverForBackdrop
+			<TrueSheet
+				backgroundColor={COLORS.darker}
+				cornerRadius={24}
+				detents={[0.6, 1]}
+				dimmedDetentIndex={0.1}
+				name={NAMES.sheets.filterDropdown}
+				scrollable
 			>
-				<View className="h-[60%] rounded-t-xl bg-darker p-4">
-					<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
+				<View className="px-4 pt-8 pb-4">
 					<FlatList
 						data={options}
 						keyExtractor={(item) => item._id}
@@ -119,8 +107,9 @@ export default function FilterDropdown({ value, onChange }: Props) {
 								<TouchableOpacity
 									activeOpacity={0.8}
 									className="flex-row items-center gap-2 rounded-xl bg-secondary px-4 py-3"
-									onPress={() => {
-										setAddFilterVisible(true);
+									onPress={async () => {
+										await TrueSheet.dismiss(NAMES.sheets.filterDropdown);
+										await TrueSheet.present(NAMES.sheets.addFilter);
 									}}
 								>
 									<Plus color="white" size={20} />
@@ -134,9 +123,9 @@ export default function FilterDropdown({ value, onChange }: Props) {
 						showsVerticalScrollIndicator={false}
 					/>
 				</View>
-			</Modal>
+			</TrueSheet>
 
-			<AddFilterModal setSheetVisible={setAddFilterVisible} sheetVisible={addFilterVisible} />
+			<AddFilterModal />
 		</>
 	);
 }

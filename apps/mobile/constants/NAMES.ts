@@ -4,6 +4,8 @@ export const NAMES = {
 		createTraining: "createTrainingSheet",
 		createFromRoutine: "createFromRoutineSheet",
 		trainingRoutine: "trainingRoutineSheet",
+		filterDropdown: "filterDropdownSheet",
+		addFilter: "addFilterSheet",
 		editTraining: "editTrainingSheet",
 		deleteTraining: "deleteTrainingSheet",
 	},
