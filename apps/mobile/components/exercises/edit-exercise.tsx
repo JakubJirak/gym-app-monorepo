@@ -1,31 +1,24 @@
 import { Ionicons } from "@expo/vector-icons";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
-import { useEffect, useRef, useState } from "react";
-import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
+import { useEffect, useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 
 type EditExerciseProps = {
-	sheetVisible: boolean;
-	setSheetVisible: (visible: boolean) => void;
 	exerciseId: string;
 	exerciseName: string;
 	usageCount: number;
+	sheetName?: string;
 };
 
-export default function EditExerciseModal({
-	sheetVisible,
-	setSheetVisible,
-	exerciseId,
-	exerciseName,
-	usageCount,
-}: EditExerciseProps) {
-	const closeSheet = () => {
-		setSheetVisible(false);
-	};
+export default function EditExerciseModal({ exerciseId, exerciseName, usageCount, sheetName }: EditExerciseProps) {
+	const sheetId = sheetName ?? NAMES.sheets.editExercise;
+	const closeSheet = () => TrueSheet.dismiss(sheetId);
 	const [name, setName] = useState(exerciseName || "");
 	const editExercise = useMutation(api.exercises.editExercise).withOptimisticUpdate((localStore, args) => {
 		const current = localStore.getQuery(api.exercises.getAllExercises, {});
@@ -43,21 +36,10 @@ export default function EditExerciseModal({
 			localStore.setQuery(api.exercises.getAllExercises, {}, filteredExercises);
 		}
 	});
-	const inputRef = useRef<TextInput>(null);
 
 	useEffect(() => {
-		if (sheetVisible) {
-			setName(exerciseName);
-		}
-	}, [sheetVisible, exerciseName]);
-
-	useEffect(() => {
-		if (sheetVisible) {
-			setTimeout(() => {
-				inputRef.current?.focus();
-			}, 100);
-		}
-	}, [sheetVisible]);
+		setName(exerciseName);
+	}, [exerciseName]);
 
 	const disabled = name === "" || name === exerciseName;
 
@@ -78,40 +60,64 @@ export default function EditExerciseModal({
 		closeSheet();
 	};
 
-	const handleModalHide = () => {
-		Keyboard.dismiss();
-	};
-
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={sheetVisible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onModalHide={handleModalHide}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.5, 1]}
+			dimmedDetentIndex={0.1}
+			footer={
+				usageCount === 0 ? (
+					<View className="mb-6 flex-row gap-3 px-4">
+						<TouchableOpacity
+							className="flex w-16 items-center justify-center rounded-xl bg-destructive"
+							onPress={handleDeleteExercise}
+						>
+							<Ionicons color="white" name="trash-outline" size={24} />
+						</TouchableOpacity>
+						<TouchableOpacity
+							className="flex-1 flex-row items-center justify-center rounded-2xl px-4 py-3"
+							disabled={disabled}
+							onPress={handleEditExercise}
+							style={{
+								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+							}}
+						>
+							<Pencil color="white" size={20} />
+							<Text className="px-3 py-1 text-center font-bold text-lg text-text">
+								Upravit cvik
+							</Text>
+						</TouchableOpacity>
+					</View>
+				) : (
+					<TouchableOpacity
+						className="mx-4 mb-6 flex-row items-center justify-center rounded-2xl py-3"
+						disabled={disabled}
+						onPress={handleEditExercise}
+						style={{
+							backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+						}}
+					>
+						<Pencil color="white" size={20} />
+						<Text className="px-3 py-1 text-center font-bold text-lg text-text">
+							Upravit cvik
+						</Text>
+					</TouchableOpacity>
+				)
+			}
+			name={sheetId}
 		>
-			<View className="h-[80%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="flex-">
-					<View className="mt-2 flex-row items-center gap-3 self-center">
-						<Pencil color="white" size={22} />
-						<Text className="font-bold text-2xl text-text">Upravit cvik</Text>
+			<View className="px-4 pt-8 pb-4">
+				<View>
+					<View className="mt-2 mb-4 flex-row items-center gap-2 self-center">
+						<Pencil color="white" size={20} />
+						<Text className="font-bold text-text text-xl">Upravit cvik</Text>
 					</View>
 
 					<View>
-						<Text className="mt-4 mb-2 font-semibold text-lg text-text">Název</Text>
+						<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
 						<TextInput
+							autoFocus
 							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 							cursorColorClassName="accent-text"
 							maxLength={20}
@@ -121,68 +127,12 @@ export default function EditExerciseModal({
 									handleEditExercise();
 								}
 							}}
-							ref={inputRef}
 							returnKeyType="done"
 							value={name}
 						/>
 					</View>
-
-					<View className="mt-8 mb-6 flex-row">
-						{usageCount === 0 ? (
-							<View className="mt-8 mb-6 flex-row">
-								<TouchableOpacity
-									className="mr-3 flex w-[15%] items-center justify-center rounded-xl bg-destructive"
-									onPress={handleDeleteExercise}
-								>
-									<Ionicons color="white" name="trash-outline" size={24} />
-								</TouchableOpacity>
-								<TouchableOpacity
-									className="mr-3 flex w-[25%] items-center justify-center rounded-xl border border-border"
-									onPress={closeSheet}
-								>
-									<Text className="p-2 text-lg text-text">Zrušit</Text>
-								</TouchableOpacity>
-
-								<TouchableOpacity
-									className="flex w-[52%] flex-row items-center justify-center rounded-xl"
-									disabled={disabled}
-									onPress={handleEditExercise}
-									style={{
-										backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-									}}
-								>
-									<Pencil color="white" size={18} />
-									<Text className="p-2 font-semibold text-lg text-text">
-										Upravit cvik
-									</Text>
-								</TouchableOpacity>
-							</View>
-						) : (
-							<>
-								<TouchableOpacity
-									className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
-									onPress={closeSheet}
-								>
-									<Text className="p-2 text-lg text-text">Zrušit</Text>
-								</TouchableOpacity>
-								<TouchableOpacity
-									className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-									disabled={disabled}
-									onPress={handleEditExercise}
-									style={{
-										backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-									}}
-								>
-									<Pencil color="white" size={16} />
-									<Text className="p-2 font-semibold text-lg text-text">
-										Upravit cvik
-									</Text>
-								</TouchableOpacity>
-							</>
-						)}
-					</View>
 				</View>
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }

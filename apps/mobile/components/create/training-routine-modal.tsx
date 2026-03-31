@@ -70,6 +70,7 @@ export default function TrainingRoutineModal() {
 								</TouchableOpacity>
 							</View>
 						)}
+						nestedScrollEnabled
 						renderItem={({ item }) => (
 							<TouchableOpacity
 								activeOpacity={0.7}
@@ -106,6 +107,7 @@ export default function TrainingRoutineModal() {
 								</View>
 							</TouchableOpacity>
 						)}
+						scrollEnabled
 						showsVerticalScrollIndicator={false}
 					/>
 				</View>

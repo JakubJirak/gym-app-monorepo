@@ -100,7 +100,7 @@ export default function EditFilterModal({
 					</View>
 				) : (
 					<TouchableOpacity
-						className="mb-6 flex-row items-center justify-center rounded-2xl px-4 py-3"
+						className="mx-4 mb-6 flex-row items-center justify-center rounded-2xl py-3"
 						disabled={disabled}
 						onPress={handleEditFilter}
 						style={{

@@ -1,11 +1,13 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Plus } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import AddNewExerciseModal from "@/components/exercises/add-new-exercise";
 import Exercise from "@/components/exercises/exercise";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 type ExerciseType = {
@@ -22,7 +24,6 @@ type SortedExercises = {
 export default function Exercises() {
 	const exercises = useQuery(api.exercises.getAllExercises);
 	const workouts = useQuery(api.workouts.getUserWorkouts);
-	const [addExercise, setAddExercise] = useState(false);
 
 	const exerciseUsageCount = useMemo(() => {
 		if (!workouts) {
@@ -73,10 +74,10 @@ export default function Exercises() {
 		<View className="flex-1 bg-primary px-2">
 			<ComponentHeader fallbackRoute="/(auth)/(tabs)/profile" text="Cviky" />
 			<TouchableOpacity
-				className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-2"
-				onPress={() => setAddExercise(true)}
+				className="absolute right-8 bottom-8 z-100 rounded-full bg-accent p-3.5"
+				onPress={() => TrueSheet.present(NAMES.sheets.addNewExercise)}
 			>
-				<Plus color="white" size={44} />
+				<Plus color="white" size={32} />
 			</TouchableOpacity>
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View className="mx-2 mt-4 pb-20">
@@ -97,7 +98,7 @@ export default function Exercises() {
 				</View>
 			</ScrollView>
 
-			<AddNewExerciseModal setSheetVisible={setAddExercise} sheetVisible={addExercise} />
+			<AddNewExerciseModal />
 		</View>
 	);
 }

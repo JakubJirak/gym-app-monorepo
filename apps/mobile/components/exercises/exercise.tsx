@@ -1,6 +1,7 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { Pencil } from "lucide-react-native";
-import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { NAMES } from "@/constants/NAMES";
 import EditExerciseModal from "./edit-exercise";
 
 type ExerciseProps = {
@@ -11,8 +12,8 @@ type ExerciseProps = {
 };
 
 export default function Exercise({ name, exerciseId, usageCount, userId }: ExerciseProps) {
-	const [edit, setEdit] = useState(false);
 	const isEditable = userId !== "default";
+	const editExerciseSheetName = `${NAMES.sheets.editExercise}-${exerciseId}`;
 
 	if (isEditable) {
 		return (
@@ -20,7 +21,7 @@ export default function Exercise({ name, exerciseId, usageCount, userId }: Exerc
 				<TouchableOpacity
 					activeOpacity={0.7}
 					className="mb-2 flex-row items-center justify-between rounded-xl bg-secondary px-4 py-3"
-					onPress={() => setEdit(true)}
+					onPress={() => TrueSheet.present(editExerciseSheetName)}
 				>
 					<Text className="flex-1 text-base text-text">{name}</Text>
 					<Text className="text-base text-muted">{usageCount}x</Text>
@@ -31,8 +32,7 @@ export default function Exercise({ name, exerciseId, usageCount, userId }: Exerc
 				<EditExerciseModal
 					exerciseId={exerciseId}
 					exerciseName={name}
-					setSheetVisible={setEdit}
-					sheetVisible={edit}
+					sheetName={editExerciseSheetName}
 					usageCount={usageCount}
 				/>
 			</>

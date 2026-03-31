@@ -1,27 +1,23 @@
 import { Ionicons } from "@expo/vector-icons";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 import MuscleGroupDropdown from "../forms/muscle-group-dropdown";
 
 type AddNewExerciseProps = {
-	sheetVisible: boolean;
-	setSheetVisible: (visible: boolean) => void;
 	defaultName?: string;
 	onExerciseCreated?: (exerciseId: string) => void;
+	sheetName?: string;
 };
 
-export default function AddNewExerciseModal({
-	sheetVisible,
-	setSheetVisible,
-	defaultName,
-	onExerciseCreated,
-}: AddNewExerciseProps) {
-	const closeSheet = () => setSheetVisible(false);
+export default function AddNewExerciseModal({ defaultName, onExerciseCreated, sheetName }: AddNewExerciseProps) {
+	const sheetId = sheetName ?? NAMES.sheets.addNewExercise;
+	const closeSheet = () => TrueSheet.dismiss(sheetId);
 	const [name, setName] = useState(defaultName ?? "");
 	const [muscleGroupId, setMuscleGroupId] = useState<string | undefined>(undefined);
 	const addExercise = useMutation(api.exercises.addExercise).withOptimisticUpdate((localStore, args) => {
@@ -58,29 +54,32 @@ export default function AddNewExerciseModal({
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={sheetVisible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.7, 1]}
+			dimmedDetentIndex={0.1}
+			footer={
+				<TouchableOpacity
+					className="mb-6 flex-row items-center justify-center rounded-2xl px-4 py-3"
+					disabled={disabled}
+					onPress={handleAddExercise}
+					style={{
+						backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
+					}}
+				>
+					<Ionicons color="white" name="add" size={28} />
+					<Text className="px-2 py-1 text-center font-bold text-lg text-text">Přidat cvik</Text>
+				</TouchableOpacity>
+			}
+			footerStyle={{ paddingHorizontal: 16 }}
+			name={sheetId}
 		>
-			<View className="h-[80%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="flex-1">
+			<View className="px-4 pt-8 pb-4">
+				<View>
 					<View className="mt-2 mb-4 flex-row items-center gap-2 self-center">
 						<Ionicons color="white" name="add-outline" size={32} />
-						<Text className="font-bold text-2xl text-text">Přidat cvik</Text>
+						<Text className="font-bold text-text text-xl">Přidat cvik</Text>
 					</View>
 
 					<View className="gap-4">
@@ -105,28 +104,8 @@ export default function AddNewExerciseModal({
 							<MuscleGroupDropdown onChange={setMuscleGroupId} value={muscleGroupId} />
 						</View>
 					</View>
-
-					<View className="mt-8 mb-6 flex-row">
-						<TouchableOpacity
-							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
-							onPress={closeSheet}
-						>
-							<Text className="p-2 text-lg text-text">Zrušit</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-							disabled={disabled}
-							onPress={handleAddExercise}
-							style={{
-								backgroundColor: disabled ? COLORS.disabled : COLORS.accent,
-							}}
-						>
-							<Ionicons color="white" name="add" size={28} />
-							<Text className="p-2 font-semibold text-lg text-text">Přidat cvik</Text>
-						</TouchableOpacity>
-					</View>
 				</View>
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }

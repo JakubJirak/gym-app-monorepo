@@ -1,9 +1,11 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Check, ChevronDown, Plus } from "lucide-react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, Keyboard, type ListRenderItem, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 import AddNewExerciseModal from "../exercises/add-new-exercise";
 
@@ -18,26 +20,22 @@ const EmptyComponent = ({
 }: {
 	input: string;
 	onExerciseCreated: (exerciseId: string) => void;
-}) => {
-	const [sheetVisible, setSheetVisible] = useState(false);
-	return (
-		<View className="items-center py-4">
-			<TouchableOpacity
-				className="flex flex-row items-center gap-2 rounded-xl bg-secondary px-4 py-3"
-				onPress={() => setSheetVisible(true)}
-			>
-				<Plus color="white" size={24} />
-				<Text className="text-lg text-text">Přidat nový cvik</Text>
-			</TouchableOpacity>
-			<AddNewExerciseModal
-				defaultName={input}
-				onExerciseCreated={onExerciseCreated}
-				setSheetVisible={setSheetVisible}
-				sheetVisible={sheetVisible}
-			/>
-		</View>
-	);
-};
+}) => (
+	<View className="items-center py-4">
+		<TouchableOpacity
+			className="flex flex-row items-center gap-2 rounded-xl bg-secondary px-4 py-3"
+			onPress={() => TrueSheet.present(NAMES.sheets.addNewExerciseFromPicker)}
+		>
+			<Plus color="white" size={24} />
+			<Text className="text-lg text-text">Přidat nový cvik</Text>
+		</TouchableOpacity>
+		<AddNewExerciseModal
+			defaultName={input}
+			onExerciseCreated={onExerciseCreated}
+			sheetName={NAMES.sheets.addNewExerciseFromPicker}
+		/>
+	</View>
+);
 
 type ExercisePickerProps = {
 	selectedId?: string | null;

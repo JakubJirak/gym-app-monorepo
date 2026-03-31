@@ -56,10 +56,10 @@ export default function Filtry() {
 			/>
 
 			<TouchableOpacity
-				className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-2"
+				className="absolute right-8 bottom-8 z-50 rounded-full bg-accent p-3.5"
 				onPress={() => TrueSheet.present(NAMES.sheets.addFilter)}
 			>
-				<Plus color="white" size={44} />
+				<Plus color="white" size={32} />
 			</TouchableOpacity>
 			<AddFilterModal />
 		</View>
