@@ -52,6 +52,7 @@ export default function TrainingFooter({ id, exercises, isEdit, setIsEdit }: Tra
 			<ExercisePicker
 				onSelect={handleExerciseSelect}
 				setVisible={setAddExerciseModal}
+				sheetName={`${NAMES.sheets.exercisePicker}-training-footer-${id}`}
 				standalone
 				visible={addExerciseModal}
 			/>

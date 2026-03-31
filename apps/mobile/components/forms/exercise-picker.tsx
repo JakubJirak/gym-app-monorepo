@@ -14,16 +14,20 @@ type Exercise = {
 };
 
 const EmptyComponent = ({
+	addExerciseSheetName,
 	input,
 	onExerciseCreated,
 }: {
+	addExerciseSheetName: string;
 	input: string;
 	onExerciseCreated: (exerciseId: string) => void;
 }) => (
 	<View className="items-center py-4">
 		<TouchableOpacity
 			className="flex flex-row items-center gap-2 rounded-xl bg-secondary px-4 py-3"
-			onPress={() => TrueSheet.present(NAMES.sheets.addNewExerciseFromPicker)}
+			onPress={() => {
+				TrueSheet.present(addExerciseSheetName).catch(() => null);
+			}}
 		>
 			<Plus color="white" size={24} />
 			<Text className="text-lg text-text">Přidat nový cvik</Text>
@@ -31,7 +35,7 @@ const EmptyComponent = ({
 		<AddNewExerciseModal
 			defaultName={input}
 			onExerciseCreated={onExerciseCreated}
-			sheetName={NAMES.sheets.addNewExerciseFromPicker}
+			sheetName={addExerciseSheetName}
 		/>
 	</View>
 );
@@ -59,6 +63,7 @@ export function ExercisePicker({
 	const modalVisible = standalone && visible !== undefined ? visible : internalModalVisible;
 	const setModalVisible = standalone && setVisible !== undefined ? setVisible : setInternalModalVisible;
 	const pickerSheetName = sheetName ?? NAMES.sheets.exercisePicker;
+	const addExerciseSheetName = `${pickerSheetName}-${NAMES.sheets.addNewExerciseFromPicker}`;
 	const [query, setQuery] = useState("");
 	const exercises = useQuery(api.exercises.getAllExercises);
 
@@ -67,11 +72,11 @@ export function ExercisePicker({
 
 	useEffect(() => {
 		if (modalVisible && !isPresented) {
-			TrueSheet.present(pickerSheetName);
+			TrueSheet.present(pickerSheetName).catch(() => null);
 			setIsPresented(true);
 		}
 		if (!modalVisible && isPresented) {
-			TrueSheet.dismiss(pickerSheetName);
+			TrueSheet.dismiss(pickerSheetName).catch(() => null);
 			setIsPresented(false);
 		}
 	}, [isPresented, modalVisible, pickerSheetName]);
@@ -94,7 +99,7 @@ export function ExercisePicker({
 	}
 
 	const closeModal = () => {
-		TrueSheet.dismiss(pickerSheetName);
+		TrueSheet.dismiss(pickerSheetName).catch(() => null);
 		setIsPresented(false);
 		setModalVisible(false);
 	};
@@ -141,6 +146,7 @@ export function ExercisePicker({
 				keyExtractor={(item) => item._id}
 				ListEmptyComponent={() => (
 					<EmptyComponent
+						addExerciseSheetName={addExerciseSheetName}
 						input={query}
 						onExerciseCreated={(exerciseId) => {
 							onSelect(exerciseId);
@@ -183,7 +189,7 @@ export function ExercisePicker({
 				className="w-full flex-row items-center justify-between rounded-lg bg-secondary px-4 py-3"
 				onPress={() => {
 					setModalVisible(true);
-					TrueSheet.present(pickerSheetName);
+					TrueSheet.present(pickerSheetName).catch(() => null);
 					setIsPresented(true);
 				}}
 			>

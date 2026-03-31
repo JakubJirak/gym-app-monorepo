@@ -111,7 +111,7 @@ export default function AddFilterModal({ sheetName }: AddFilterProps) {
 				</View>
 			</View>
 			<ColorSquarePicker
-				columns={48}
+				columns={36}
 				initialHex="#000000"
 				onColorChange={(hex) => setColor(hex)}
 				rows={48}

@@ -1,10 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
 import { ExercisePicker } from "@/components/forms/exercise-picker";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
@@ -22,7 +23,16 @@ export default function RoutineAddExerciseModal({
 	exercises,
 }: RoutineAddExerciseProps) {
 	const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+	const name = `${NAMES.sheets.routineAddExercise}-${routineId}`;
 	const closeSheet = () => setSheetVisible(false);
+
+	useEffect(() => {
+		if (sheetVisible) {
+			TrueSheet.present(name);
+		} else {
+			TrueSheet.dismiss(name);
+		}
+	}, [name, sheetVisible]);
 	const addExercise = useMutation(api.routineExercises.addRoutineExercise).withOptimisticUpdate(
 		(localStore, args) => {
 			const queries = localStore.getAllQueries(api.routines.getRoutineById);
@@ -62,55 +72,35 @@ export default function RoutineAddExerciseModal({
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={sheetVisible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.45, 0.7]}
+			dimmedDetentIndex={0.1}
+			footer={
+				<TouchableOpacity
+					className="mx-4 mb-6 flex-row items-center justify-center rounded-2xl px-4 py-3"
+					disabled={selectedId === undefined}
+					onPress={handleAddExercise}
+					style={{
+						backgroundColor: selectedId === undefined ? COLORS.disabled : COLORS.accent,
+					}}
+				>
+					<Ionicons color="white" name="add" size={28} />
+					<Text className="px-2 py-1 text-center font-bold text-lg text-text">Přidat cvik</Text>
+				</TouchableOpacity>
+			}
+			name={name}
+			onDidDismiss={closeSheet}
 		>
-			<View className="h-[40%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="flex-1 items-center justify-between">
-					<View className="mt-2 flex-row items-center gap-2">
-						<Ionicons color="white" name="add-outline" size={32} />
-						<Text className="font-bold text-2xl text-text">Přidat cvik</Text>
-					</View>
-
-					<ExercisePicker onSelect={(id) => setSelectedId(id)} selectedId={selectedId} />
-
-					<View className="mt-4 mb-6 flex-row">
-						<TouchableOpacity
-							className="mr-4 flex w-[35%] items-center justify-center rounded-xl border border-border"
-							onPress={closeSheet}
-						>
-							<Text className="p-2 text-lg text-text">Zrušit</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							className="flex w-[60%] flex-row items-center justify-center rounded-xl"
-							disabled={selectedId === undefined}
-							onPress={handleAddExercise}
-							style={{
-								backgroundColor:
-									selectedId === undefined ? COLORS.disabled : COLORS.accent,
-							}}
-						>
-							<Ionicons color="white" name="add" size={28} />
-							<Text className="p-2 font-semibold text-lg text-text">Přidat cvik</Text>
-						</TouchableOpacity>
-					</View>
+			<View className="px-4 pt-8 pb-4">
+				<View className="mt-2 mb-4 flex-row items-center gap-2 self-center">
+					<Ionicons color="white" name="add-outline" size={28} />
+					<Text className="font-bold text-text text-xl">Přidat cvik</Text>
 				</View>
+
+				<ExercisePicker onSelect={(id) => setSelectedId(id)} selectedId={selectedId} />
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }

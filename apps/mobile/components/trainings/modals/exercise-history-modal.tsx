@@ -1,6 +1,9 @@
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
+import { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
-import Modal from "react-native-modal";
+import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { formatDate } from "@/src/utils/date-utils";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 
@@ -20,8 +23,17 @@ export default function ExerciseHistoryModal({
 	currentTrainingId,
 }: ExerciseHistoryModalProps) {
 	const trainings = useQuery(api.workouts.getUserWorkouts);
+	const name = `${NAMES.sheets.exerciseHistory}-${exerciseId}`;
 
 	const closeModal = () => setVisible(false);
+
+	useEffect(() => {
+		if (visible) {
+			TrueSheet.present(name);
+		} else {
+			TrueSheet.dismiss(name);
+		}
+	}, [name, visible]);
 
 	const getLastThreeOccurrences = () => {
 		if (!trainings) {
@@ -49,22 +61,20 @@ export default function ExerciseHistoryModal({
 	const history = getLastThreeOccurrences();
 
 	return (
-		<Modal
-			animationIn="fadeIn"
-			animationOut="fadeOut"
-			backdropOpacity={0.7}
-			backdropTransitionOutTiming={0}
-			isVisible={visible}
-			onBackButtonPress={closeModal}
-			onBackdropPress={closeModal}
-			style={{ justifyContent: "center", alignItems: "center", margin: 0 }}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.6, 0.9]}
+			dimmedDetentIndex={0.1}
+			name={name}
+			onDidDismiss={closeModal}
+			scrollable
 		>
-			<View className="max-h-[70%] w-[80%] rounded-xl bg-darker p-4">
-				<Text className="mb-2 text-center font-bold text-text text-xl">{exerciseName}</Text>
+			<View className="flex-1 px-4 pt-8 pb-4">
+				<Text className="mb-3 text-center font-bold text-text text-xl">{exerciseName}</Text>
 
 				<FlatList
+					className="flex-1"
 					data={history}
 					ItemSeparatorComponent={() => <View className="my-2 h-0.5 bg-secondary" />}
 					keyExtractor={(item) => item.id}
@@ -98,9 +108,10 @@ export default function ExerciseHistoryModal({
 							</View>
 						</View>
 					)}
+					scrollEnabled
 					showsVerticalScrollIndicator={false}
 				/>
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }

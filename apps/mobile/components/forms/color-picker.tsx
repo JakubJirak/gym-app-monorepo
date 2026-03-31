@@ -1,9 +1,11 @@
 /** biome-ignore-all lint/style/useTemplate: more readable */
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: its grid */
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { Pencil } from "lucide-react-native";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type GestureResponderEvent, type LayoutChangeEvent, Text, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
+import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 
 type PickerProps = {
 	size?: number;
@@ -92,6 +94,7 @@ export default function ColorPickerBottomSheet({
 	visible,
 	setVisible,
 }: PickerProps) {
+	const name = NAMES.sheets.colorPicker;
 	const [selectedHex, setSelectedHex] = useState(() => normalizeHex(initialHex) || "#FF0000");
 	const layoutRef = useRef({ width: size, height: size, x: 0, y: 0 });
 
@@ -147,6 +150,14 @@ export default function ColorPickerBottomSheet({
 
 	const close = () => setVisible(false);
 
+	useEffect(() => {
+		if (visible) {
+			TrueSheet.present(name);
+		} else {
+			TrueSheet.dismiss(name);
+		}
+	}, [name, visible]);
+
 	const confirm = () => {
 		// biome-ignore lint/nursery/noUnusedExpressions: only once
 		onColorChange ? onColorChange(selectedHex) : null;
@@ -154,25 +165,18 @@ export default function ColorPickerBottomSheet({
 	};
 
 	return (
-		<Modal
-			backdropOpacity={0.5}
-			hideModalContentWhileAnimating
-			isVisible={visible}
-			onBackButtonPress={close}
-			onBackdropPress={close}
-			onSwipeComplete={close}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.7]}
+			dimmedDetentIndex={0.1}
+			name={name}
+			onDidDismiss={close}
 		>
 			<View
 				className={`${className}rounded-t-2xl h-[65%] bg-darker p-4`}
 				style={{ borderTopLeftRadius: 16, borderTopRightRadius: 16 }}
 			>
-				<View className="mb-4 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
 				<View
 					onLayout={onLayout}
 					onResponderGrant={pickColorAt}
@@ -186,6 +190,7 @@ export default function ColorPickerBottomSheet({
 						overflow: "hidden",
 						borderRadius: 8,
 						alignSelf: "center",
+						marginTop: 16,
 					}}
 				>
 					{grid.map((row, rIdx) => (
@@ -224,6 +229,6 @@ export default function ColorPickerBottomSheet({
 					</View>
 				</View>
 			</View>
-		</Modal>
+		</TrueSheet>
 	);
 }

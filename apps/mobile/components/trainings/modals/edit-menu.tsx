@@ -1,10 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { ChevronDown, ChevronUp, NotebookPen, Pencil, Plus } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
 import { COLORS } from "@/constants/COLORS";
+import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 import AddSetModal from "./edit-menu-modals/add-set";
@@ -35,7 +36,16 @@ export default function EditMenuModal({
 	const [set, setSet] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const [note, setNote] = useState(false);
+	const sheetName = `${NAMES.sheets.trainingEditMenu}-${exerciseId}`;
 	const closeSheet = () => setSheetVisible(false);
+
+	useEffect(() => {
+		if (sheetVisible) {
+			TrueSheet.present(sheetName);
+		} else {
+			TrueSheet.dismiss(sheetName);
+		}
+	}, [sheetName, sheetVisible]);
 
 	const deleteWorkoutExercise = useMutation(api.workoutExercises.deleteWorkoutExercise).withOptimisticUpdate(
 		(localStore, args) => {
@@ -130,26 +140,16 @@ export default function EditMenuModal({
 	};
 
 	return (
-		<Modal
-			animationIn="slideInUp"
-			animationOut="slideOutDown"
-			backdropOpacity={0.5}
-			backdropTransitionOutTiming={0}
-			hideModalContentWhileAnimating
-			isVisible={sheetVisible}
-			onBackButtonPress={closeSheet}
-			onBackdropPress={closeSheet}
-			onSwipeComplete={closeSheet}
-			propagateSwipe
-			style={{ justifyContent: "flex-end", margin: 0 }}
-			swipeDirection={["down"]}
-			useNativeDriver
-			useNativeDriverForBackdrop
+		<TrueSheet
+			backgroundColor={COLORS.darker}
+			cornerRadius={24}
+			detents={[0.6, 0.9]}
+			dimmedDetentIndex={0.1}
+			name={sheetName}
+			onDidDismiss={closeSheet}
 		>
-			<View className="h-[63%] rounded-t-xl bg-darker p-4">
-				<View className="mb-2 h-1 w-10 self-center rounded-full bg-modalPicker" />
-
-				<View className="mt-3 flex-1 gap-4">
+			<View className="px-4 pt-8 pb-4">
+				<View className="mt-1 gap-4">
 					<TouchableOpacity
 						className="w-full flex-row items-center gap-2 rounded-xl bg-secondary px-3 py-2.5 pl-[25%]"
 						onPress={() => setSet(true)}
@@ -222,6 +222,6 @@ export default function EditMenuModal({
 				visible={note}
 				workoutExerciseId={exerciseId}
 			/>
-		</Modal>
+		</TrueSheet>
 	);
 }

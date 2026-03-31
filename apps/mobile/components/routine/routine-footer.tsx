@@ -52,6 +52,7 @@ export default function RoutineFooter({ id, exercises, isEdit, setIsEdit }: Rout
 			<ExercisePicker
 				onSelect={handleExerciseSelect}
 				setVisible={setAddExerciseModal}
+				sheetName={`${NAMES.sheets.exercisePicker}-routine-footer-${id}`}
 				standalone
 				visible={addExerciseModal}
 			/>
