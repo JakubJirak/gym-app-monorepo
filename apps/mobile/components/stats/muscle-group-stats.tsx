@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react";
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { RadarChart } from "react-native-gifted-charts";
 import { COLORS } from "@/constants/COLORS";
@@ -9,7 +9,7 @@ type MuscleGroupStatsProps = {
 	trainings: typeof api.workouts.getUserWorkouts._returnType;
 };
 
-const MuscleGroupStats = memo(function MuscleGroupStatsComponent({ trainings }: MuscleGroupStatsProps) {
+function MuscleGroupStats({ trainings }: MuscleGroupStatsProps) {
 	const allMuscleGroups = useQuery(api.muscleGroups.getAllMuscleGroups);
 
 	const muscleGroupCount = useMemo(() => {
@@ -35,7 +35,11 @@ const MuscleGroupStats = memo(function MuscleGroupStatsComponent({ trainings }: 
 				count[group] = (count[group] || 0) + 1;
 			});
 
-		return Object.fromEntries(Object.entries(count).sort(([, a], [, b]) => b - a));
+		return Object.fromEntries(
+			Object.entries(count)
+				.filter(([, exerciseCount]) => exerciseCount > 0)
+				.sort(([, a], [, b]) => b - a)
+		);
 	}, [trainings, allMuscleGroups]);
 
 	const chartData = useMemo(() => {
@@ -100,6 +104,6 @@ const MuscleGroupStats = memo(function MuscleGroupStatsComponent({ trainings }: 
 			</View>
 		</View>
 	);
-});
+}
 
 export default MuscleGroupStats;
