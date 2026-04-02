@@ -11,7 +11,7 @@ export default function About() {
 				<Info color="white" size={24} />
 				<View className="flex-1 flex-row items-center justify-between">
 					<Text className="text-lg text-text">Verze</Text>
-					<Text className="text-base text-muted">1.0</Text>
+					<Text className="text-base text-muted">1.2</Text>
 				</View>
 			</View>
 		</View>
