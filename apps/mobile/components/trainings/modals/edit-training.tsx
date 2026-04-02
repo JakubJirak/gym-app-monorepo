@@ -83,7 +83,7 @@ export default function EditTrainingModal({
 		<TrueSheet
 			backgroundColor={COLORS.darker}
 			cornerRadius={24}
-			detents={[0.7, 1]}
+			detents={[0.8, 1]}
 			dimmedDetentIndex={0.1}
 			footer={
 				<TouchableOpacity
