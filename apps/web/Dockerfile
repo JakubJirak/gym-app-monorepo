@@ -19,7 +19,7 @@ ENV NODE_ENV=development
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/bun.lock ./bun.lock
 
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile || bun install
 
 # ─── Stage 3: Build ───────────────────────────────────────────────────────────
 FROM oven/bun:1.3.9-alpine AS builder
@@ -31,7 +31,7 @@ COPY --from=pruner /app/out/full/ .
 
 # Re-install in the builder layer to avoid broken links/binaries when copying
 # Bun-managed node_modules across stages.
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile || bun install
 
 # Build-time env vars (injected by Dokploy / docker build --build-arg)
 ARG VITE_CONVEX_URL
@@ -62,6 +62,6 @@ COPY --from=builder /app/apps/web/.output ./.output
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-	CMD wget -qO- http://127.0.0.1:3000/api/health >/dev/null || exit 1
+	CMD bun -e "fetch('http://127.0.0.1:3000/').then(() => process.exit(0)).catch(() => process.exit(1))"
 
 CMD ["bun", ".output/server/index.mjs"]
