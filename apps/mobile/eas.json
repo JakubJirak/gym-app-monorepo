@@ -13,6 +13,7 @@
     },
     "production": {
       "autoIncrement": true,
+      "bun": "1.3.9",
       "android": {
         "buildType": "apk"
       },

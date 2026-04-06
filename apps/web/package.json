@@ -13,8 +13,9 @@
     "start": "bun run .output/server/index.mjs"
   },
   "dependencies": {
-    "@packages/convex": "workspace:*",
+    "@convex-dev/better-auth": "^0.11.4",
     "@convex-dev/react-query": "^0.0.0-alpha.11",
+    "@packages/convex": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -44,6 +45,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "convex": "^1.27.3",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.548.0",
     "nitro": "^3.0.1-alpha.2",
@@ -51,6 +53,7 @@
     "react-day-picker": "^9.11.1",
     "react-dom": "19.1.0",
     "react-icons": "^5.5.0",
+    "better-auth": "^1.5.6",
     "recharts": "2.15.4",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.6",

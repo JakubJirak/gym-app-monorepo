@@ -8,12 +8,12 @@ export const getAllFilters = query({
 	handler: async (ctx) => {
 		let userId: string;
 		try {
-			//@ts-expect-error
+
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return [];
 			}
-			//@ts-expect-error
+
 			userId = user._id;
 		} catch (error) {
 			// Auth timeout or error - return empty results
@@ -34,12 +34,12 @@ export const addFilter = mutation({
 		color: v.string(),
 	},
 	handler: async (ctx, { name, color }) => {
-		//@ts-expect-error
+	
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
+
 		const userId = user._id;
 
 		// Rate limiting
@@ -60,12 +60,12 @@ export const editFilter = mutation({
 		color: v.string(),
 	},
 	handler: async (ctx, { filterId, name, color }) => {
-		//@ts-expect-error
+
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
+
 		const userId = user._id;
 
 		// Rate limiting
@@ -92,12 +92,12 @@ export const deleteFilter = mutation({
 		filterId: v.id("filters"),
 	},
 	handler: async (ctx, { filterId }) => {
-		//@ts-expect-error
+
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
+
 		const userId = user._id;
 
 		// Rate limiting

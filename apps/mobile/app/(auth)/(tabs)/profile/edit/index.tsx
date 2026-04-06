@@ -35,7 +35,7 @@ export default function Edit() {
 				<View className="mt-8 mb-3 gap-3">
 					<View className="items-center gap-4">
 						<View>
-							<View className="relative h-[110px] w-[110px] rounded-full bg-gray-700" />
+							<View className="relative h-27.5 w-27.5 rounded-full bg-gray-700" />
 							{/* <View className="absolute right-0 bottom-0 size-10 items-center justify-center rounded-full bg-accent">
 								<Ionicons color="white" name="pencil" size={20} />
 							</View> */}

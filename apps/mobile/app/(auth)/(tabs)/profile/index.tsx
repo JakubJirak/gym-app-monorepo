@@ -33,7 +33,7 @@ export default function Profile() {
 			<ProfileHeader text={session.user.name} />
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View className="mt-2 mb-6 flex-row items-center gap-6">
-					<View className="h-[90px] w-[90px] rounded-full bg-gray-700" />
+					<View className="h-22.5 w-22.5 rounded-full bg-gray-700" />
 					<View className="gap-1">
 						<Text className="font-semibold text-3xl text-text">{session.user.name}</Text>
 						{desc && <Text className="text-muted text-xl">{desc.description}</Text>}

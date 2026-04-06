@@ -22,11 +22,15 @@ export const MaterialTopTabs = withLayoutContext<
 	MaterialTopTabNavigationEventMap
 >(Navigator);
 
-export const RoutineIdContext = createContext<string | string[] | undefined>(undefined);
+export const RoutineIdContext = createContext<string | undefined>(undefined);
 
 export default function RoutineIdLayout() {
 	const { id } = useLocalSearchParams();
-	const routine = useQuery(api.routines.getRoutineById, id ? { routineId: id as Id<"routines"> } : "skip");
+	const routineId = Array.isArray(id) ? id[0] : id;
+	const routine = useQuery(
+		api.routines.getRoutineById,
+		routineId ? { routineId: routineId as Id<"routines"> } : "skip"
+	);
 
 	const filterColor = routine?.filter?.color || COLORS.accent;
 
@@ -48,10 +52,10 @@ export default function RoutineIdLayout() {
 	return (
 		<>
 			<Stack.Screen options={{ headerShown: false }} />
-			<RoutineIdContext.Provider value={id}>
+			<RoutineIdContext.Provider value={routineId}>
 				<View className="flex-1 bg-primary">
 					<View className="px-4">
-						<RoutineHeader routineId={id as string} text={routine.name} />
+						<RoutineHeader routineId={routineId as string} text={routine.name} />
 					</View>
 
 					<MaterialTopTabs
