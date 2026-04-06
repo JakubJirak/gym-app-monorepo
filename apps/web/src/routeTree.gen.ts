@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as SharedTrainingIdRouteImport } from './routes/shared/$trainingId'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as AuthTreninkyIndexRouteImport } from './routes/_auth/treninky/index'
 import { Route as AuthStatistikyIndexRouteImport } from './routes/_auth/statistiky/index'
 import { Route as AuthRutinyIndexRouteImport } from './routes/_auth/rutiny/index'
@@ -49,6 +50,11 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
 const SharedTrainingIdRoute = SharedTrainingIdRouteImport.update({
   id: '/shared/$trainingId',
   path: '/shared/$trainingId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthTreninkyIndexRoute = AuthTreninkyIndexRouteImport.update({
@@ -114,6 +120,7 @@ const AuthRutinyRoutineIdRoute = AuthRutinyRoutineIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/health': typeof ApiHealthRoute
   '/shared/$trainingId': typeof SharedTrainingIdRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/health': typeof ApiHealthRoute
   '/shared/$trainingId': typeof SharedTrainingIdRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
@@ -152,6 +160,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/api/health': typeof ApiHealthRoute
   '/shared/$trainingId': typeof SharedTrainingIdRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/api/health'
     | '/shared/$trainingId'
     | '/login/'
     | '/register/'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/api/health'
     | '/shared/$trainingId'
     | '/login'
     | '/register'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
+    | '/api/health'
     | '/shared/$trainingId'
     | '/login/'
     | '/register/'
@@ -229,6 +241,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  ApiHealthRoute: typeof ApiHealthRoute
   SharedTrainingIdRoute: typeof SharedTrainingIdRoute
   LoginIndexRoute: typeof LoginIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
@@ -270,6 +283,13 @@ declare module '@tanstack/react-router' {
       path: '/shared/$trainingId'
       fullPath: '/shared/$trainingId'
       preLoaderRoute: typeof SharedTrainingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/treninky/': {
@@ -392,6 +412,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  ApiHealthRoute: ApiHealthRoute,
   SharedTrainingIdRoute: SharedTrainingIdRoute,
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,

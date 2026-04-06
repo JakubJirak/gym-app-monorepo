@@ -26,10 +26,16 @@ const fetchAuth = createServerFn({ method: "GET" }).handler(async () => {
 	const convexUrl = process.env.VITE_CONVEX_URL;
 	const convexSiteUrl = process.env.VITE_CONVEX_SITE_URL;
 	if (!convexUrl) {
-		throw new Error("VITE_CONVEX_URL must be set");
+		return {
+			userId: undefined,
+			token: undefined,
+		};
 	}
 	if (!convexSiteUrl) {
-		throw new Error("VITE_CONVEX_SITE_URL must be set");
+		return {
+			userId: undefined,
+			token: undefined,
+		};
 	}
 
 	const betterAuthServer = convexBetterAuthReactStart({
