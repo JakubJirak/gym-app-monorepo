@@ -11,10 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ResetPasswordIndexRouteImport } from './routes/reset-password/index'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
-import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password/index'
+import { Route as SharedTrainingIdRouteImport } from './routes/shared/$trainingId'
 import { Route as AuthTreninkyIndexRouteImport } from './routes/_auth/treninky/index'
 import { Route as AuthStatistikyIndexRouteImport } from './routes/_auth/statistiky/index'
 import { Route as AuthRutinyIndexRouteImport } from './routes/_auth/rutiny/index'
@@ -24,7 +23,6 @@ import { Route as AuthMenuIndexRouteImport } from './routes/_auth/menu/index'
 import { Route as AuthKategorieIndexRouteImport } from './routes/_auth/kategorie/index'
 import { Route as AuthKalendarIndexRouteImport } from './routes/_auth/kalendar/index'
 import { Route as AuthCvikyIndexRouteImport } from './routes/_auth/cviky/index'
-import { Route as SharedTrainingTrainingIdRouteImport } from './routes/shared/training/$trainingId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AuthTreninkyTrainingIdRouteImport } from './routes/_auth/treninky/$trainingId'
 import { Route as AuthRutinyRoutineIdRouteImport } from './routes/_auth/rutiny/$routineId'
@@ -38,11 +36,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ResetPasswordIndexRoute = ResetPasswordIndexRouteImport.update({
-  id: '/reset-password/',
-  path: '/reset-password/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
@@ -53,9 +46,9 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
-  id: '/forgot-password/',
-  path: '/forgot-password/',
+const SharedTrainingIdRoute = SharedTrainingIdRouteImport.update({
+  id: '/shared/$trainingId',
+  path: '/shared/$trainingId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthTreninkyIndexRoute = AuthTreninkyIndexRouteImport.update({
@@ -103,12 +96,6 @@ const AuthCvikyIndexRoute = AuthCvikyIndexRouteImport.update({
   path: '/cviky/',
   getParentRoute: () => AuthRoute,
 } as any)
-const SharedTrainingTrainingIdRoute =
-  SharedTrainingTrainingIdRouteImport.update({
-    id: '/shared/training/$trainingId',
-    path: '/shared/training/$trainingId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -127,14 +114,12 @@ const AuthRutinyRoutineIdRoute = AuthRutinyRoutineIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/forgot-password/': typeof ForgotPasswordIndexRoute
+  '/shared/$trainingId': typeof SharedTrainingIdRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
-  '/reset-password/': typeof ResetPasswordIndexRoute
   '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/shared/training/$trainingId': typeof SharedTrainingTrainingIdRoute
   '/cviky/': typeof AuthCvikyIndexRoute
   '/kalendar/': typeof AuthKalendarIndexRoute
   '/kategorie/': typeof AuthKategorieIndexRoute
@@ -147,14 +132,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/shared/$trainingId': typeof SharedTrainingIdRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
-  '/reset-password': typeof ResetPasswordIndexRoute
   '/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/shared/training/$trainingId': typeof SharedTrainingTrainingIdRoute
   '/cviky': typeof AuthCvikyIndexRoute
   '/kalendar': typeof AuthKalendarIndexRoute
   '/kategorie': typeof AuthKategorieIndexRoute
@@ -169,14 +152,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/forgot-password/': typeof ForgotPasswordIndexRoute
+  '/shared/$trainingId': typeof SharedTrainingIdRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
-  '/reset-password/': typeof ResetPasswordIndexRoute
   '/_auth/rutiny/$routineId': typeof AuthRutinyRoutineIdRoute
   '/_auth/treninky/$trainingId': typeof AuthTreninkyTrainingIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/shared/training/$trainingId': typeof SharedTrainingTrainingIdRoute
   '/_auth/cviky/': typeof AuthCvikyIndexRoute
   '/_auth/kalendar/': typeof AuthKalendarIndexRoute
   '/_auth/kategorie/': typeof AuthKategorieIndexRoute
@@ -191,14 +172,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/forgot-password/'
+    | '/shared/$trainingId'
     | '/login/'
     | '/register/'
-    | '/reset-password/'
     | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
-    | '/shared/training/$trainingId'
     | '/cviky/'
     | '/kalendar/'
     | '/kategorie/'
@@ -211,14 +190,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/forgot-password'
+    | '/shared/$trainingId'
     | '/login'
     | '/register'
-    | '/reset-password'
     | '/rutiny/$routineId'
     | '/treninky/$trainingId'
     | '/api/auth/$'
-    | '/shared/training/$trainingId'
     | '/cviky'
     | '/kalendar'
     | '/kategorie'
@@ -232,14 +209,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
-    | '/forgot-password/'
+    | '/shared/$trainingId'
     | '/login/'
     | '/register/'
-    | '/reset-password/'
     | '/_auth/rutiny/$routineId'
     | '/_auth/treninky/$trainingId'
     | '/api/auth/$'
-    | '/shared/training/$trainingId'
     | '/_auth/cviky/'
     | '/_auth/kalendar/'
     | '/_auth/kategorie/'
@@ -254,12 +229,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
+  SharedTrainingIdRoute: typeof SharedTrainingIdRoute
   LoginIndexRoute: typeof LoginIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
-  ResetPasswordIndexRoute: typeof ResetPasswordIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  SharedTrainingTrainingIdRoute: typeof SharedTrainingTrainingIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -278,13 +251,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reset-password/': {
-      id: '/reset-password/'
-      path: '/reset-password'
-      fullPath: '/reset-password/'
-      preLoaderRoute: typeof ResetPasswordIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/register/': {
       id: '/register/'
       path: '/register'
@@ -299,11 +265,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/forgot-password/': {
-      id: '/forgot-password/'
-      path: '/forgot-password'
-      fullPath: '/forgot-password/'
-      preLoaderRoute: typeof ForgotPasswordIndexRouteImport
+    '/shared/$trainingId': {
+      id: '/shared/$trainingId'
+      path: '/shared/$trainingId'
+      fullPath: '/shared/$trainingId'
+      preLoaderRoute: typeof SharedTrainingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/treninky/': {
@@ -369,13 +335,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCvikyIndexRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/shared/training/$trainingId': {
-      id: '/shared/training/$trainingId'
-      path: '/shared/training/$trainingId'
-      fullPath: '/shared/training/$trainingId'
-      preLoaderRoute: typeof SharedTrainingTrainingIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -433,12 +392,10 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
+  SharedTrainingIdRoute: SharedTrainingIdRoute,
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
-  ResetPasswordIndexRoute: ResetPasswordIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  SharedTrainingTrainingIdRoute: SharedTrainingTrainingIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

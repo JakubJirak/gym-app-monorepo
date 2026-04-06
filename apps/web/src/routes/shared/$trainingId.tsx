@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { api } from "../../../../../packages/convex/convex/_generated/api";
 
 const chartConfig = {
 	visitors: {
@@ -56,7 +56,7 @@ const COLORS = [
 	"var(--chart-10)",
 ];
 
-export const Route = createFileRoute("/shared/training/$trainingId")({
+export const Route = createFileRoute("/shared/$trainingId")({
 	component: RouteComponent,
 });
 

@@ -25,7 +25,7 @@ export function DialogShareTraining({ trainingId }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [copied, setCopied] = useState(false);
 	const shareTraining = useMutation(api.workouts.shareWorkout);
-	const sharedUrl = `https://gymtracker.jirak.dev/shared/training/${trainingId}`;
+	const sharedUrl = `https://gymtracker.jirak.dev/shared/${trainingId}`;
 
 	function handleShareTraining() {
 		shareTraining({ workoutId: trainingId as Id<"workouts"> });

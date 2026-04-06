@@ -25,7 +25,7 @@ export function DialogUnshareTraining({ trainingId }: DialogEditSet) {
 	const [open, setOpen] = useState<boolean>(false);
 	const [copied, setCopied] = useState(false);
 	const unshareTraining = useMutation(api.workouts.disableWorkoutSharing);
-	const sharedUrl = `https://gymtracker.jirak.dev/shared/training/${trainingId}`;
+	const sharedUrl = `https://gymtracker.jirak.dev/shared/${trainingId}`;
 
 	function handleUnshareTraining() {
 		unshareTraining({ workoutId: trainingId as Id<"workouts"> });

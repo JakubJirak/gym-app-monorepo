@@ -1,5 +1,5 @@
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
-import { fetchSession, getCookieName } from "@convex-dev/better-auth/react-start";
+import { convexBetterAuthReactStart } from "@convex-dev/better-auth/react-start";
 import type { ConvexQueryClient } from "@convex-dev/react-query";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
-import { getCookie, getRequest } from "@tanstack/react-start/server";
+import { getCookie } from "@tanstack/react-start/server";
 import type { ConvexReactClient } from "convex/react";
 import { Button } from "@/components/ui/button";
 import { ThemeProvider, useTheme } from "@/data/providers/theme-provider";
@@ -23,12 +23,23 @@ import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
 const fetchAuth = createServerFn({ method: "GET" }).handler(async () => {
-	const { createAuth } = await import("../../../../packages/convex/convex/auth");
-	const { session } = await fetchSession(getRequest());
-	const sessionCookieName = getCookieName(createAuth);
-	const token = getCookie(sessionCookieName);
+	const convexUrl = process.env.VITE_CONVEX_URL;
+	const convexSiteUrl = process.env.VITE_CONVEX_SITE_URL;
+	if (!convexUrl) {
+		throw new Error("VITE_CONVEX_URL must be set");
+	}
+	if (!convexSiteUrl) {
+		throw new Error("VITE_CONVEX_SITE_URL must be set");
+	}
+
+	const betterAuthServer = convexBetterAuthReactStart({
+		convexUrl,
+		convexSiteUrl,
+	});
+	const token = (await betterAuthServer.getToken()) ?? getCookie("__session");
+	const userId = token ? "authenticated" : undefined;
 	return {
-		userId: session?.user.id,
+		userId,
 		token,
 	};
 });
