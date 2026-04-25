@@ -22,39 +22,60 @@ import { getThemeServerFn } from "@/lib/theme";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
+const AUTH_TOKEN_TIMEOUT_MS = 1500;
+
 const fetchAuth = createServerFn({ method: "GET" }).handler(async () => {
 	const convexUrl = process.env.VITE_CONVEX_URL;
 	const convexSiteUrl = process.env.VITE_CONVEX_SITE_URL;
+	const convexJwtCookie =
+		getCookie("__Secure-better-auth.convex_jwt") ??
+		getCookie("better-auth.convex_jwt") ??
+		getCookie("__session");
+	const sessionTokenCookie =
+		getCookie("__Secure-better-auth.session_token") ?? getCookie("better-auth.session_token");
+	const hasAuthCookie = Boolean(convexJwtCookie || sessionTokenCookie);
+
 	if (!convexUrl) {
 		return {
-			userId: undefined,
-			token: undefined,
+			userId: hasAuthCookie ? "authenticated" : undefined,
+			token: convexJwtCookie,
 		};
 	}
 	if (!convexSiteUrl) {
+		return {
+			userId: hasAuthCookie ? "authenticated" : undefined,
+			token: convexJwtCookie,
+		};
+	}
+	if (!hasAuthCookie) {
 		return {
 			userId: undefined,
 			token: undefined,
 		};
 	}
 
+	let token = convexJwtCookie;
+
 	try {
 		const betterAuthServer = convexBetterAuthReactStart({
 			convexUrl,
 			convexSiteUrl,
 		});
-		const token = (await betterAuthServer.getToken()) ?? getCookie("__session");
-		const userId = token ? "authenticated" : undefined;
-		return {
-			userId,
-			token,
-		};
+		const timedToken = await Promise.race<string | undefined>([
+			betterAuthServer.getToken(),
+			new Promise<string | undefined>((resolve) => {
+				setTimeout(() => resolve(undefined), AUTH_TOKEN_TIMEOUT_MS);
+			}),
+		]);
+		token = timedToken ?? token;
 	} catch {
-		return {
-			userId: undefined,
-			token: undefined,
-		};
+		// Keep SSR responsive if auth backend is temporarily unavailable.
 	}
+
+	return {
+		userId: token || sessionTokenCookie ? "authenticated" : undefined,
+		token,
+	};
 });
 
 export const Route = createRootRouteWithContext<{
