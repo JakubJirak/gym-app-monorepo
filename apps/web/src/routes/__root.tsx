@@ -38,16 +38,23 @@ const fetchAuth = createServerFn({ method: "GET" }).handler(async () => {
 		};
 	}
 
-	const betterAuthServer = convexBetterAuthReactStart({
-		convexUrl,
-		convexSiteUrl,
-	});
-	const token = (await betterAuthServer.getToken()) ?? getCookie("__session");
-	const userId = token ? "authenticated" : undefined;
-	return {
-		userId,
-		token,
-	};
+	try {
+		const betterAuthServer = convexBetterAuthReactStart({
+			convexUrl,
+			convexSiteUrl,
+		});
+		const token = (await betterAuthServer.getToken()) ?? getCookie("__session");
+		const userId = token ? "authenticated" : undefined;
+		return {
+			userId,
+			token,
+		};
+	} catch {
+		return {
+			userId: undefined,
+			token: undefined,
+		};
+	}
 });
 
 export const Route = createRootRouteWithContext<{
