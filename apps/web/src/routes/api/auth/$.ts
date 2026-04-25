@@ -1,10 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Custom auth proxy handler that fixes the invalid Host header
- * set by @convex-dev/better-auth's reactStartHandler.
- * The library sets `Host: https://...` (with protocol), which is invalid.
+ * Custom auth proxy handler for Better Auth requests.
+ * We intentionally forward only a minimal header set to avoid leaking
+ * reverse-proxy headers that can break origin checks in production.
  */
+function buildAuthProxyHeaders(request: Request, targetOrigin: string): Headers {
+	const headers = new Headers();
+	const requestHeaders = request.headers;
+	const headerNames = ["cookie", "content-type", "accept", "authorization", "user-agent", "x-requested-with"];
+
+	for (const name of headerNames) {
+		const value = requestHeaders.get(name);
+		if (value) {
+			headers.set(name, value);
+		}
+	}
+
+	const origin = requestHeaders.get("origin");
+	const referer = requestHeaders.get("referer");
+	headers.set("origin", origin ?? targetOrigin);
+	headers.set("referer", referer ?? `${targetOrigin}/`);
+
+	return headers;
+}
+
 function authHandler(request: Request): Promise<Response> {
 	const convexSiteUrl = import.meta.env.VITE_CONVEX_SITE_URL;
 	if (!convexSiteUrl) {
@@ -12,20 +32,21 @@ function authHandler(request: Request): Promise<Response> {
 	}
 
 	const requestUrl = new URL(request.url);
-	const targetUrl = `${convexSiteUrl}${requestUrl.pathname}${requestUrl.search}`;
-
-	const headers = new Headers(request.headers);
-	headers.set("accept-encoding", "application/json");
-	// Set Host to just the hostname, not the full URL with protocol
-	headers.set("host", new URL(convexSiteUrl).host);
+	const targetOrigin = new URL(convexSiteUrl).origin;
+	const targetUrl = `${targetOrigin}${requestUrl.pathname}${requestUrl.search}`;
+	const headers = buildAuthProxyHeaders(request, targetOrigin);
+	const hasBody = request.method !== "GET" && request.method !== "HEAD";
 
 	return fetch(targetUrl, {
 		method: request.method,
 		headers,
 		redirect: "manual",
-		body: request.body,
-		// @ts-expect-error - duplex is required for streaming request bodies
-		duplex: "half",
+		...(hasBody
+			? {
+					body: request.body,
+					duplex: "half",
+				}
+			: {}),
 	});
 }
 
