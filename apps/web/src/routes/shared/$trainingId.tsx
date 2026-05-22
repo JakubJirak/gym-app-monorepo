@@ -13,13 +13,13 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { Pie, PieChart } from "recharts";
-import { formatDate } from "utils/date-utils";
-import { formatSetInfo } from "utils/training-format";
 import { Badge } from "@/components/ui/badge";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
+import { formatDate } from "../../../utils/date-utils";
+import { formatSetInfo } from "../../../utils/training-format";
 
 const chartConfig = {
 	visitors: {
