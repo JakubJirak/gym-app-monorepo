@@ -124,14 +124,14 @@ const TrainingsList = () => {
 												/>
 											))}
 											<div className="mt-4 space-y-2">
-												<div
-													className={`${toggleEdit ? "" : "hidden"}`}
-												>
-													<DialogAddExercise
-														order={training.exercises.length}
-														trainingId={training._id}
-													/>
-												</div>
+												{toggleEdit && (
+													<div>
+														<DialogAddExercise
+															order={training.exercises.length}
+															trainingId={training._id}
+														/>
+													</div>
+												)}
 												<div className="flex items-center justify-between">
 													<div className="">
 														<Toggle

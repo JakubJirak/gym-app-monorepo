@@ -37,16 +37,18 @@ const TrainingLi = ({ exercise, toggleEdit, index, len }: TrainingLiProps) => (
 	<div className="mt-2 space-y-3 rounded-lg" key={exercise._id}>
 		<div className={`${toggleEdit ? "" : "justify-between"} flex items-center`}>
 			<h4 className="font-semibold text-lg">{exercise?.exercise?.name}</h4>
-			<div className={`${toggleEdit ? "mr-auto ml-2 flex gap-1.5" : "hidden"}`}>
-				<EditOptionsDialog
-					exerciseId={exercise._id}
-					isFirst={index === 0}
-					isLast={index === len - 1}
-					order={index}
-					orderSet={exercise.sets.length}
-					workoutId={exercise.workoutId}
-				/>
-			</div>
+			{toggleEdit && (
+				<div className="mr-auto ml-2 flex gap-1.5">
+					<EditOptionsDialog
+						exerciseId={exercise._id}
+						isFirst={index === 0}
+						isLast={index === len - 1}
+						order={index}
+						orderSet={exercise.sets.length}
+						workoutId={exercise.workoutId}
+					/>
+				</div>
+			)}
 			<Badge variant="outline">{exercise?.exercise?.muscleGroup}</Badge>
 		</div>
 
