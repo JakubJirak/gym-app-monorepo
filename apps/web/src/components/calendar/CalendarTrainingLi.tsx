@@ -1,5 +1,5 @@
-import { formatSetInfo } from "utils/training-format";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import { formatSetInfo } from "../../../utils/training-format";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
