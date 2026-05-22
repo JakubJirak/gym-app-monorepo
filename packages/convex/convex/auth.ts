@@ -1,10 +1,10 @@
-import { expo } from "@better-auth/expo";
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { components } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
+import authConfig from "./auth.config";
 import authSchema from "./betterAuth/schema";
 
 const siteUrl = process.env.SITE_URL as string;
@@ -57,15 +57,11 @@ export const createAuth = (ctx: GenericCtx<DataModel>, { optionsOnly } = { optio
 			// 	logAuthMessage(`[auth] Password updated for ${user.email}`);
 			// },
 		},
-		plugins: [
-			expo(),
-			convex(),
-			//crossDomain({ siteUrl })
-		],
+		plugins: [convex({ authConfig })],
 	});
 };
 
 export const getCurrentUser = query({
 	args: {},
-	handler: async (ctx) => authComponent.getAuthUser(ctx as unknown as GenericCtx<DataModel>),
+	handler: async (ctx) => authComponent.getAuthUser(ctx),
 });

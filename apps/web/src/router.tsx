@@ -1,20 +1,17 @@
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
-import { routerWithQueryClient } from "@tanstack/react-router-with-query";
-import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
 	const CONVEX_URL = import.meta.env.VITE_CONVEX_URL as string;
-	// if (!CONVEX_URL) {
-	// 	console.error("missing envar VITE_CONVEX_URL");
-	// }
-	const convex = new ConvexReactClient(CONVEX_URL, {
+	if (!CONVEX_URL) {
+		console.error("missing envar VITE_CONVEX_URL");
+	}
+	const convexQueryClient = new ConvexQueryClient(CONVEX_URL, {
 		expectAuth: false,
-		unsavedChangesWarning: false,
 	});
-	const convexQueryClient = new ConvexQueryClient(convex);
 
 	const queryClient: QueryClient = new QueryClient({
 		defaultOptions: {
@@ -26,18 +23,19 @@ export function getRouter() {
 	});
 	convexQueryClient.connect(queryClient);
 
-	const router = routerWithQueryClient(
-		createRouter({
-			routeTree,
-			defaultPreload: "intent",
-			context: { queryClient, convexClient: convex, convexQueryClient },
-			scrollRestoration: true,
-			Wrap: ({ children }) => (
-				<ConvexProvider client={convexQueryClient.convexClient}>{children}</ConvexProvider>
-			),
-		}),
-		queryClient
-	);
+	const router = createRouter({
+		routeTree,
+		defaultPreload: "intent",
+		context: { queryClient, convexQueryClient },
+		scrollRestoration: true,
+		defaultErrorComponent: (err) => <p>{err.error.stack}</p>,
+		defaultNotFoundComponent: () => <p>not found</p>,
+	});
+
+	setupRouterSsrQueryIntegration({
+		router,
+		queryClient,
+	});
 
 	return router;
 }

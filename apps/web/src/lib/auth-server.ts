@@ -1,5 +1,5 @@
-import { setupFetchClient } from "@convex-dev/better-auth/react-start";
-import { getCookie } from "@tanstack/react-start/server";
-import { createAuth } from "../../../../packages/convex/convex/auth";
-
-export const { fetchQuery, fetchMutation, fetchAction } = await setupFetchClient(createAuth, getCookie);
+import { convexBetterAuthReactStart } from "@convex-dev/better-auth/react-start";
+export const { handler, getToken, fetchAuthQuery, fetchAuthMutation, fetchAuthAction } = convexBetterAuthReactStart({
+	convexUrl: process.env.VITE_CONVEX_URL as string,
+	convexSiteUrl: process.env.VITE_CONVEX_SITE_URL as string,
+});

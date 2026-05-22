@@ -3,7 +3,7 @@ import { LoginForm } from "@/components/login/LoginForm.tsx";
 
 export const Route = createFileRoute("/login/")({
 	beforeLoad: ({ context }) => {
-		if (context.userId) {
+		if (context.isAuthenticated) {
 			throw redirect({
 				to: "/menu",
 			});

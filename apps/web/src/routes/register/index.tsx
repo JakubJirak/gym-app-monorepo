@@ -3,7 +3,7 @@ import { RegisterForm } from "@/components/register/RegisterForm";
 
 export const Route = createFileRoute("/register/")({
 	beforeLoad: ({ context }) => {
-		if (context.userId) {
+		if (context.isAuthenticated) {
 			throw redirect({
 				to: "/menu",
 			});
