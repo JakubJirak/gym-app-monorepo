@@ -1,12 +1,12 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import type { ExerciseSelect } from "utils/training-types";
 import { AddExercise } from "@/components/cviky/AddExercise.tsx";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
+import type { ExerciseSelect } from "../../../utils/training-types";
 
 type ExerciseComboboxProps = {
 	selectedStatus: ExerciseSelect | null;
@@ -40,7 +40,7 @@ export function ExerciseCombobox({
 			<DrawerTitle className="hidden">title</DrawerTitle>
 			<DrawerDescription className="hidden">description</DrawerDescription>
 			<DrawerContent className="h-[70vh] max-h-[50vh]">
-				<div className="h-full max-w-[500px] overflow-auto lg:mx-auto lg:min-w-[500px]">
+				<div className="h-full max-w-125 overflow-auto lg:mx-auto lg:min-w-125">
 					<StatusList setOpen={setOpen} setSelectedStatus={setSelectedStatus} />
 				</div>
 			</DrawerContent>

@@ -1,9 +1,9 @@
-import { formatSetInfo } from "utils/training-format";
 import { EditOptionsDialog } from "@/components/treninky/EditOptionsDialog.tsx";
 import { DialogEditSet } from "@/components/treninky/editDialogs/DialogEditSet.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import { formatSetInfo } from "../../../utils/training-format";
 
 type Exercise = {
 	_id: Id<"workoutExercises">;

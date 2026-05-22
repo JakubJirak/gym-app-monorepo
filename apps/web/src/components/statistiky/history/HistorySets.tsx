@@ -2,7 +2,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { History } from "lucide-react";
 import { useState } from "react";
-import type { ExerciseSelect } from "utils/training-types";
+import type { ExerciseSelect } from "../../../../utils/training-types";
 import { ExerciseCombobox } from "@/components/treninky/ExerciseCombobox.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";

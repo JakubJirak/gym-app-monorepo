@@ -26,7 +26,7 @@ function RouteComponent() {
 	return (
 		<>
 			<Header page={rutina.name} />
-			<div className="mx-auto w-[90%] max-w-[500px] space-y-4 pb-8">
+			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">
 				<div className="">
 					{rutina.exercises.length === 0 ? (
 						<p className="text-muted-foreground text-sm">Žádné cviky v rutině</p>

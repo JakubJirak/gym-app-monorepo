@@ -2,9 +2,5 @@
   "compilerOptions": {
     "strictNullChecks": true
   },
-  "exclude": [
-    "node_modules",
-    "**/node_modules"
-  ],
-  "extends": "expo/tsconfig.base"
+  "exclude": ["node_modules", "**/node_modules"]
 }

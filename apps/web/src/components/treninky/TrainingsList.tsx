@@ -1,18 +1,17 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { useMutation } from "convex/react";
 import { Dumbbell, NotebookPen } from "lucide-react";
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { GiWeightLiftingUp } from "react-icons/gi";
-import { formatDate } from "utils/date-utils.ts";
 import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddExercise.tsx";
 import DialogDelete from "@/components/treninky/editDialogs/DialogDeleteTraining.tsx";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
+import { formatDate } from "../../../utils/date-utils.ts";
 import TrainingDialog, { type Training } from "./AddNewTraining.tsx";
 import TrainingLi from "./TrainingLi.tsx";
 
@@ -39,7 +38,7 @@ const TrainingsList = () => {
 
 	if (!(trainings || isLoading)) {
 		return (
-			<Card className="mx-auto max-w-[500px]">
+			<Card className="mx-auto max-w-125">
 				<CardContent className="flex flex-col items-center justify-center py-6">
 					<GiWeightLiftingUp size={55} />
 					<h3 className="my-3 font-semibold text-lg">Zatím žádné tréninky</h3>
@@ -53,7 +52,7 @@ const TrainingsList = () => {
 	}
 
 	return (
-		<div className="container mx-auto w-[90%] max-w-[500px]">
+		<div className="container mx-auto w-[90%] max-w-125">
 			<div className="space-y-4">
 				{/* Trainings List */}
 				{trainings.length > 0 ? (
@@ -82,11 +81,7 @@ const TrainingsList = () => {
 									value={training._id}
 								>
 									<AccordionTrigger className="flex items-center gap-2 py-3 hover:no-underline">
-										<Link
-											className="flex flex-1 flex-row items-center gap-y-1"
-											params={{ trainingId: training._id }}
-											to={"/treninky/$trainingId"}
-										>
+										<div className="flex flex-1 flex-row items-center gap-y-1">
 											<div className="flex flex-1 flex-col gap-1">
 												<div className="font-semibold text-base">
 													{formatDate(
@@ -115,7 +110,7 @@ const TrainingsList = () => {
 											>
 												{training?.filter?.name || "Žádný"}
 											</div>
-										</Link>
+										</div>
 									</AccordionTrigger>
 									<AccordionContent className="pb-2">
 										<div className="relative flex flex-col items-stretch">
@@ -162,7 +157,7 @@ const TrainingsList = () => {
 						</Accordion>
 					</div>
 				) : (
-					<Card className="mx-auto max-w-[500px]">
+					<Card className="mx-auto max-w-125">
 						<CardContent className="flex flex-col items-center justify-center py-6">
 							<GiWeightLiftingUp size={55} />
 							<h3 className="my-3 font-semibold text-lg">Zatím žádné tréninky</h3>

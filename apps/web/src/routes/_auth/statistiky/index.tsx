@@ -26,7 +26,7 @@ function RouteComponent() {
 		return (
 			<>
 				<Header page="STATISTIKY" />
-				<div className="mx-auto w-[90%] max-w-[500px]">
+				<div className="mx-auto w-[90%] max-w-125">
 					<Card className="p-4 text-center">
 						<p>Pro zobrazení statistik musíte nejprve vytvořit trénink</p>
 					</Card>
@@ -39,7 +39,7 @@ function RouteComponent() {
 		<>
 			<Header page="STATISTIKY" />
 
-			<Tabs className="mx-auto w-[90%] max-w-[500px] space-y-3" defaultValue="stats">
+			<Tabs className="mx-auto w-[90%] max-w-125 space-y-3" defaultValue="stats">
 				<TabsList className="w-full bg-secondary">
 					<TabsTrigger value="stats">Celkově</TabsTrigger>
 					<TabsTrigger value="musclegroup">Podle partie</TabsTrigger>

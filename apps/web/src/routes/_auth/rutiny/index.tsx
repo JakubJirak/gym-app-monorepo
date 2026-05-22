@@ -35,7 +35,7 @@ function RouteComponent() {
 	return (
 		<>
 			<Header page="RUTINY" />
-			<div className="mx-auto w-[90%] max-w-[500px] space-y-4 pb-8">
+			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">
 				<div className="pb-4">
 					<div className="-mb-2 flex flex-row items-center gap-1">
 						<div className="flex-1 space-y-1">

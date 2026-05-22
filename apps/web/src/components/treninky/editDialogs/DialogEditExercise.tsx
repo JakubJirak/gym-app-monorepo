@@ -2,7 +2,6 @@ import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import type { ExerciseSelect } from "utils/training-types";
 import { ExerciseCombobox } from "@/components/treninky/ExerciseCombobox.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { ExerciseSelect } from "../../../../utils/training-types";
 
 type DialogEditExercise = {
 	exerciseId: string;

@@ -20,7 +20,7 @@ function RouteComponent() {
 	return (
 		<>
 			<Header page="PROFIL" />
-			<div className="mx-auto w-[90%] max-w-[500px] space-y-4 pb-8">
+			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">
 				<Separator />
 				<UserAccInfo />
 				<Separator />

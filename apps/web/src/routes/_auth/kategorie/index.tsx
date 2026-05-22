@@ -29,7 +29,7 @@ function RouteComponent() {
 	return (
 		<div className="pb-8">
 			<Header page="KATEGORIE" />
-			<div className="mx-auto w-[90%] max-w-[500px] space-y-4 pb-8">
+			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">
 				<div className="mb-4 flex items-center justify-between pl-1">
 					<div className="">
 						<h2 className="mb-1 flex items-center gap-2 font-semibold text-lg">

@@ -43,7 +43,7 @@ const UserWeightInput = () => {
 				<form className="flex items-center gap-2" onSubmit={handleAddWeight}>
 					<p>Vaše váha (kg):</p>
 					<Input
-						className="max-w-[70px]"
+						className="max-w-17.5"
 						max="500"
 						min="10"
 						onChange={(e) => setWeight(e.target.value)}
@@ -67,7 +67,7 @@ const UserWeightInput = () => {
 					<p>Vaše váha (kg):</p>
 					<Input
 						autoFocus
-						className="max-w-[70px]"
+						className="max-w-17.5"
 						max="500"
 						min="10"
 						onChange={(e) => setWeight(e.target.value)}

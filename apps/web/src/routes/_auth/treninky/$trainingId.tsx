@@ -1,7 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { formatDate } from "utils/date-utils";
 import Header from "@/components/Header.tsx";
 import MuscleGroupTrainingStats from "@/components/treninky/trenink/MuscleGroupTrainingStats";
 import TrainingInfo from "@/components/treninky/trenink/TrainingInfo.tsx";
@@ -9,6 +8,7 @@ import TrainingStats from "@/components/treninky/trenink/TrainingStats";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import { formatDate } from "../../../../utils/date-utils";
 
 export const Route = createFileRoute("/_auth/treninky/$trainingId")({
 	component: RouteComponent,

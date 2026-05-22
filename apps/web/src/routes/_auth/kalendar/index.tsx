@@ -5,12 +5,12 @@ import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { NotebookPen } from "lucide-react";
 import { useState } from "react";
-import { toLocalISODateString } from "utils/date-utils";
 import CalendarTrainingLi from "@/components/calendar/CalendarTrainingLi";
 import Header from "@/components/Header.tsx";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
 import { Calendar, CalendarDayButton } from "@/components/ui/calendar.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
+import { toLocalISODateString } from "../../../../utils/date-utils";
 
 export const Route = createFileRoute("/_auth/kalendar/")({
 	component: RouteComponent,
@@ -43,7 +43,7 @@ function RouteComponent() {
 		<div className="">
 			<Header page="KALENDÁŘ" />
 
-			<div className="mx-auto w-[90%] max-w-[500px] space-y-4 pb-8">
+			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">
 				<div className="">
 					<Calendar
 						className="w-full rounded-2xl border border-border"
