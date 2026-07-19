@@ -34,6 +34,8 @@ ENV VITE_CONVEX_URL=${VITE_CONVEX_URL}
 ARG VITE_CONVEX_SITE_URL
 ENV VITE_CONVEX_SITE_URL=${VITE_CONVEX_SITE_URL}
 
+RUN test -n "$VITE_CONVEX_URL"
+RUN test -n "$VITE_CONVEX_SITE_URL"
 RUN bun turbo run build --filter=gym-app
 
 # ─── Stage 4: Production runner ───────────────────────────────────────────────
