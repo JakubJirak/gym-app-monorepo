@@ -2,7 +2,7 @@
 FROM oven/bun:1.3.9-alpine AS pruner
 WORKDIR /app
 
-RUN bun add -g turbo@^2
+RUN bun add -g turbo@2.9.4
 
 COPY . .
 RUN turbo prune gym-app --docker
@@ -43,7 +43,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# VITE_CONVEX_SITE_URL is also checked at SSR runtime by @convex-dev/better-auth
+# Convex env vars are also checked at SSR runtime by @convex-dev/better-auth
+ARG VITE_CONVEX_URL
+ENV VITE_CONVEX_URL=${VITE_CONVEX_URL}
+
 ARG VITE_CONVEX_SITE_URL
 ENV VITE_CONVEX_SITE_URL=${VITE_CONVEX_SITE_URL}
 
