@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
+import type { ConvexReactClient } from "convex/react";
 import { Button } from "@/components/ui/button";
 import { ThemeProvider, useTheme } from "@/data/providers/theme-provider";
 import { getThemeServerFn } from "@/lib/theme";
@@ -24,6 +25,7 @@ const getAuth = createServerFn({ method: "GET" }).handler(async () => await getT
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
+	convexClient: ConvexReactClient;
 	convexQueryClient: ConvexQueryClient;
 }>()({
 	head: () => ({
@@ -77,11 +79,14 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
 	const context = useRouteContext({ from: Route.id });
 	const data = Route.useLoaderData();
+	if (!context.convexClient) {
+		throw new Error("Convex client is missing from router context.");
+	}
 	return (
 		<ThemeProvider theme={data}>
 			<ConvexBetterAuthProvider
 				authClient={authClient}
-				client={context.convexQueryClient.convexClient}
+				client={context.convexClient}
 				initialToken={context.token}
 			>
 				<RootDocument>
