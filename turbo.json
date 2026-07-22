@@ -5,6 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["VITE_CONVEX_URL", "VITE_CONVEX_SITE_URL"],
       "outputs": ["dist/**", "!dist/cache/**", ".output/**"]
     },
     "lint": {
