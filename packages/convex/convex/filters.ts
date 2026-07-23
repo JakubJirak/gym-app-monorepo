@@ -115,3 +115,33 @@ export const deleteFilter = mutation({
 		await ctx.db.delete(filterId);
 	},
 });
+
+export const getFilterSummaries = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("filters"),
+			name: v.string(),
+			color: v.string(),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const filters = await ctx.db
+			.query("filters")
+			.withIndex("by_userId", (q) => q.eq("userId", user._id))
+			.collect();
+
+		return filters
+			.map((filter) => ({
+				_id: filter._id,
+				name: filter.name,
+				color: filter.color,
+			}))
+			.sort((a, b) => a.name.localeCompare(b.name, "cs"));
+	},
+});

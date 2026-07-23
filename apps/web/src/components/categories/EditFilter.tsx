@@ -1,5 +1,5 @@
 import { useMutation } from "convex/react";
-import { Pencil } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
@@ -11,76 +11,108 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import type { FilterSummary } from "./category";
 
-export function EditFilter({ filterId, defName, defColor }: { filterId: string; defName: string; defColor: string }) {
-	const [open, setOpen] = useState<boolean>(false);
-	const [filter, setFilter] = useState<string>(defName);
-	const [color, setColor] = useState<string>(defColor);
+type EditFilterProps = {
+	filter: FilterSummary;
+	onClose: () => void;
+};
+
+export function EditFilter({ filter: initialFilter, onClose }: EditFilterProps) {
+	const [filter, setFilter] = useState(initialFilter.name);
+	const [color, setColor] = useState(initialFilter.color);
+	const [isSaving, setIsSaving] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const editFilter = useMutation(api.filters.editFilter);
 
-	function handleEditFilter() {
-		editFilter({
-			filterId: filterId as Id<"filters">,
-			name: filter,
-			color,
-		});
-		setOpen(false);
-	}
-
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		e.stopPropagation();
-		handleEditFilter();
+		const name = filter.trim();
+		if (!name || isSaving) {
+			return;
+		}
+
+		setIsSaving(true);
+		setError(null);
+
+		try {
+			await editFilter({
+				filterId: initialFilter._id,
+				name,
+				color,
+			});
+		} catch {
+			setError("Kategorii se nepodařilo upravit.");
+			setIsSaving(false);
+			return;
+		}
+
+		setIsSaving(false);
+		onClose();
 	};
 
 	return (
-		<Dialog onOpenChange={setOpen} open={open}>
-			<form>
-				<DialogTrigger asChild>
-					<Button size="icon-sm" variant="outline">
-						<Pencil />
-					</Button>
-				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>Úprava kategorie</DialogTitle>
-						<DialogDescription>
-							Zde můžete upravit kategorii pro vaše tréninky.
-						</DialogDescription>
-					</DialogHeader>
-					<form onSubmit={handleSubmit}>
-						<Input
-							className="mt-2"
-							onChange={(e) => setFilter(e.target.value)}
+		<Dialog
+			onOpenChange={(open) => {
+				if (!(open || isSaving)) {
+					onClose();
+				}
+			}}
+			open
+		>
+			<DialogContent className="h-auto sm:max-w-106.25">
+				<DialogHeader>
+					<DialogTitle>Úprava kategorie</DialogTitle>
+					<DialogDescription>Zde můžete upravit kategorii pro vaše tréninky.</DialogDescription>
+				</DialogHeader>
+				<form onSubmit={handleSubmit}>
+					<Input
+						aria-label="Název kategorie"
+						autoFocus
+						className="mt-2"
+						maxLength={50}
+						onChange={(e) => setFilter(e.target.value)}
+						required
+						type="text"
+						value={filter}
+					/>
+					<div className="mt-4 flex items-center gap-4">
+						<p>Vyber barvu:</p>
+						<input
+							aria-label="Barva kategorie"
+							className="cursor-pointer"
+							onChange={(e) => setColor(e.target.value)}
 							required
-							type="text"
-							value={filter}
+							type="color"
+							value={color}
 						/>
-						<div className="mt-4 flex items-center gap-4">
-							<p>Vyber barvu:</p>
-							<input
-								className="cursor-pointer"
-								onChange={(e) => setColor(e.target.value)}
-								required
-								type="color"
-								value={color}
-							/>
-						</div>
+					</div>
 
-						<DialogFooter className="mt-4">
-							<DialogClose asChild>
-								<Button variant="outline">Zrušit</Button>
-							</DialogClose>
-							<Button type="submit">Upravit kategorii</Button>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</form>
+					{error && <p className="mt-4 text-destructive text-sm">{error}</p>}
+
+					<DialogFooter className="mt-4">
+						<DialogClose asChild>
+							<Button disabled={isSaving} type="button" variant="outline">
+								Zrušit
+							</Button>
+						</DialogClose>
+						<Button
+							disabled={
+								isSaving ||
+								!filter.trim() ||
+								(filter.trim() === initialFilter.name && color === initialFilter.color)
+							}
+							type="submit"
+						>
+							{isSaving && <LoaderCircle className="animate-spin" />}
+							Upravit kategorii
+						</Button>
+					</DialogFooter>
+				</form>
+			</DialogContent>
 		</Dialog>
 	);
 }

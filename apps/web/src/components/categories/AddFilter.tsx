@@ -1,5 +1,5 @@
 import { useMutation } from "convex/react";
-import { Plus } from "lucide-react";
+import { LoaderCircle, Plus } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
@@ -20,65 +20,92 @@ export function AddFilter() {
 	const [open, setOpen] = useState<boolean>(false);
 	const [filter, setFilter] = useState<string>("");
 	const [color, setColor] = useState<string>("#000000");
+	const [isSaving, setIsSaving] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const addFilter = useMutation(api.filters.addFilter);
 
-	function handleAddFilter(filterName: string) {
-		addFilter({
-			name: filterName,
-			color,
-		});
-		setOpen(false);
-	}
-
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		e.stopPropagation();
-		handleAddFilter(filter);
+		const name = filter.trim();
+		if (!name || isSaving) {
+			return;
+		}
+
+		setIsSaving(true);
+		setError(null);
+
+		try {
+			await addFilter({ name, color });
+			setFilter("");
+			setColor("#000000");
+			setOpen(false);
+		} catch {
+			setError("Kategorii se nepodařilo přidat.");
+		} finally {
+			setIsSaving(false);
+		}
 	};
 
 	return (
-		<Dialog onOpenChange={setOpen} open={open}>
-			<form>
-				<DialogTrigger asChild>
-					<Button size="icon">
-						<Plus />
-					</Button>
-				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>Přidání kategorie</DialogTitle>
-						<DialogDescription>
-							Zde můžete přidat novou kategorii pro vaše tréninky.
-						</DialogDescription>
-					</DialogHeader>
-					<form onSubmit={handleSubmit}>
-						<Input
-							className="mt-2"
-							onChange={(e) => setFilter(e.target.value)}
+		<Dialog
+			onOpenChange={(nextOpen) => {
+				if (!isSaving) {
+					setOpen(nextOpen);
+					setError(null);
+				}
+			}}
+			open={open}
+		>
+			<DialogTrigger asChild>
+				<Button size="icon">
+					<Plus />
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="h-auto sm:max-w-106.25">
+				<DialogHeader>
+					<DialogTitle>Přidání kategorie</DialogTitle>
+					<DialogDescription>
+						Zde můžete přidat novou kategorii pro vaše tréninky.
+					</DialogDescription>
+				</DialogHeader>
+				<form onSubmit={handleSubmit}>
+					<Input
+						aria-label="Název kategorie"
+						autoFocus
+						className="mt-2"
+						maxLength={50}
+						onChange={(e) => setFilter(e.target.value)}
+						required
+						type="text"
+						value={filter}
+					/>
+					<div className="mt-4 flex items-center gap-4">
+						<p>Vyber barvu:</p>
+						<input
+							aria-label="Barva kategorie"
+							className="cursor-pointer"
+							onChange={(e) => setColor(e.target.value)}
 							required
-							type="text"
-							value={filter}
+							type="color"
+							value={color}
 						/>
-						<div className="mt-4 flex items-center gap-4">
-							<p>Vyber barvu:</p>
-							<input
-								className="cursor-pointer"
-								onChange={(e) => setColor(e.target.value)}
-								required
-								type="color"
-								value={color}
-							/>
-						</div>
+					</div>
 
-						<DialogFooter className="mt-4">
-							<DialogClose asChild>
-								<Button variant="outline">Zrušit</Button>
-							</DialogClose>
-							<Button type="submit">Přidat kategorii</Button>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</form>
+					{error && <p className="mt-4 text-destructive text-sm">{error}</p>}
+
+					<DialogFooter className="mt-4">
+						<DialogClose asChild>
+							<Button disabled={isSaving} type="button" variant="outline">
+								Zrušit
+							</Button>
+						</DialogClose>
+						<Button disabled={isSaving || !filter.trim()} type="submit">
+							{isSaving && <LoaderCircle className="animate-spin" />}
+							Přidat kategorii
+						</Button>
+					</DialogFooter>
+				</form>
+			</DialogContent>
 		</Dialog>
 	);
 }
