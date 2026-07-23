@@ -1,8 +1,22 @@
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
-import { mutation, query } from "./_generated/server";
+import { type MutationCtx, mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 import { rateLimiter } from "./rateLimit";
+
+async function assertOwnedFilter(ctx: MutationCtx, filterId: Id<"filters">, userId: string) {
+	const filter = await ctx.db.get(filterId);
+	if (!filter || filter.userId !== userId) {
+		throw new Error("Unauthorized");
+	}
+}
+
+async function assertExerciseAvailable(ctx: MutationCtx, exerciseId: Id<"exercises">, userId: string) {
+	const exercise = await ctx.db.get(exerciseId);
+	if (!exercise || (exercise.userId !== userId && exercise.userId !== "default")) {
+		throw new Error("Unauthorized");
+	}
+}
 
 export const getUserWorkoutSummaries = query({
 	args: {},
@@ -387,6 +401,10 @@ export const createWorkout = mutation({
 
 		// Rate limiting
 		await rateLimiter.limit(ctx, "addWorkout", { key: userId, throws: true });
+		await assertOwnedFilter(ctx, args.filterId, userId);
+		await Promise.all(
+			(args.exercises ?? []).map((exercise) => assertExerciseAvailable(ctx, exercise.exerciseId, userId))
+		);
 
 		// 1. Vytvoření tréninku
 		const workoutId = await ctx.db.insert("workouts", {
@@ -495,6 +513,7 @@ export const editWorkout = mutation({
 		if (workout.userId !== userId) {
 			throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
 		}
+		await assertOwnedFilter(ctx, args.filterId, userId);
 
 		await ctx.db.patch(args.workoutId, {
 			name: args.name,

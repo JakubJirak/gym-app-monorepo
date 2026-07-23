@@ -26,11 +26,11 @@ function RouteComponent() {
 	const { data: trainings, isError, isPending } = useQuery(convexQuery(api.workouts.getUserWorkoutSummaries, {}));
 	const selectedDate = toLocalISODateString(date);
 	const matchingTrainings = useMemo(
-		() => trainings?.filter((training) => training.workoutDate === selectedDate) ?? [],
+		() => trainings?.filter((training) => training.workoutDate.slice(0, 10) === selectedDate) ?? [],
 		[trainings, selectedDate]
 	);
 	const trainingDates = useMemo(
-		() => trainings?.map((training) => new Date(`${training.workoutDate}T00:00:00`)) ?? [],
+		() => trainings?.map((training) => new Date(`${training.workoutDate.slice(0, 10)}T00:00:00`)) ?? [],
 		[trainings]
 	);
 

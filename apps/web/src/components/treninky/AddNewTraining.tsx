@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import { toLocalISODateString } from "../../../utils/date-utils";
 
 export type Training = {
 	workoutDate: string;
@@ -58,7 +59,7 @@ const AddNewTraining = ({ onSave }: TrainingDialogProps) => {
 		}
 
 		const newTraining: Training = {
-			workoutDate: training.date.toISOString(),
+			workoutDate: toLocalISODateString(training.date),
 			filterId: training.filterId,
 		};
 

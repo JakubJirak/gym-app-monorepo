@@ -34,7 +34,7 @@ export function ExerciseCombobox({
 	return (
 		<Drawer onOpenChange={setOpen} open={open}>
 			<DrawerTrigger asChild>
-				<Button autoFocus className="w-full justify-start" variant="outline">
+				<Button autoFocus className="w-full justify-start" type="button" variant="outline">
 					{selectedStatus ? <p>{selectedStatus.name}</p> : <>Vyber cvik</>}
 				</Button>
 			</DrawerTrigger>
@@ -88,14 +88,13 @@ function StatusList({
 					{exercises.map((status) => (
 						<CommandItem
 							className="p-2 text-base"
-							key={status.name}
-							onSelect={(value) => {
-								setSelectedStatus(
-									exercises.find((priority) => priority.name === value) || null
-								);
+							key={status._id}
+							keywords={[status.name]}
+							onSelect={() => {
+								setSelectedStatus(status);
 								setOpen(false);
 							}}
-							value={status.name}
+							value={status._id}
 						>
 							{status.name}
 						</CommandItem>

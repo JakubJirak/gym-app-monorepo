@@ -1,7 +1,15 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
+import { type MutationCtx, mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 import { rateLimiter } from "./rateLimit";
+
+async function assertOwnedFilter(ctx: MutationCtx, filterId: Id<"filters">, userId: string) {
+	const filter = await ctx.db.get(filterId);
+	if (!filter || filter.userId !== userId) {
+		throw new Error("Unauthorized");
+	}
+}
 
 export const getUserRoutineSummaries = query({
 	args: {},
@@ -267,6 +275,7 @@ export const addRoutine = mutation({
 
 		// Rate limiting
 		await rateLimiter.limit(ctx, "addRoutine", { key: userId, throws: true });
+		await assertOwnedFilter(ctx, args.filterId, userId);
 
 		const id = await ctx.db.insert("routines", {
 			name: args.name,
@@ -336,6 +345,7 @@ export const editRoutine = mutation({
 		if (routine.userId !== userId) {
 			throw new Error("Unauthorized");
 		}
+		await assertOwnedFilter(ctx, args.filterId, userId);
 
 		await ctx.db.patch(args.routineId, {
 			name: args.name,
@@ -359,7 +369,7 @@ export const createWorkoutFromRoutine = mutation({
 
 		// Get the routine with its filter
 		const routine = await ctx.db.get(args.routineId);
-		if (!routine) {
+		if (!routine || routine.userId !== userId) {
 			throw new Error("Unauthorized");
 		}
 
