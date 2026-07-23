@@ -8,12 +8,10 @@ export const getUserDescription = query({
 	handler: async (ctx) => {
 		let userId: string;
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return null;
 			}
-			//@ts-expect-error
 			userId = user._id;
 		} catch (error) {
 			// Auth timeout or error - return null
@@ -33,12 +31,10 @@ export const addUserDescription = mutation({
 		description: v.string(),
 	},
 	handler: async (ctx, { description }) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -58,12 +54,10 @@ export const editUserDescription = mutation({
 	},
 
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
