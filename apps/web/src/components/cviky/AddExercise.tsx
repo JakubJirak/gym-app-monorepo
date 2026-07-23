@@ -1,7 +1,7 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "convex/react";
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import { Check, ChevronsUpDown, LoaderCircle, Plus } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
@@ -34,7 +34,7 @@ export function AddExercise({ defaultName }: DialogEditSet) {
 	const [value, setValue] = useState("");
 	const addExercise = useMutation(api.exercises.addExercise);
 
-	const { data: muscleGroups } = useSuspenseQuery(convexQuery(api.muscleGroups.getAllMuscleGroups, {}));
+	const { data: muscleGroups, isError, isPending } = useQuery(convexQuery(api.muscleGroups.getAllMuscleGroups, {}));
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -49,7 +49,15 @@ export function AddExercise({ defaultName }: DialogEditSet) {
 		}
 	};
 
-	if (!muscleGroups) {
+	if (isPending) {
+		return (
+			<Button disabled size="icon">
+				<LoaderCircle className="animate-spin" />
+			</Button>
+		);
+	}
+
+	if (isError || !muscleGroups) {
 		return null;
 	}
 
@@ -61,7 +69,7 @@ export function AddExercise({ defaultName }: DialogEditSet) {
 						<Plus />
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-[425px]">
+				<DialogContent className="h-auto sm:max-w-106.25">
 					<DialogHeader>
 						<DialogTitle>Přidat vlastní cvik</DialogTitle>
 						<DialogDescription>Zde si můžete přidat vlastní cvik.</DialogDescription>
