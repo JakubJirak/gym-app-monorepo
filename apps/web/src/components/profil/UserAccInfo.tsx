@@ -1,25 +1,30 @@
 import { Separator } from "@/components/ui/separator.tsx";
-import { authClient } from "@/lib/auth-client.ts";
 
-const UserAccInfo = () => {
-	const { data: session } = authClient.useSession();
+type UserAccInfoProps = {
+	account: {
+		name: string;
+		email: string;
+		createdAt: number;
+	};
+};
 
-	if (!session) {
-		return null;
-	}
-	const createdDate = new Date(session.user.createdAt).toLocaleDateString();
+const UserAccInfo = ({ account }: UserAccInfoProps) => {
+	const createdDate = new Intl.DateTimeFormat("cs-CZ", {
+		dateStyle: "medium",
+		timeZone: "Europe/Prague",
+	}).format(new Date(account.createdAt));
 
 	return (
 		<div className="p-2">
 			<div className="space-y-3">
 				<div className="space-y-1">
 					<p className="text-muted-foreground">Uživatelské jméno</p>
-					<p>{session.user.name}</p>
+					<p>{account.name}</p>
 				</div>
 				<Separator />
 				<div className="space-y-1">
 					<p className="text-muted-foreground">Email</p>
-					<p>{session.user.email}</p>
+					<p>{account.email}</p>
 				</div>
 				<Separator />
 				<div className="space-y-1">
