@@ -8,15 +8,12 @@ export const getAllExercises = query({
 	handler: async (ctx) => {
 		let userId: string;
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return [];
 			}
-			//@ts-expect-error
 			userId = user._id;
 		} catch (error) {
-			// Auth timeout or error - return empty results
 			console.error("Auth error in getAllExercises:", error);
 			return [];
 		}
@@ -32,11 +29,8 @@ export const getAllExercises = query({
 			.collect();
 		const allExercises = [...userExercises, ...defaultExercises];
 
-		// Unikátní muscleGroupId
-		// @ts-expect-error
 		const muscleGroupIds = [...new Set(allExercises.map((e) => e.muscleGroupId))];
 
-		// Načteme muscleGroups jednotlivě pomocí Promise.all
 		const muscleGroupsArray = await Promise.all(
 			muscleGroupIds.map((id) =>
 				ctx.db
@@ -46,7 +40,6 @@ export const getAllExercises = query({
 			)
 		);
 
-		// Vytvoříme mapu id -> název
 		const muscleGroupMap = muscleGroupsArray
 			.filter((mg): mg is NonNullable<typeof mg> => mg !== null && mg !== undefined)
 			.reduce(
@@ -57,7 +50,6 @@ export const getAllExercises = query({
 				{} as Record<string, string>
 			);
 
-		// Vytvoříme pole objektů s názvem cviku a názvem muscleGroup
 		const exercisesWithMuscleGroup = allExercises.map((exercise) => ({
 			_id: exercise._id,
 			_creationTime: exercise._creationTime,
@@ -77,15 +69,12 @@ export const addExercise = mutation({
 		muscleGroupId: v.id("muscleGroups"),
 	},
 	handler: async (ctx, args) => {
-		// @ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		// @ts-expect-error
 		const userId = user._id;
 
-		// Rate limiting
 		await rateLimiter.limit(ctx, "addExercise", { key: userId, throws: true });
 
 		const exerciseId = await ctx.db.insert("exercises", {
@@ -103,15 +92,12 @@ export const editExercise = mutation({
 		name: v.string(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
-		// Rate limiting
 		await rateLimiter.limit(ctx, "updateExercise", { key: userId, throws: true });
 
 		const ex = await ctx.db.get(args.exerciseId);
@@ -134,12 +120,10 @@ export const deleteExercise = mutation({
 		exerciseId: v.id("exercises"),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -155,5 +139,76 @@ export const deleteExercise = mutation({
 		}
 
 		await ctx.db.delete(args.exerciseId);
+	},
+});
+
+export const getExerciseGroups = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("muscleGroups"),
+			name: v.string(),
+			exercises: v.array(
+				v.object({
+					_id: v.id("exercises"),
+					name: v.string(),
+					editable: v.boolean(),
+				})
+			),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const [userExercises, defaultExercises, muscleGroups] = await Promise.all([
+			ctx.db
+				.query("exercises")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.collect(),
+			ctx.db
+				.query("exercises")
+				.withIndex("by_userId", (q) => q.eq("userId", "default"))
+				.collect(),
+			ctx.db.query("muscleGroups").collect(),
+		]);
+
+		const groupsById = new Map(
+			muscleGroups.map((muscleGroup) => [
+				muscleGroup._id,
+				{
+					_id: muscleGroup._id,
+					name: muscleGroup.name,
+					exercises: [] as Array<{
+						_id: (typeof userExercises)[number]["_id"];
+						name: string;
+						editable: boolean;
+					}>,
+				},
+			])
+		);
+
+		for (const exercise of [...userExercises, ...defaultExercises]) {
+			const group = groupsById.get(exercise.muscleGroupId);
+			if (!group) {
+				continue;
+			}
+
+			group.exercises.push({
+				_id: exercise._id,
+				name: exercise.name,
+				editable: exercise.userId === user._id,
+			});
+		}
+
+		return [...groupsById.values()]
+			.filter((group) => group.exercises.length > 0)
+			.map((group) => ({
+				...group,
+				exercises: group.exercises.sort((a, b) => a.name.localeCompare(b.name, "cs")),
+			}))
+			.sort((a, b) => a.name.localeCompare(b.name, "cs"));
 	},
 });

@@ -1,24 +1,13 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Dumbbell } from "lucide-react";
-import { useMemo } from "react";
+import { Dumbbell, LoaderCircle } from "lucide-react";
+import { Suspense } from "react";
 import { AddExercise } from "@/components/cviky/AddExercise";
 import Exercise from "@/components/cviky/Exercise";
 import Header from "@/components/Header";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
-
-type ExerciseType = {
-	_id: string;
-	name: string;
-	userId: string;
-	muscleGroup: string;
-};
-
-type SortedExercises = {
-	[muscleGroup: string]: ExerciseType[];
-};
 
 export const Route = createFileRoute("/_auth/cviky/")({
 	component: RouteComponent,
@@ -34,41 +23,6 @@ export const Route = createFileRoute("/_auth/cviky/")({
 });
 
 function RouteComponent() {
-	const { data: exercises } = useSuspenseQuery(convexQuery(api.exercises.getAllExercises, {}));
-
-	const sortedExercises = useMemo<SortedExercises>(
-		() =>
-			(exercises ?? []).reduce<SortedExercises>((acc, exercise) => {
-				if (!acc[exercise.muscleGroup as string]) {
-					acc[exercise.muscleGroup as string] = [];
-				}
-				//@ts-expect-error - exercise.muscleGroup is string
-				acc[exercise.muscleGroup].push(exercise);
-				return acc;
-			}, {}),
-		[exercises]
-	);
-
-	if (exercises === undefined) {
-		return (
-			<div className="pb-8">
-				<Header page="CVIKY" />
-				<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8" />
-			</div>
-		);
-	}
-
-	if (!exercises || exercises?.length === 0) {
-		return (
-			<div className="pb-8">
-				<Header page="CVIKY" />
-				<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">
-					<p>Žádné cviky k zobrazení.</p>
-				</div>
-			</div>
-		);
-	}
-
 	return (
 		<div className="pb-8">
 			<Header page="CVIKY" />
@@ -86,29 +40,52 @@ function RouteComponent() {
 					<AddExercise defaultName="" />
 				</div>
 
-				<Accordion className="w-full" type="multiple">
-					{Object.entries(sortedExercises).map(([muscleGroup, ex]) => (
-						<AccordionItem key={muscleGroup} value={muscleGroup}>
-							<AccordionTrigger className="pt-3 pb-2 font-bold text-base hover:no-underline">
-								{muscleGroup}
-							</AccordionTrigger>
-
-							<AccordionContent className="pb-2">
-								<div className="mt-2 space-y-2">
-									{ex.map((exercise) => (
-										<Exercise
-											editable={exercise.userId !== "default"}
-											id={exercise._id}
-											key={exercise._id}
-											name={exercise.name}
-										/>
-									))}
-								</div>
-							</AccordionContent>
-						</AccordionItem>
-					))}
-				</Accordion>
+				<Suspense fallback={<ExercisesLoading />}>
+					<ExerciseGroups />
+				</Suspense>
 			</div>
+		</div>
+	);
+}
+
+function ExerciseGroups() {
+	const { data: exerciseGroups } = useSuspenseQuery(convexQuery(api.exercises.getExerciseGroups, {}));
+
+	if (exerciseGroups.length === 0) {
+		return <p>Žádné cviky k zobrazení.</p>;
+	}
+
+	return (
+		<Accordion className="w-full" type="multiple">
+			{exerciseGroups.map((group) => (
+				<AccordionItem key={group._id} value={group._id}>
+					<AccordionTrigger className="pt-3 pb-2 font-bold text-base hover:no-underline">
+						{group.name}
+					</AccordionTrigger>
+
+					<AccordionContent className="pb-2">
+						<div className="mt-2 space-y-2">
+							{group.exercises.map((exercise) => (
+								<Exercise
+									editable={exercise.editable}
+									id={exercise._id}
+									key={exercise._id}
+									name={exercise.name}
+								/>
+							))}
+						</div>
+					</AccordionContent>
+				</AccordionItem>
+			))}
+		</Accordion>
+	);
+}
+
+function ExercisesLoading() {
+	return (
+		<div className="flex items-center justify-center gap-2 py-8 text-muted-foreground">
+			<LoaderCircle className="animate-spin" />
+			<span>Načítám cviky…</span>
 		</div>
 	);
 }
