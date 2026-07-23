@@ -1,19 +1,26 @@
-import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { api } from "../../../../../packages/convex/convex/_generated/api";
 
 type PowerflitingStatsType = {
 	benchPR: number;
 	deadliftPR: number;
 	squatPR: number;
+	weightData:
+		| {
+				weight: string;
+		  }
+		| null
+		| undefined;
 };
 
-const PowerliftingStats = ({ benchPR, squatPR, deadliftPR }: PowerflitingStatsType) => {
-	const { data: weightData } = useSuspenseQuery(convexQuery(api.userWeights.getUserWeight, {}));
+const PowerliftingStats = ({ benchPR, squatPR, deadliftPR, weightData }: PowerflitingStatsType) => {
 	const total = squatPR + deadliftPR + benchPR;
+	const bodyWeight = Number(weightData?.weight);
+	const hasBodyWeight = Number.isFinite(bodyWeight) && bodyWeight > 0;
+
+	const formatBodyWeightRatio = (weight: number) =>
+		hasBodyWeight ? `${(weight / bodyWeight).toFixed(2)}x BW` : null;
 
 	if (total === 0) {
 		return null;
@@ -27,7 +34,7 @@ const PowerliftingStats = ({ benchPR, squatPR, deadliftPR }: PowerflitingStatsTy
 					Powerlifting PR
 				</h2>
 				<p className="text-muted-foreground text-sm">
-					{weightData ? `${weightData.weight}kg BW` : "Zadejte svoji váhu v profilu"}
+					{hasBodyWeight ? `${bodyWeight}kg BW` : "Zadejte svoji váhu v profilu"}
 				</p>
 			</div>
 			<div>
@@ -36,9 +43,9 @@ const PowerliftingStats = ({ benchPR, squatPR, deadliftPR }: PowerflitingStatsTy
 						<div className="flex flex-col items-center justify-center gap-1">
 							<p className="font-bold text-lg sm:text-xl">{squatPR}kg</p>
 							<p className="mb-1 text-muted-foreground text-sm sm:text-base">Squat</p>
-							{weightData ? (
+							{formatBodyWeightRatio(squatPR) ? (
 								<Badge className="text-xs sm:text-base" variant="secondary">
-									{(squatPR / Number(weightData.weight)).toFixed(2)}x BW
+									{formatBodyWeightRatio(squatPR)}
 								</Badge>
 							) : null}
 						</div>
@@ -47,9 +54,9 @@ const PowerliftingStats = ({ benchPR, squatPR, deadliftPR }: PowerflitingStatsTy
 							<p className="mb-1 text-center text-muted-foreground text-sm sm:text-base">
 								Bench Press
 							</p>
-							{weightData ? (
+							{formatBodyWeightRatio(benchPR) ? (
 								<Badge className="text-xs sm:text-base" variant="secondary">
-									{(benchPR / Number(weightData.weight)).toFixed(2)}x BW
+									{formatBodyWeightRatio(benchPR)}
 								</Badge>
 							) : null}
 						</div>
@@ -58,9 +65,9 @@ const PowerliftingStats = ({ benchPR, squatPR, deadliftPR }: PowerflitingStatsTy
 							<p className="mb-1 text-center text-muted-foreground text-sm sm:text-base">
 								Deadlift
 							</p>
-							{weightData ? (
+							{formatBodyWeightRatio(deadliftPR) ? (
 								<Badge className="text-xs sm:text-base" variant="secondary">
-									{(deadliftPR / Number(weightData.weight)).toFixed(2)}x BW
+									{formatBodyWeightRatio(deadliftPR)}
 								</Badge>
 							) : null}
 						</div>
@@ -71,9 +78,9 @@ const PowerliftingStats = ({ benchPR, squatPR, deadliftPR }: PowerflitingStatsTy
 							<div className="flex flex-col items-center justify-center gap-1">
 								<p className="text-center font-bold text-2xl">{total}kg</p>
 								<p className="text-muted-foreground">Total</p>
-								{weightData ? (
+								{formatBodyWeightRatio(total) ? (
 									<Badge className="text-xs sm:text-base" variant="accent">
-										{(total / Number(weightData.weight)).toFixed(2)}x BW
+										{formatBodyWeightRatio(total)}
 									</Badge>
 								) : null}
 							</div>
