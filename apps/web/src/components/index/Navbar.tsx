@@ -18,7 +18,7 @@ const Navbar = () => {
 			<div className="relative flex items-center">
 				<div className="flex items-center gap-2">
 					<span className="font-semibold text-lg">GYM TRACKER</span>
-					<span className="text-muted-foreground text-sm">v1.2</span>
+					<span className="text-muted-foreground text-sm">v1.3</span>
 				</div>
 
 				<ul className="-translate-x-1/2 absolute left-1/2 flex items-center gap-6">
