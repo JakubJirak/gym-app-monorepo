@@ -1,5 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { LoaderCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { AddExercise } from "@/components/cviky/AddExercise.tsx";
 import { Button } from "@/components/ui/button";
@@ -56,10 +57,19 @@ function StatusList({
 	setSelectedStatus: (status: ExerciseSelect | null) => void;
 }) {
 	const [searchVal, setSearchVal] = useState<string>("");
-	const { data: exercises } = useSuspenseQuery(convexQuery(api.exercises.getAllExercises, {}));
+	const { data: exercises, isError, isPending } = useQuery(convexQuery(api.exercises.getAllExercises, {}));
 
-	if (!exercises) {
-		return null;
+	if (isPending) {
+		return (
+			<div className="flex h-full items-center justify-center gap-2 text-muted-foreground">
+				<LoaderCircle className="h-5 w-5 animate-spin" />
+				<span>Načítám cviky…</span>
+			</div>
+		);
+	}
+
+	if (isError || !exercises) {
+		return <p className="p-4 text-center text-destructive">Cviky se nepodařilo načíst.</p>;
 	}
 
 	return (

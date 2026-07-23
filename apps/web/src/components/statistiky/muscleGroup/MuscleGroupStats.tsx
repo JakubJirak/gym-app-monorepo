@@ -1,29 +1,10 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { BicepsFlexed } from "lucide-react";
-import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { BicepsFlexed, LoaderCircle } from "lucide-react";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 const MuscleGroupStats = () => {
-	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
-
-	const muscleGroupCount = useMemo(() => {
-		if (!trainings) {
-			return {};
-		}
-		const count = trainings
-			.flatMap((t) => t.exercises)
-			.reduce<Record<string, number>>((acc, cvik) => {
-				const group: string =
-					cvik.exercise?.muscleGroup && cvik.exercise.muscleGroup !== null
-						? cvik.exercise.muscleGroup
-						: "";
-				acc[group] = (acc[group] || 0) + 1;
-				return acc;
-			}, {});
-
-		return Object.fromEntries(Object.entries(count).sort(([, a], [, b]) => b - a));
-	}, [trainings]);
+	const { data: muscleGroups, isPending } = useQuery(convexQuery(api.stats.getMuscleGroupStats, {}));
 
 	return (
 		<div className="p-1">
@@ -31,14 +12,20 @@ const MuscleGroupStats = () => {
 				<BicepsFlexed />
 				Podle partie těla
 			</p>
+			{isPending && (
+				<div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+					<LoaderCircle className="h-5 w-5 animate-spin" />
+					<span>Načítám statistiky…</span>
+				</div>
+			)}
 			<div className="grid grid-cols-3 gap-3">
-				{Object.entries(muscleGroupCount).map(([group, count]) => (
+				{muscleGroups?.map((muscleGroup) => (
 					<div
 						className="flex flex-col items-center justify-between gap-1 rounded-2xl bg-secondary py-4 text-center"
-						key={group}
+						key={muscleGroup.muscleGroupId}
 					>
-						<p className="mt-1 font-bold text-2xl">{count}</p>
-						<p className="text-muted-foreground">{group}</p>
+						<p className="mt-1 font-bold text-2xl">{muscleGroup.exerciseCount}</p>
+						<p className="text-muted-foreground">{muscleGroup.name}</p>
 					</div>
 				))}
 			</div>

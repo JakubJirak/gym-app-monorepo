@@ -1,24 +1,11 @@
-import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
-
-type setsType =
-	| {
-			_id: Id<"sets">;
-			reps: number;
-			weight: number;
-			order: number;
-	  }[]
-	| undefined;
+import type { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 type HistorySetProps = {
-	date?: string;
-	sets?: setsType;
+	date: string;
+	sets: (typeof api.stats.getExerciseHistory._returnType.entries)[number]["sets"];
 };
 
 const HistorySet = ({ date, sets }: HistorySetProps) => {
-	if (!(date && sets)) {
-		return <p>Pro tento cvik nemate zadnou serii</p>;
-	}
-
 	const d = new Date(date);
 
 	return (

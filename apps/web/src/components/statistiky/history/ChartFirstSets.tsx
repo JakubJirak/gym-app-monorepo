@@ -2,60 +2,13 @@ import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 import { CustomTooltip } from "@/components/statistiky/history/CustomTooltip.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { type ChartConfig, ChartContainer, ChartTooltip } from "@/components/ui/chart.tsx";
-import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import type { api } from "../../../../../../packages/convex/convex/_generated/api";
 
-type chartProps = {
-	historySets:
-		| ({
-				id: Id<"workouts">;
-				date: string;
-				sets: {
-					_id: Id<"sets">;
-					reps: number;
-					weight: number;
-					order: number;
-				}[];
-		  } | null)[]
-		| undefined;
+type ChartFirstSetsProps = {
+	chartData: typeof api.stats.getExerciseHistory._returnType.chart;
 };
 
-const ChartFirstSets = ({ historySets }: chartProps) => {
-	const sortedHistorySets = [...(historySets ?? [])]
-		.filter(Boolean)
-		.sort(
-			(a, b) =>
-				new Date(a?.date ? a.date : "2025-01-01").getTime() -
-				new Date(b?.date ? b.date : "2025-01-01").getTime()
-		);
-
-	const chartData = sortedHistorySets
-		.map((set) => {
-			if (!set) {
-				return null;
-			}
-
-			const weights = set.sets.map((s) => Number(s.weight)).filter((w) => !Number.isNaN(w));
-
-			const maxWeight = weights.length ? Math.max(...weights) : null;
-			if (maxWeight === null) {
-				return null;
-			}
-
-			const maxWeightSets = set.sets.filter((s) => Number(s.weight) === maxWeight);
-
-			const maxReps =
-				maxWeightSets.length > 0
-					? Math.max(...maxWeightSets.map((s) => Number(s.reps)).filter((r) => !Number.isNaN(r)))
-					: null;
-
-			return {
-				date: set.date,
-				value: maxWeight,
-				reps: maxReps,
-			};
-		})
-		.filter(Boolean);
-
+const ChartFirstSets = ({ chartData }: ChartFirstSetsProps) => {
 	const chartConfig = {
 		weight: {
 			label: "Vaha",
@@ -66,7 +19,7 @@ const ChartFirstSets = ({ historySets }: chartProps) => {
 	return (
 		<Card>
 			<CardContent>
-				<ChartContainer className="min-h-[200px] w-full" config={chartConfig}>
+				<ChartContainer className="min-h-50 w-full" config={chartConfig}>
 					<BarChart
 						accessibilityLayer
 						data={chartData}

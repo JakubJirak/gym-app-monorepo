@@ -1,6 +1,7 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { LoaderCircle } from "lucide-react";
 import Header from "@/components/Header";
 import HistorySets from "@/components/statistiky/history/HistorySets";
 import MuscleGroupStats from "@/components/statistiky/muscleGroup/MuscleGroupStats";
@@ -20,9 +21,21 @@ export const Route = createFileRoute("/_auth/statistiky/")({
 });
 
 function RouteComponent() {
-	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
+	const { data: stats, isPending } = useQuery(convexQuery(api.stats.getOverallStats, {}));
 
-	if (trainings === undefined || trainings?.length === 0) {
+	if (isPending) {
+		return (
+			<>
+				<Header page="STATISTIKY" />
+				<div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+					<LoaderCircle className="h-5 w-5 animate-spin" />
+					<span>Načítám statistiky…</span>
+				</div>
+			</>
+		);
+	}
+
+	if (!stats || stats.workoutCount === 0) {
 		return (
 			<>
 				<Header page="STATISTIKY" />
@@ -46,7 +59,7 @@ function RouteComponent() {
 					<TabsTrigger value="history">Historie</TabsTrigger>
 				</TabsList>
 				<TabsContent value="stats">
-					<OverallStats />
+					<OverallStats stats={stats} />
 				</TabsContent>
 				<TabsContent value="musclegroup">
 					<MuscleGroupStats />

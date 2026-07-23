@@ -17,6 +17,7 @@ import type * as muscleGroups from "../muscleGroups.js";
 import type * as rateLimit from "../rateLimit.js";
 import type * as routineExercises from "../routineExercises.js";
 import type * as routines from "../routines.js";
+import type * as stats from "../stats.js";
 import type * as tips from "../tips.js";
 import type * as userGoals from "../userGoals.js";
 import type * as userWeights from "../userWeights.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   rateLimit: typeof rateLimit;
   routineExercises: typeof routineExercises;
   routines: typeof routines;
+  stats: typeof stats;
   tips: typeof tips;
   userGoals: typeof userGoals;
   userWeights: typeof userWeights;
