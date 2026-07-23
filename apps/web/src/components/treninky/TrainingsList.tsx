@@ -1,13 +1,12 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { useMutation } from "convex/react";
-import { Dumbbell, NotebookPen } from "lucide-react";
+import { Dumbbell } from "lucide-react";
 import { GiWeightLiftingUp } from "react-icons/gi";
 import { Separator } from "@/components/ui/separator.tsx";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
-import { formatDate } from "../../../utils/date-utils.ts";
 import TrainingDialog, { type Training } from "./AddNewTraining.tsx";
+import { TrainingSummaryLink } from "./training-summary-link.tsx";
 
 const TrainingsList = () => {
 	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkoutSummaries, {}));
@@ -49,42 +48,7 @@ const TrainingsList = () => {
 						<div>
 							{trainings.map((training, index) => (
 								<div key={training._id}>
-									<Link
-										className="flex items-center gap-3 rounded-md px-1 py-3 outline-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring"
-										params={{ trainingId: training._id }}
-										to="/treninky/$trainingId"
-									>
-										<div className="flex min-w-0 flex-1 flex-col gap-1">
-											<div className="font-semibold text-base">
-												{formatDate(
-													new Date(training.workoutDate),
-													"PPPP"
-												)}
-											</div>
-											{training.name && (
-												<div className="flex items-center gap-2 text-muted-foreground text-sm">
-													<NotebookPen className="h-4 w-4 shrink-0" />
-													<span className="truncate">
-														{training.name}
-													</span>
-												</div>
-											)}
-										</div>
-
-										<div
-											className="shrink-0 rounded-full border px-3 py-1 text-center text-sm"
-											style={{
-												borderColor: training.filter?.color
-													? `${training.filter.color}99`
-													: "hsl(var(--border))",
-												color:
-													training.filter?.color ||
-													"hsl(var(--foreground))",
-											}}
-										>
-											{training.filter?.name || "Žádný"}
-										</div>
-									</Link>
+									<TrainingSummaryLink training={training} />
 									{index < trainings.length - 1 && <Separator />}
 								</div>
 							))}
