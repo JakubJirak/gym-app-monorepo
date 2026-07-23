@@ -4,6 +4,60 @@ import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 import { rateLimiter } from "./rateLimit";
 
+export const getUserWorkoutSummaries = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("workouts"),
+			name: v.string(),
+			workoutDate: v.string(),
+			filter: v.union(
+				v.object({
+					name: v.string(),
+					color: v.string(),
+				}),
+				v.null()
+			),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const workouts = await ctx.db
+			.query("workouts")
+			.withIndex("by_userId_workoutDate", (q) => q.eq("userId", user._id))
+			.order("desc")
+			.collect();
+
+		const filterIds = [...new Set(workouts.map((workout) => workout.filterId))];
+		const filters = await Promise.all(filterIds.map((filterId) => ctx.db.get(filterId)));
+		const filtersById = new Map(
+			filters
+				.filter((filter): filter is NonNullable<typeof filter> => filter !== null)
+				.map((filter) => [filter._id, filter])
+		);
+
+		return workouts.map((workout) => {
+			const filter = filtersById.get(workout.filterId);
+
+			return {
+				_id: workout._id,
+				name: workout.name,
+				workoutDate: workout.workoutDate,
+				filter: filter
+					? {
+							name: filter.name,
+							color: filter.color,
+						}
+					: null,
+			};
+		});
+	},
+});
+
 export const getUserWorkouts = query({
 	args: {},
 	async handler(ctx) {

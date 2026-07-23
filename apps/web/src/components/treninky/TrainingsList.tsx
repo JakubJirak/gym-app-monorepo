@@ -1,23 +1,16 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { useMutation } from "convex/react";
 import { Dumbbell, NotebookPen } from "lucide-react";
-import { useState } from "react";
-import { FaPencilAlt } from "react-icons/fa";
 import { GiWeightLiftingUp } from "react-icons/gi";
-import { DialogAddExercise } from "@/components/treninky/editDialogs/DialogAddExercise.tsx";
-import DialogDelete from "@/components/treninky/editDialogs/DialogDeleteTraining.tsx";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
-import { Toggle } from "@/components/ui/toggle.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 import { formatDate } from "../../../utils/date-utils.ts";
 import TrainingDialog, { type Training } from "./AddNewTraining.tsx";
-import TrainingLi from "./TrainingLi.tsx";
 
 const TrainingsList = () => {
-	const [toggleEdit, setToggleEdit] = useState(false);
-	const { data: trainings, isLoading } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
+	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkoutSummaries, {}));
 
 	function handleSaveTraining(training: Training) {
 		handleAddTraining(training);
@@ -32,29 +25,9 @@ const TrainingsList = () => {
 		});
 	};
 
-	if (!trainings) {
-		return null;
-	}
-
-	if (!(trainings || isLoading)) {
-		return (
-			<Card className="mx-auto max-w-125">
-				<CardContent className="flex flex-col items-center justify-center py-6">
-					<GiWeightLiftingUp size={55} />
-					<h3 className="my-3 font-semibold text-lg">Zatím žádné tréninky</h3>
-					<p className="mb-5 text-center text-muted-foreground">
-						Začněte sledovat své tréninky přidáním prvního tréninku.
-					</p>
-					<TrainingDialog onSave={handleSaveTraining} />
-				</CardContent>
-			</Card>
-		);
-	}
-
 	return (
 		<div className="container mx-auto w-[90%] max-w-125">
 			<div className="space-y-4">
-				{/* Trainings List */}
 				{trainings.length > 0 ? (
 					<div className="space-y-3">
 						<div className="pb-4">
@@ -73,100 +46,59 @@ const TrainingsList = () => {
 								</div>
 							</div>
 						</div>
-						<Accordion className="w-full space-y-2" type="multiple">
-							{trainings.map((training) => (
-								<AccordionItem
-									className="rounded-xl border bg-background px-4 outline-none last:border-b has-focus-visible:border-ring has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50"
-									key={training._id}
-									value={training._id}
-								>
-									<AccordionTrigger className="flex items-center gap-2 py-3 hover:no-underline">
-										<div className="flex flex-1 flex-row items-center gap-y-1">
-											<div className="flex flex-1 flex-col gap-1">
-												<div className="font-semibold text-base">
-													{formatDate(
-														new Date(training.workoutDate),
-														"PPPP"
-													)}
-												</div>
-												{training.name && (
-													<div className="flex items-center gap-2 text-muted-foreground text-sm">
-														<NotebookPen className="h-4 w-4" />
+						<div>
+							{trainings.map((training, index) => (
+								<div key={training._id}>
+									<Link
+										className="flex items-center gap-3 rounded-md px-1 py-3 outline-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring"
+										params={{ trainingId: training._id }}
+										to="/treninky/$trainingId"
+									>
+										<div className="flex min-w-0 flex-1 flex-col gap-1">
+											<div className="font-semibold text-base">
+												{formatDate(
+													new Date(training.workoutDate),
+													"PPPP"
+												)}
+											</div>
+											{training.name && (
+												<div className="flex items-center gap-2 text-muted-foreground text-sm">
+													<NotebookPen className="h-4 w-4 shrink-0" />
+													<span className="truncate">
 														{training.name}
-													</div>
-												)}
-											</div>
-
-											<div
-												className="rounded-full border px-3 py-1 text-center"
-												style={{
-													borderColor: training?.filter?.color
-														? `${training.filter.color}99`
-														: "hsl(var(--border))",
-													color:
-														training?.filter?.color ||
-														"hsl(var(--foreground))",
-												}}
-											>
-												{training?.filter?.name || "Žádný"}
-											</div>
-										</div>
-									</AccordionTrigger>
-									<AccordionContent className="pb-2">
-										<div className="relative flex flex-col items-stretch">
-											{training.exercises.map((exercise, index) => (
-												<TrainingLi
-													exercise={exercise}
-													index={index}
-													key={exercise._id}
-													len={training.exercises.length}
-													toggleEdit={toggleEdit}
-												/>
-											))}
-											<div className="mt-4 space-y-2">
-												{toggleEdit && (
-													<div>
-														<DialogAddExercise
-															order={training.exercises.length}
-															trainingId={training._id}
-														/>
-													</div>
-												)}
-												<div className="flex items-center justify-between">
-													<div className="">
-														<Toggle
-															onClick={() =>
-																setToggleEdit(
-																	!toggleEdit
-																)
-															}
-															variant="outline"
-														>
-															<FaPencilAlt /> Upravit
-														</Toggle>
-													</div>
-													<div className="inline-flex self-end">
-														<DialogDelete id={training._id} />
-													</div>
+													</span>
 												</div>
-											</div>
+											)}
 										</div>
-									</AccordionContent>
-								</AccordionItem>
+
+										<div
+											className="shrink-0 rounded-full border px-3 py-1 text-center text-sm"
+											style={{
+												borderColor: training.filter?.color
+													? `${training.filter.color}99`
+													: "hsl(var(--border))",
+												color:
+													training.filter?.color ||
+													"hsl(var(--foreground))",
+											}}
+										>
+											{training.filter?.name || "Žádný"}
+										</div>
+									</Link>
+									{index < trainings.length - 1 && <Separator />}
+								</div>
 							))}
-						</Accordion>
+						</div>
 					</div>
 				) : (
-					<Card className="mx-auto max-w-125">
-						<CardContent className="flex flex-col items-center justify-center py-6">
-							<GiWeightLiftingUp size={55} />
-							<h3 className="my-3 font-semibold text-lg">Zatím žádné tréninky</h3>
-							<p className="mb-5 text-center text-muted-foreground">
-								Začněte sledovat své tréninky přidáním prvního tréninku.
-							</p>
-							<TrainingDialog onSave={handleSaveTraining} />
-						</CardContent>
-					</Card>
+					<div className="flex flex-col items-center justify-center py-6">
+						<GiWeightLiftingUp size={55} />
+						<h3 className="my-3 font-semibold text-lg">Zatím žádné tréninky</h3>
+						<p className="mb-5 text-center text-muted-foreground">
+							Začněte sledovat své tréninky přidáním prvního tréninku.
+						</p>
+						<TrainingDialog onSave={handleSaveTraining} />
+					</div>
 				)}
 			</div>
 		</div>
