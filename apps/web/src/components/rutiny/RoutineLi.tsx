@@ -1,35 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
+import type { api } from "../../../../../packages/convex/convex/_generated/api";
 
 type RoutineLiProps = {
-	rutina: {
-		filter: {
-			_id: Id<"filters">;
-			_creationTime: number;
-			name: string;
-			userId: string;
-			color: string;
-		} | null;
-		exercises: {
-			_id: Id<"routinesExercises">;
-			exercise: {
-				muscleGroup: string | null;
-				_id: Id<"exercises">;
-				_creationTime: number;
-				name: string;
-				userId: string;
-				muscleGroupId: Id<"muscleGroups">;
-			} | null;
-			order: number;
-			routineId: Id<"routines">;
-			note: string | undefined;
-		}[];
-		_id: Id<"routines">;
-		_creationTime: number;
-		name: string;
-		userId: string;
-		filterId: Id<"filters">;
-	};
+	rutina: (typeof api.routines.getUserRoutineSummaries._returnType)[number];
 };
 
 export default function RoutineLi({ rutina }: RoutineLiProps) {

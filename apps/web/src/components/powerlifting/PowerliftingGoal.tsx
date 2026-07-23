@@ -15,7 +15,7 @@ const PowerliftingGoal = ({ title, goal, value }: PowerliftingGoalProps) => (
 			<p>{value}%</p>
 		</div>
 
-		<Progress value={value} />
+		<Progress value={Math.min(value, 100)} />
 	</div>
 );
 

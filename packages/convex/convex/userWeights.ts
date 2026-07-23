@@ -8,12 +8,10 @@ export const getUserWeight = query({
 	handler: async (ctx) => {
 		let userId: string;
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return null;
 			}
-			//@ts-expect-error
 			userId = user._id;
 		} catch (error) {
 			// Auth timeout or error - return null
@@ -33,12 +31,10 @@ export const addUserWeight = mutation({
 		weight: v.string(),
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -59,12 +55,10 @@ export const updateUserWeight = mutation({
 		changeWeight: v.string(), // očekává číslo jako vstupní parametr
 	},
 	handler: async (ctx, args) => {
-		//@ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
 		}
-		//@ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting

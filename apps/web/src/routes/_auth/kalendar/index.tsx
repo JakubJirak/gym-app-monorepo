@@ -1,14 +1,13 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
 import { cs } from "date-fns/locale";
-import { NotebookPen } from "lucide-react";
-import { useState } from "react";
-import CalendarTrainingLi from "@/components/calendar/CalendarTrainingLi";
+import { LoaderCircle } from "lucide-react";
+import { type ReactNode, useMemo, useState } from "react";
 import Header from "@/components/Header.tsx";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion.tsx";
-import { Calendar, CalendarDayButton } from "@/components/ui/calendar.tsx";
+import { TrainingSummaryLink } from "@/components/treninky/training-summary-link.tsx";
+import { Calendar } from "@/components/ui/calendar.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 import { toLocalISODateString } from "../../../../utils/date-utils";
 
@@ -24,121 +23,67 @@ export const Route = createFileRoute("/_auth/kalendar/")({
 
 function RouteComponent() {
 	const [date, setDate] = useState<Date | undefined>(new Date());
-	const { data: trainings } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
+	const { data: trainings, isError, isPending } = useQuery(convexQuery(api.workouts.getUserWorkoutSummaries, {}));
+	const selectedDate = toLocalISODateString(date);
+	const matchingTrainings = useMemo(
+		() => trainings?.filter((training) => training.workoutDate.slice(0, 10) === selectedDate) ?? [],
+		[trainings, selectedDate]
+	);
+	const trainingDates = useMemo(
+		() => trainings?.map((training) => new Date(`${training.workoutDate.slice(0, 10)}T00:00:00`)) ?? [],
+		[trainings]
+	);
 
-	function allDates() {
-		return trainings?.map((training) => training.workoutDate);
-	}
+	let content: ReactNode;
+	if (isPending) {
+		content = (
+			<div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+				<LoaderCircle className="h-5 w-5 animate-spin" />
+				<span>Načítám kalendář…</span>
+			</div>
+		);
+	} else if (isError || !trainings) {
+		content = <p className="py-10 text-center text-muted-foreground">Kalendář se nepodařilo načíst.</p>;
+	} else {
+		content = (
+			<>
+				<Calendar
+					className="w-full rounded-2xl border border-border"
+					defaultMonth={date}
+					locale={cs}
+					mode="single"
+					modifiers={{ hasTraining: trainingDates }}
+					modifiersClassNames={{
+						hasTraining:
+							"[&>button]:rounded-lg [&>button]:bg-ring/70 [&>button]:font-bold [&>button]:text-white",
+					}}
+					onSelect={(selected) => selected && setDate(selected)}
+					selected={date}
+				/>
 
-	const matchingTrainings = trainings?.filter((training) => training.workoutDate === toLocalISODateString(date));
-
-	function formatDate(d: Date | null, formatString: string) {
-		if (d) {
-			return format(d, formatString, { locale: cs });
-		}
-		return "neplatne datum";
+				<div>
+					{matchingTrainings.length > 0 ? (
+						matchingTrainings.map((training, index) => (
+							<div key={training._id}>
+								<TrainingSummaryLink training={training} />
+								{index < matchingTrainings.length - 1 && <Separator />}
+							</div>
+						))
+					) : (
+						<p className="py-6 text-center text-muted-foreground text-sm">
+							V tento den nemáte žádný trénink.
+						</p>
+					)}
+				</div>
+			</>
+		);
 	}
 
 	return (
-		<div className="">
+		<div>
 			<Header page="KALENDÁŘ" />
 
-			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">
-				<div className="">
-					<Calendar
-						className="w-full rounded-2xl border border-border"
-						components={{
-							// biome-ignore lint/correctness/noNestedComponentDefinitions: faster
-							DayButton: ({ children, modifiers, day, ...props }) => {
-								const trainingsDates = allDates();
-								const dayString = toLocalISODateString(day.date);
-								const isSpecial = trainingsDates?.includes(dayString);
-
-								return (
-									<CalendarDayButton
-										day={day}
-										modifiers={modifiers}
-										{...props}
-										className={
-											isSpecial
-												? "rounded-lg bg-ring/70 font-bold text-white"
-												: ""
-										}
-									>
-										{children}
-									</CalendarDayButton>
-								);
-							},
-						}}
-						defaultMonth={date}
-						locale={cs}
-						mode="single"
-						onSelect={(d) => d && setDate(d)}
-						selected={date}
-					/>
-				</div>
-				<div className="">
-					<Accordion className="w-full space-y-2" type="multiple">
-						{matchingTrainings?.map((training) => (
-							<AccordionItem
-								className="rounded-xl border bg-background px-4 outline-none last:border-b has-focus-visible:border-ring has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50"
-								key={training._id}
-								value={training._id}
-							>
-								<AccordionTrigger className="flex items-center gap-2 py-3 hover:no-underline">
-									<Link
-										className="flex flex-1 flex-row items-center gap-y-1"
-										params={{ trainingId: training._id }}
-										to={"/treninky/$trainingId"}
-									>
-										<div className="flex flex-1 flex-col gap-1">
-											<div className="font-semibold text-base">
-												{formatDate(
-													new Date(training.workoutDate),
-													"PPPP"
-												)}
-											</div>
-											{training.name && (
-												<div className="flex items-center gap-2 text-muted-foreground text-sm">
-													<NotebookPen className="h-4 w-4" />
-													{training.name}
-												</div>
-											)}
-										</div>
-
-										<div
-											className="rounded-full border px-3 py-1 text-center"
-											style={{
-												borderColor: training?.filter?.color
-													? `${training.filter.color}99`
-													: "hsl(var(--border))",
-												color:
-													training?.filter?.color ||
-													"hsl(var(--foreground))",
-											}}
-										>
-											{training?.filter?.name || "Žádný"}
-										</div>
-									</Link>
-								</AccordionTrigger>
-
-								<AccordionContent className="pb-4">
-									<div className="relative flex flex-col items-stretch gap-2">
-										{training.exercises.map((exercise, index) => (
-											<CalendarTrainingLi
-												exercise={exercise}
-												index={index}
-												key={exercise._id}
-												len={training.exercises.length}
-											/>
-										))}
-									</div>
-								</AccordionContent>
-							</AccordionItem>
-						))}
-					</Accordion>
-				</div>
-			</div>
+			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">{content}</div>
 		</div>
 	);
 }

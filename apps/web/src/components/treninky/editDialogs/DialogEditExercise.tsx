@@ -48,33 +48,33 @@ export function DialogEditExercise({ exerciseId, setOpenParent }: DialogEditExer
 
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
-			<form>
-				<DialogTrigger asChild>
-					<Button className="w-40" variant="outline">
-						<Pencil className="size-4" />
-						Změnit cvik
-					</Button>
-				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-106.25">
-					<DialogHeader>
-						<DialogTitle>Změna cviku</DialogTitle>
-						<DialogDescription>Zde můžete změnit typ cviku v tréninku.</DialogDescription>
-					</DialogHeader>
-					<form onSubmit={handleSubmit}>
-						<ExerciseCombobox
-							exerciseId="a"
-							selectedStatus={selectedStatusesEx}
-							setSelectedStatus={setSelectedStatusesEx}
-						/>
-						<DialogFooter className="mt-4">
-							<DialogClose asChild>
-								<Button variant="outline">Zrušit</Button>
-							</DialogClose>
-							<Button type="submit">Uložit změny</Button>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</form>
+			<DialogTrigger asChild>
+				<Button className="w-40" type="button" variant="outline">
+					<Pencil className="size-4" />
+					Změnit cvik
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="h-auto sm:max-w-106.25">
+				<DialogHeader>
+					<DialogTitle>Změna cviku</DialogTitle>
+					<DialogDescription>Zde můžete změnit typ cviku v tréninku.</DialogDescription>
+				</DialogHeader>
+				<form onSubmit={handleSubmit}>
+					<ExerciseCombobox
+						exerciseId="a"
+						selectedStatus={selectedStatusesEx}
+						setSelectedStatus={setSelectedStatusesEx}
+					/>
+					<DialogFooter className="mt-4">
+						<DialogClose asChild>
+							<Button type="button" variant="outline">
+								Zrušit
+							</Button>
+						</DialogClose>
+						<Button type="submit">Uložit změny</Button>
+					</DialogFooter>
+				</form>
+			</DialogContent>
 		</Dialog>
 	);
 }

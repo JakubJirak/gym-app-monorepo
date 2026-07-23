@@ -1,7 +1,7 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "convex/react";
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import { Check, ChevronsUpDown, LoaderCircle, Plus } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
@@ -34,7 +34,14 @@ export function AddExercise({ defaultName }: DialogEditSet) {
 	const [value, setValue] = useState("");
 	const addExercise = useMutation(api.exercises.addExercise);
 
-	const { data: muscleGroups } = useSuspenseQuery(convexQuery(api.muscleGroups.getAllMuscleGroups, {}));
+	const {
+		data: muscleGroups,
+		isError,
+		isPending,
+	} = useQuery({
+		...convexQuery(api.muscleGroups.getAllMuscleGroups, {}),
+		enabled: open,
+	});
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -49,23 +56,31 @@ export function AddExercise({ defaultName }: DialogEditSet) {
 		}
 	};
 
-	if (!muscleGroups) {
-		return null;
-	}
-
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
-			<form>
-				<DialogTrigger asChild>
-					<Button size="icon">
-						<Plus />
-					</Button>
-				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>Přidat vlastní cvik</DialogTitle>
-						<DialogDescription>Zde si můžete přidat vlastní cvik.</DialogDescription>
-					</DialogHeader>
+			<DialogTrigger asChild>
+				<Button size="icon">
+					<Plus />
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="h-auto sm:max-w-106.25">
+				<DialogHeader>
+					<DialogTitle>Přidat vlastní cvik</DialogTitle>
+					<DialogDescription>Zde si můžete přidat vlastní cvik.</DialogDescription>
+				</DialogHeader>
+
+				{isPending && (
+					<div className="flex items-center justify-center gap-2 py-8 text-muted-foreground">
+						<LoaderCircle className="animate-spin" />
+						<span>Načítám svalové partie…</span>
+					</div>
+				)}
+
+				{!isPending && (isError || !muscleGroups) && (
+					<p className="py-8 text-center text-destructive">Svalové partie se nepodařilo načíst.</p>
+				)}
+
+				{!(isPending || isError) && muscleGroups && (
 					<form className="space-y-4" onSubmit={handleSubmit}>
 						<div className="grid gap-4">
 							<div className="grid gap-3">
@@ -144,8 +159,8 @@ export function AddExercise({ defaultName }: DialogEditSet) {
 							<Button type="submit">Uložit cvik</Button>
 						</DialogFooter>
 					</form>
-				</DialogContent>
-			</form>
+				)}
+			</DialogContent>
 		</Dialog>
 	);
 }

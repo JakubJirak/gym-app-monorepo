@@ -1,8 +1,11 @@
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "convex/react";
-import { TableProperties } from "lucide-react";
+import { LoaderCircle, TableProperties } from "lucide-react";
+import { Suspense, useState } from "react";
 import { AddFilter } from "@/components/categories/AddFilter";
-import Category from "@/components/categories/category";
+import Category, { type FilterSummary } from "@/components/categories/category";
+import { EditFilter } from "@/components/categories/EditFilter";
 import Header from "@/components/Header";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
@@ -20,12 +23,6 @@ export const Route = createFileRoute("/_auth/kategorie/")({
 });
 
 function RouteComponent() {
-	const filters = useQuery(api.filters.getAllFilters);
-
-	if (!filters) {
-		return null;
-	}
-
 	return (
 		<div className="pb-8">
 			<Header page="KATEGORIE" />
@@ -41,17 +38,40 @@ function RouteComponent() {
 					<AddFilter />
 				</div>
 
-				<div className="mt-8 flex flex-col gap-4">
-					{filters.map((filter) => (
-						<Category
-							color={filter.color}
-							id={filter._id}
-							key={filter._id}
-							name={filter.name}
-						/>
-					))}
-				</div>
+				<Suspense fallback={<CategoriesLoading />}>
+					<CategoryList />
+				</Suspense>
 			</div>
+		</div>
+	);
+}
+
+function CategoryList() {
+	const { data: filters } = useSuspenseQuery(convexQuery(api.filters.getFilterSummaries, {}));
+	const [selectedFilter, setSelectedFilter] = useState<FilterSummary | null>(null);
+
+	if (filters.length === 0) {
+		return <p className="mt-8">Žádné kategorie k zobrazení.</p>;
+	}
+
+	return (
+		<>
+			<div className="mt-8 flex flex-col gap-4">
+				{filters.map((filter) => (
+					<Category filter={filter} key={filter._id} onEdit={setSelectedFilter} />
+				))}
+			</div>
+
+			{selectedFilter && <EditFilter filter={selectedFilter} onClose={() => setSelectedFilter(null)} />}
+		</>
+	);
+}
+
+function CategoriesLoading() {
+	return (
+		<div className="flex items-center justify-center gap-2 py-8 text-muted-foreground">
+			<LoaderCircle className="animate-spin" />
+			<span>Načítám kategorie…</span>
 		</div>
 	);
 }

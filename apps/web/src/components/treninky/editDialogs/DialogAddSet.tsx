@@ -51,57 +51,57 @@ export function DialogAddSet({ order, exerciseId, setOpenParent }: DialogEditSet
 
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
-			<form>
-				<DialogTrigger asChild>
-					<Button className="w-40" variant="outline">
-						<Plus className="size-5" />
-						Přidat sérii
-					</Button>
-				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-106.25">
-					<DialogHeader>
-						<DialogTitle>Přidání série</DialogTitle>
-						<DialogDescription>Zde můžete přidat sérii k vybranému cviku.</DialogDescription>
-					</DialogHeader>
-					<form onSubmit={handleSubmit}>
-						<div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
-							<div className="grid gap-3">
-								<Label htmlFor="vaha">Váha (kg)</Label>
-								<Input
-									id="vaha"
-									min={1}
-									name="vaha"
-									onChange={(e) => setAddSetWeight(e.target.value)}
-									required
-									step={0.01}
-									type="number"
-									value={addSetWeight}
-								/>
-							</div>
-							<div className="grid gap-3">
-								<Label htmlFor="opak">Počet opakování</Label>
-								<Input
-									id="opak"
-									min={1}
-									name="opak"
-									onChange={(e) => setAddSetReps(e.target.value)}
-									required
-									step={0.01}
-									type="number"
-									value={addSetReps}
-								/>
-							</div>
+			<DialogTrigger asChild>
+				<Button className="w-40" type="button" variant="outline">
+					<Plus className="size-5" />
+					Přidat sérii
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="h-auto sm:max-w-106.25">
+				<DialogHeader>
+					<DialogTitle>Přidání série</DialogTitle>
+					<DialogDescription>Zde můžete přidat sérii k vybranému cviku.</DialogDescription>
+				</DialogHeader>
+				<form onSubmit={handleSubmit}>
+					<div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
+						<div className="grid gap-3">
+							<Label htmlFor="vaha">Váha (kg)</Label>
+							<Input
+								id="vaha"
+								min={1}
+								name="vaha"
+								onChange={(e) => setAddSetWeight(e.target.value)}
+								required
+								step={0.01}
+								type="number"
+								value={addSetWeight}
+							/>
 						</div>
+						<div className="grid gap-3">
+							<Label htmlFor="opak">Počet opakování</Label>
+							<Input
+								id="opak"
+								min={1}
+								name="opak"
+								onChange={(e) => setAddSetReps(e.target.value)}
+								required
+								step={0.01}
+								type="number"
+								value={addSetReps}
+							/>
+						</div>
+					</div>
 
-						<DialogFooter className="mt-4">
-							<DialogClose asChild>
-								<Button variant="outline">Zrušit</Button>
-							</DialogClose>
-							<Button type="submit">Uložit změny</Button>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</form>
+					<DialogFooter className="mt-4">
+						<DialogClose asChild>
+							<Button type="button" variant="outline">
+								Zrušit
+							</Button>
+						</DialogClose>
+						<Button type="submit">Uložit změny</Button>
+					</DialogFooter>
+				</form>
+			</DialogContent>
 		</Dialog>
 	);
 }

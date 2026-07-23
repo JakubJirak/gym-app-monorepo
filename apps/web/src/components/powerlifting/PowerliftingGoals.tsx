@@ -1,21 +1,32 @@
-import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { Target } from "lucide-react";
 import PowerliftingGoal from "@/components/powerlifting/PowerliftingGoal.tsx";
-import { api } from "../../../../../packages/convex/convex/_generated/api";
 
 type PowerliftingGoalsType = {
 	benchPR: number;
 	deadliftPR: number;
 	squatPR: number;
+	goals:
+		| {
+				squat: string;
+				bench: string;
+				deadlift: string;
+		  }
+		| null
+		| undefined;
 };
 
-const PowerliftingGoals = ({ benchPR, squatPR, deadliftPR }: PowerliftingGoalsType) => {
-	const { data: goals } = useSuspenseQuery(convexQuery(api.userGoals.getUserGoals, {}));
-
+const PowerliftingGoals = ({ benchPR, squatPR, deadliftPR, goals }: PowerliftingGoalsType) => {
 	if (!goals) {
 		return null;
 	}
+
+	const getProgress = (personalRecord: number, goal: string) => {
+		const numericGoal = Number(goal);
+		if (!Number.isFinite(numericGoal) || numericGoal <= 0) {
+			return 0;
+		}
+		return Math.max(0, Math.round((personalRecord / numericGoal) * 100));
+	};
 
 	return (
 		<div className="p-4">
@@ -29,17 +40,17 @@ const PowerliftingGoals = ({ benchPR, squatPR, deadliftPR }: PowerliftingGoalsTy
 					<PowerliftingGoal
 						goal={goals.squat ?? ""}
 						title="Squat"
-						value={Number(((squatPR / Number(goals.squat)) * 100).toFixed(0))}
+						value={getProgress(squatPR, goals.squat)}
 					/>
 					<PowerliftingGoal
 						goal={goals.bench ?? ""}
 						title="Bench"
-						value={Number(((benchPR / Number(goals.bench)) * 100).toFixed(0))}
+						value={getProgress(benchPR, goals.bench)}
 					/>
 					<PowerliftingGoal
 						goal={goals.deadlift ?? ""}
 						title="Deadlift"
-						value={Number(((deadliftPR / Number(goals.deadlift)) * 100).toFixed(0))}
+						value={getProgress(deadliftPR, goals.deadlift)}
 					/>
 				</div>
 			</div>

@@ -1,5 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,67 +24,67 @@ export type Routine = {
 };
 
 type RoutineDialogProps = {
-	onSave: (routine: Routine) => void;
+	onSave: (routine: Routine) => Promise<void>;
 };
 
 const AddRoutineDialog = ({ onSave }: RoutineDialogProps) => {
-	const { data: filters } = useSuspenseQuery(convexQuery(api.filters.getAllFilters, {}));
+	const { data: filters, isError, isPending } = useQuery(convexQuery(api.filters.getAllFilters, {}));
 	const [open, setOpen] = useState<boolean>(false);
-
-	// Safely get first filter ID
-	const getDefaultFilterId = () => {
-		if (filters && filters.length > 0) {
-			return filters[0]._id;
-		}
-		return;
-	};
-
-	const [routine, setRoutine] = useState({
+	const [isSaving, setIsSaving] = useState(false);
+	const [saveError, setSaveError] = useState<string | null>(null);
+	const [routine, setRoutine] = useState<{
+		name: string;
+		filterId?: Id<"filters">;
+	}>({
 		name: "",
-		filterId: getDefaultFilterId(),
 	});
+	const selectedFilterId = routine.filterId ?? filters?.[0]?._id;
 
-	const isValidRoutine = (): boolean => !!(routine.name && routine.filterId);
+	const isValidRoutine = (): boolean => !!(routine.name.trim() && selectedFilterId);
 
-	const handleSave = () => {
-		if (!(routine.name && routine.filterId)) {
+	const handleSave = async () => {
+		const name = routine.name.trim();
+		if (!(name && selectedFilterId)) {
 			return;
 		}
 
 		const newRoutine: Routine = {
-			name: routine.name,
-			filterId: routine.filterId,
+			name,
+			filterId: selectedFilterId,
 		};
 
-		onSave(newRoutine);
-		setOpen(false);
-		setRoutine({
-			name: "",
-			filterId: getDefaultFilterId(),
-		});
+		setIsSaving(true);
+		setSaveError(null);
+		try {
+			await onSave(newRoutine);
+			setOpen(false);
+			setRoutine({ name: "" });
+		} catch {
+			setSaveError("Rutinu se nepodařilo uložit. Zkuste to prosím znovu.");
+		} finally {
+			setIsSaving(false);
+		}
 	};
 
 	const handleCancel = () => {
 		setOpen(false);
-		setRoutine({
-			name: "",
-			filterId: getDefaultFilterId(),
-		});
+		setSaveError(null);
+		setRoutine({ name: "" });
 	};
 
-	const hasFilters = filters && filters.length > 0;
+	const hasFilters = !!filters?.length;
 
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
 			<DialogTrigger asChild>
-				<Button disabled={!hasFilters} size="sm">
+				<Button disabled={isPending || isError || !hasFilters} size="sm">
 					Přidat rutinu
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="max-w-md">
 				<DialogHeader>
 					<DialogTitle>Přidat novou rutinu</DialogTitle>
-					<DialogDescription>Vytvořte novou rutinu s názvem a datem.</DialogDescription>
+					<DialogDescription>Vytvořte novou rutinu s názvem a kategorií.</DialogDescription>
 				</DialogHeader>
 
 				<div className="space-y-6">
@@ -105,7 +106,7 @@ const AddRoutineDialog = ({ onSave }: RoutineDialogProps) => {
 									filterId: value as Id<"filters">,
 								}))
 							}
-							value={routine.filterId}
+							value={selectedFilterId}
 						>
 							<SelectTrigger className="w-full" id="filter-select">
 								<SelectValue placeholder="Vyberte filtr" />
@@ -138,18 +139,25 @@ const AddRoutineDialog = ({ onSave }: RoutineDialogProps) => {
 							value={routine.name}
 						/>
 					</div>
+					{saveError && <p className="text-destructive text-sm">{saveError}</p>}
 				</div>
 
 				<DialogFooter className="mt-auto flex-col gap-4 sm:flex-row">
 					<Button
 						className="w-full bg-transparent sm:w-auto"
+						disabled={isSaving}
 						onClick={handleCancel}
 						variant="outline"
 					>
 						Zrušit
 					</Button>
-					<Button className="w-full sm:w-auto" disabled={!isValidRoutine()} onClick={handleSave}>
-						Uložit rutinu
+					<Button
+						className="w-full sm:w-auto"
+						disabled={!isValidRoutine() || isSaving}
+						onClick={handleSave}
+					>
+						{isSaving && <LoaderCircle className="animate-spin" />}
+						{isSaving ? "Ukládám…" : "Uložit rutinu"}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

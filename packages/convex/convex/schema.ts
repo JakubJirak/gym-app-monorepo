@@ -10,6 +10,7 @@ export default defineSchema({
 		isShared: v.boolean(),
 	})
 		.index("by_userId", ["userId"])
+		.index("by_userId_workoutDate", ["userId", "workoutDate"])
 		.index("by_filterId", ["filterId"]),
 
 	workoutExercises: defineTable({

@@ -1,6 +1,8 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { LoaderCircle } from "lucide-react";
+import { Suspense } from "react";
 import Header from "@/components/Header.tsx";
 import MuscleGroupTrainingStats from "@/components/treninky/trenink/MuscleGroupTrainingStats";
 import TrainingInfo from "@/components/treninky/trenink/TrainingInfo.tsx";
@@ -16,6 +18,25 @@ export const Route = createFileRoute("/_auth/treninky/$trainingId")({
 
 function RouteComponent() {
 	const { trainingId } = Route.useParams();
+
+	return (
+		<Suspense
+			fallback={
+				<div className="pb-8">
+					<Header page="TRÉNINK" />
+					<div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+						<LoaderCircle className="h-5 w-5 animate-spin" />
+						<span>Načítám trénink…</span>
+					</div>
+				</div>
+			}
+		>
+			<TrainingPage trainingId={trainingId} />
+		</Suspense>
+	);
+}
+
+function TrainingPage({ trainingId }: { trainingId: string }) {
 	const { data: training } = useSuspenseQuery(
 		convexQuery(api.workouts.getWorkoutById, {
 			workoutId: trainingId as Id<"workouts">,
@@ -23,7 +44,12 @@ function RouteComponent() {
 	);
 
 	if (!training) {
-		return null;
+		return (
+			<div className="pb-8">
+				<Header page="TRÉNINK" />
+				<p className="py-10 text-center text-muted-foreground">Trénink nebyl nalezen.</p>
+			</div>
+		);
 	}
 
 	return (

@@ -1,6 +1,8 @@
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { LoaderCircle } from "lucide-react";
+import type { ReactNode } from "react";
 import Header from "@/components/Header.tsx";
 import PowerliftingGoals from "@/components/powerlifting/PowerliftingGoals.tsx";
 import PowerliftingStats from "@/components/powerlifting/PowerliftingStats.tsx";
@@ -18,42 +20,48 @@ export const Route = createFileRoute("/_auth/powerlifting/")({
 });
 
 function RouteComponent() {
-	const { data: trainings, isLoading } = useSuspenseQuery(convexQuery(api.workouts.getUserWorkouts, {}));
+	const { data: stats, isError, isPending } = useQuery(convexQuery(api.powerlifting.getPowerliftingStats, {}));
+	const { data: weightData } = useQuery(convexQuery(api.userWeights.getUserWeight, {}));
+	const { data: goals } = useQuery(convexQuery(api.userGoals.getUserGoals, {}));
 
-	const getSetsById = (id: string): number[] | undefined => {
-		if (trainings !== undefined) {
-			return trainings
-				?.flatMap((training) => training.exercises)
-				.filter((exercise) => exercise.exercise && exercise.exercise._id === id)
-				.flatMap((exercise) => exercise.sets)
-				.map((set) => Number(set.weight));
-		}
-		return [];
-	};
-
-	const maxWeight = (arr: number[]): number => {
-		if (arr.length === 0) {
-			return 0;
-		}
-		return Math.max(...arr);
-	};
-
-	const squatPR = maxWeight(getSetsById("k97fsv5mktmwx3a85nc3yf92e97sftej") ?? []);
-	const benchPR = maxWeight(getSetsById("k978awwr2wv1edjy57tmb1ncex7serqt") ?? []);
-	const deadliftPR = maxWeight(getSetsById("k971nc4hm5cfvk9rqxs86j1zqh7se6zv") ?? []);
-
-	if (isLoading) {
-		return <Header page="POWERLIFTING" />;
+	let content: ReactNode;
+	if (isPending) {
+		content = (
+			<div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+				<LoaderCircle className="h-5 w-5 animate-spin" />
+				<span>Načítám powerlifting statistiky…</span>
+			</div>
+		);
+	} else if (isError || !stats) {
+		content = (
+			<p className="py-10 text-center text-muted-foreground">
+				Powerlifting statistiky se nepodařilo načíst.
+			</p>
+		);
+	} else {
+		content = (
+			<>
+				<PowerliftingStats
+					benchPR={stats.benchPR}
+					deadliftPR={stats.deadliftPR}
+					squatPR={stats.squatPR}
+					weightData={weightData}
+				/>
+				<Separator />
+				<PowerliftingGoals
+					benchPR={stats.benchPR}
+					deadliftPR={stats.deadliftPR}
+					goals={goals}
+					squatPR={stats.squatPR}
+				/>
+			</>
+		);
 	}
 
 	return (
 		<>
 			<Header page="POWERLIFTING" />
-			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">
-				<PowerliftingStats benchPR={benchPR} deadliftPR={deadliftPR} squatPR={squatPR} />
-				<Separator />
-				<PowerliftingGoals benchPR={benchPR} deadliftPR={deadliftPR} squatPR={squatPR} />
-			</div>
+			<div className="mx-auto w-[90%] max-w-125 space-y-4 pb-8">{content}</div>
 		</>
 	);
 }

@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { LoaderCircle } from "lucide-react";
+import { Suspense } from "react";
 import Header from "@/components/Header.tsx";
 import TrainingsList from "@/components/treninky/TrainingsList";
 import { authClient } from "@/lib/auth-client.ts";
@@ -22,7 +24,16 @@ function RouteComponent() {
 	return (
 		<div className="pb-8">
 			<Header page="TRÉNINKY" />
-			<TrainingsList />
+			<Suspense
+				fallback={
+					<div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+						<LoaderCircle className="h-5 w-5 animate-spin" />
+						<span>Načítám tréninky…</span>
+					</div>
+				}
+			>
+				<TrainingsList />
+			</Suspense>
 		</div>
 	);
 }

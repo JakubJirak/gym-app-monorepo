@@ -7,22 +7,23 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 
-type UserWeightInputProps = {
-	weightData: {
+type UserDescriptionProps = {
+	description: {
 		value: string;
 	} | null;
 };
 
-const UserWeightInput = ({ weightData }: UserWeightInputProps) => {
-	const [weight, setWeight] = useState(weightData?.value ?? "");
-	const [isEditing, setIsEditing] = useState(weightData === null);
+const UserDescription = ({ description }: UserDescriptionProps) => {
+	const [value, setValue] = useState(description?.value ?? "");
+	const [isEditing, setIsEditing] = useState(description === null);
 	const [isSaving, setIsSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const setUserWeight = useMutation(api.profile.setUserWeight);
+	const setDescription = useMutation(api.profile.setUserDescription);
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		if (!weight || isSaving) {
+		const normalizedValue = value.trim();
+		if (!normalizedValue || isSaving) {
 			return;
 		}
 
@@ -30,41 +31,43 @@ const UserWeightInput = ({ weightData }: UserWeightInputProps) => {
 		setError(null);
 
 		try {
-			await setUserWeight({ weight });
+			await setDescription({ description: normalizedValue });
+			setValue(normalizedValue);
 			setIsEditing(false);
 		} catch {
-			setError("Váhu se nepodařilo uložit.");
+			setError("Popis se nepodařilo uložit.");
 		} finally {
 			setIsSaving(false);
 		}
 	};
 
 	const startEditing = () => {
-		setWeight(weightData?.value ?? "");
+		setValue(description?.value ?? "");
 		setError(null);
 		setIsEditing(true);
 	};
 
-	if (!weightData || isEditing) {
+	if (!description || isEditing) {
 		return (
 			<div className="p-2">
 				<form className="flex flex-wrap items-end gap-2" onSubmit={handleSubmit}>
-					<div className="flex flex-1 flex-col gap-2">
-						<Label htmlFor="profile-weight">Vaše váha (kg)</Label>
+					<div className="flex min-w-0 flex-1 flex-col gap-2">
+						<Label htmlFor="profile-description">Váš popis</Label>
 						<Input
 							autoFocus
-							className="max-w-25"
-							id="profile-weight"
-							max="500"
-							min="10"
-							onChange={(event) => setWeight(event.target.value)}
+							id="profile-description"
+							maxLength={200}
+							onChange={(event) => setValue(event.target.value)}
 							required
-							step="0.01"
-							type="number"
-							value={weight}
+							value={value}
 						/>
 					</div>
-					<Button aria-label="Uložit váhu" disabled={isSaving || !weight} size="icon" type="submit">
+					<Button
+						aria-label="Uložit popis"
+						disabled={isSaving || !value.trim()}
+						size="icon"
+						type="submit"
+					>
 						{isSaving ? <LoaderCircle className="animate-spin" /> : <Check />}
 					</Button>
 					{error && <p className="w-full text-destructive text-sm">{error}</p>}
@@ -75,15 +78,15 @@ const UserWeightInput = ({ weightData }: UserWeightInputProps) => {
 
 	return (
 		<div className="flex items-center gap-2 p-2">
-			<div className="flex-1">
-				<p className="text-muted-foreground text-sm">Vaše váha</p>
-				<p>{weightData.value} kg</p>
+			<div className="min-w-0 flex-1">
+				<p className="text-muted-foreground text-sm">Váš popis</p>
+				<p className="break-words">{description.value}</p>
 			</div>
-			<Button aria-label="Upravit váhu" onClick={startEditing} size="icon" type="button">
+			<Button aria-label="Upravit popis" onClick={startEditing} size="icon" type="button">
 				<Pencil />
 			</Button>
 		</div>
 	);
 };
 
-export default UserWeightInput;
+export default UserDescription;

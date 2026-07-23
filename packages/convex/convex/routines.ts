@@ -1,7 +1,137 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
+import { type MutationCtx, mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 import { rateLimiter } from "./rateLimit";
+
+async function assertOwnedFilter(ctx: MutationCtx, filterId: Id<"filters">, userId: string) {
+	const filter = await ctx.db.get(filterId);
+	if (!filter || filter.userId !== userId) {
+		throw new Error("Unauthorized");
+	}
+}
+
+export const getUserRoutineSummaries = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("routines"),
+			name: v.string(),
+			filter: v.union(
+				v.object({
+					name: v.string(),
+					color: v.string(),
+				}),
+				v.null()
+			),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const routines = await ctx.db
+			.query("routines")
+			.withIndex("by_userId", (q) => q.eq("userId", user._id))
+			.collect();
+		const filterIds = [...new Set(routines.map((routine) => routine.filterId))];
+		const filters = await Promise.all(filterIds.map((filterId) => ctx.db.get(filterId)));
+		const filtersById = new Map(
+			filters
+				.filter((filter): filter is NonNullable<typeof filter> => filter !== null)
+				.map((filter) => [filter._id, filter])
+		);
+
+		return routines.map((routine) => {
+			const filter = filtersById.get(routine.filterId);
+
+			return {
+				_id: routine._id,
+				name: routine.name,
+				filter: filter ? { name: filter.name, color: filter.color } : null,
+			};
+		});
+	},
+});
+
+export const getRoutineDetail = query({
+	args: {
+		routineId: v.id("routines"),
+	},
+	returns: v.union(
+		v.object({
+			_id: v.id("routines"),
+			name: v.string(),
+			exercises: v.array(
+				v.object({
+					_id: v.id("routinesExercises"),
+					exercise: v.union(
+						v.object({
+							name: v.string(),
+							muscleGroup: v.union(v.string(), v.null()),
+						}),
+						v.null()
+					),
+				})
+			),
+		}),
+		v.null()
+	),
+	handler: async (ctx, { routineId }) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return null;
+		}
+
+		const routine = await ctx.db.get(routineId);
+		if (!routine || routine.userId !== user._id) {
+			return null;
+		}
+
+		const routineExercises = await ctx.db
+			.query("routinesExercises")
+			.withIndex("by_routineId", (q) => q.eq("routineId", routineId))
+			.collect();
+		routineExercises.sort((a, b) => a.order - b.order);
+
+		const exerciseIds = [...new Set(routineExercises.map((item) => item.exerciseId))];
+		const exercises = await Promise.all(exerciseIds.map((exerciseId) => ctx.db.get(exerciseId)));
+		const exercisesById = new Map(
+			exercises
+				.filter((exercise): exercise is NonNullable<typeof exercise> => exercise !== null)
+				.map((exercise) => [exercise._id, exercise])
+		);
+
+		const muscleGroupIds = [
+			...new Set(exercises.flatMap((exercise) => (exercise ? [exercise.muscleGroupId] : []))),
+		];
+		const muscleGroups = await Promise.all(muscleGroupIds.map((muscleGroupId) => ctx.db.get(muscleGroupId)));
+		const muscleGroupsById = new Map(
+			muscleGroups
+				.filter((muscleGroup): muscleGroup is NonNullable<typeof muscleGroup> => muscleGroup !== null)
+				.map((muscleGroup) => [muscleGroup._id, muscleGroup])
+		);
+
+		return {
+			_id: routine._id,
+			name: routine.name,
+			exercises: routineExercises.map((routineExercise) => {
+				const exercise = exercisesById.get(routineExercise.exerciseId);
+				return {
+					_id: routineExercise._id,
+					exercise: exercise
+						? {
+								name: exercise.name,
+								muscleGroup: muscleGroupsById.get(exercise.muscleGroupId)?.name ?? null,
+							}
+						: null,
+				};
+			}),
+		};
+	},
+});
 
 export const getUserRoutines = query({
 	args: {},
@@ -145,6 +275,7 @@ export const addRoutine = mutation({
 
 		// Rate limiting
 		await rateLimiter.limit(ctx, "addRoutine", { key: userId, throws: true });
+		await assertOwnedFilter(ctx, args.filterId, userId);
 
 		const id = await ctx.db.insert("routines", {
 			name: args.name,
@@ -214,6 +345,7 @@ export const editRoutine = mutation({
 		if (routine.userId !== userId) {
 			throw new Error("Unauthorized");
 		}
+		await assertOwnedFilter(ctx, args.filterId, userId);
 
 		await ctx.db.patch(args.routineId, {
 			name: args.name,
@@ -237,7 +369,7 @@ export const createWorkoutFromRoutine = mutation({
 
 		// Get the routine with its filter
 		const routine = await ctx.db.get(args.routineId);
-		if (!routine) {
+		if (!routine || routine.userId !== userId) {
 			throw new Error("Unauthorized");
 		}
 

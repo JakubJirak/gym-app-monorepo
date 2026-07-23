@@ -8,12 +8,10 @@ export const getUserGoals = query({
 	handler: async (ctx) => {
 		let userId: string;
 		try {
-			//@ts-expect-error
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return null;
 			}
-			//@ts-expect-error
 			userId = user._id;
 		} catch (error) {
 			// Auth timeout or error - return null
@@ -35,12 +33,10 @@ export const addUserGoals = mutation({
 		deadlift: v.string(),
 	},
 	handler: async (ctx, args) => {
-		// @ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			return null; // Uživatel není přihlášen
 		}
-		// @ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting
@@ -65,12 +61,10 @@ export const updateUserGoals = mutation({
 		deadlift: v.string(),
 	},
 	handler: async (ctx, args) => {
-		// @ts-expect-error
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			return null; // Uživatel není přihlášen
 		}
-		// @ts-expect-error
 		const userId = user._id;
 
 		// Rate limiting

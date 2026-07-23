@@ -1,46 +1,53 @@
-import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMutation } from "convex/react";
-import { Pencil, Target } from "lucide-react";
+import { LoaderCircle, Pencil, Target } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
+import { Label } from "@/components/ui/label";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 
-const UserSetGoals = () => {
-	const [squat, setSquat] = useState("");
-	const [bench, setBench] = useState("");
-	const [deadlift, setDeadlift] = useState("");
-	const [edit, setEdit] = useState<boolean>(false);
+type UserSetGoalsProps = {
+	goals: {
+		squat: string;
+		bench: string;
+		deadlift: string;
+	} | null;
+};
 
-	const { data: goals } = useSuspenseQuery(convexQuery(api.userGoals.getUserGoals, {}));
-	const addGoals = useMutation(api.userGoals.addUserGoals);
-	const updateGoals = useMutation(api.userGoals.updateUserGoals);
+const UserSetGoals = ({ goals }: UserSetGoalsProps) => {
+	const [squat, setSquat] = useState(goals?.squat ?? "");
+	const [bench, setBench] = useState(goals?.bench ?? "");
+	const [deadlift, setDeadlift] = useState(goals?.deadlift ?? "");
+	const [isEditing, setIsEditing] = useState(goals === null);
+	const [isSaving, setIsSaving] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const setUserGoals = useMutation(api.profile.setUserGoals);
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		e.stopPropagation();
-		if (edit) {
-			if (goals) {
-				updateGoals({
-					goalId: goals._id,
-					squat,
-					bench,
-					deadlift,
-				});
-			}
-		} else {
-			addGoals({
-				squat,
-				bench,
-				deadlift,
-			});
+	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		if (!(squat && bench && deadlift) || isSaving) {
+			return;
 		}
 
-		setEdit(false);
-		setSquat("");
-		setBench("");
-		setDeadlift("");
+		setIsSaving(true);
+		setError(null);
+
+		try {
+			await setUserGoals({ squat, bench, deadlift });
+			setIsEditing(false);
+		} catch {
+			setError("Cíle se nepodařilo uložit.");
+		} finally {
+			setIsSaving(false);
+		}
+	};
+
+	const startEditing = () => {
+		setSquat(goals?.squat ?? "");
+		setBench(goals?.bench ?? "");
+		setDeadlift(goals?.deadlift ?? "");
+		setError(null);
+		setIsEditing(true);
 	};
 
 	return (
@@ -50,77 +57,70 @@ const UserSetGoals = () => {
 					<Target />
 					Cíle pro Powerlifting (kg)
 				</p>
-				{goals && (
-					<Button onClick={() => setEdit(true)} size="icon">
+				{goals && !isEditing && (
+					<Button aria-label="Upravit cíle" onClick={startEditing} size="icon">
 						<Pencil />
 					</Button>
 				)}
 			</div>
-			<div className="px-0">
-				{!goals || edit ? (
-					<form className="-mt-2 flex flex-col gap-3" onSubmit={(e) => handleSubmit(e)}>
-						<div className="grid grid-cols-[60px_1fr] items-center gap-2">
-							<p>Squat:</p>
-							<Input
-								className="max-w-[100px]"
-								max="500"
-								min="10"
-								onChange={(e) => setSquat(e.target.value)}
-								required
-								step="0.01"
-								type="number"
-								value={squat}
-							/>
-						</div>
-						<div className="grid grid-cols-[60px_1fr] items-center gap-2">
-							<p>Bench:</p>
-							<Input
-								className="max-w-[100px]"
-								max="500"
-								min="10"
-								onChange={(e) => setBench(e.target.value)}
-								required
-								step="0.01"
-								type="number"
-								value={bench}
-							/>
-						</div>
-						<div className="grid grid-cols-[60px_1fr] items-center gap-2">
-							<p>Deadlift:</p>
-							<Input
-								className="max-w-[100px]"
-								max="500"
-								min="10"
-								onChange={(e) => setDeadlift(e.target.value)}
-								required
-								step="0.01"
-								type="number"
-								value={deadlift}
-							/>
-						</div>
-						<Button className="mt-2" type="submit">
-							Uložit cíle
-						</Button>
-					</form>
-				) : (
-					<div className="-mt-2 flex flex-col gap-3">
-						<div className="grid grid-cols-[60px_1fr] items-center gap-2">
-							<p>Squat:</p>
-							<p>{goals.squat}kg</p>
-						</div>
-						<div className="grid grid-cols-[60px_1fr] items-center gap-2">
-							<p>Bench:</p>
-							<p>{goals.bench}kg</p>
-						</div>
-						<div className="grid grid-cols-[60px_1fr] items-center gap-2">
-							<p>Deadlift:</p>
-							<p>{goals.deadlift}kg</p>
-						</div>
-					</div>
-				)}
-			</div>
+
+			{!goals || isEditing ? (
+				<form className="-mt-2 flex flex-col gap-3" onSubmit={handleSubmit}>
+					<GoalInput id="goal-squat" label="Squat" onChange={setSquat} value={squat} />
+					<GoalInput id="goal-bench" label="Bench" onChange={setBench} value={bench} />
+					<GoalInput id="goal-deadlift" label="Deadlift" onChange={setDeadlift} value={deadlift} />
+
+					{error && <p className="text-destructive text-sm">{error}</p>}
+
+					<Button
+						className="mt-2"
+						disabled={isSaving || !(squat && bench && deadlift)}
+						type="submit"
+					>
+						{isSaving && <LoaderCircle className="animate-spin" />}
+						Uložit cíle
+					</Button>
+				</form>
+			) : (
+				<div className="-mt-2 flex flex-col gap-3">
+					<GoalValue label="Squat" value={goals.squat} />
+					<GoalValue label="Bench" value={goals.bench} />
+					<GoalValue label="Deadlift" value={goals.deadlift} />
+				</div>
+			)}
 		</div>
 	);
 };
+
+type GoalInputProps = {
+	id: string;
+	label: string;
+	value: string;
+	onChange: (value: string) => void;
+};
+
+const GoalInput = ({ id, label, value, onChange }: GoalInputProps) => (
+	<div className="grid grid-cols-[70px_1fr] items-center gap-2">
+		<Label htmlFor={id}>{label}</Label>
+		<Input
+			className="max-w-25"
+			id={id}
+			max="500"
+			min="10"
+			onChange={(event) => onChange(event.target.value)}
+			required
+			step="0.01"
+			type="number"
+			value={value}
+		/>
+	</div>
+);
+
+const GoalValue = ({ label, value }: { label: string; value: string }) => (
+	<div className="grid grid-cols-[70px_1fr] items-center gap-2">
+		<p>{label}:</p>
+		<p>{value} kg</p>
+	</div>
+);
 
 export default UserSetGoals;

@@ -43,31 +43,31 @@ export function DialogEditNote({ exerciseId, setOpenParent }: DialogEditNote) {
 
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
-			<form>
-				<DialogTrigger asChild>
-					<Button className="w-40" variant="outline">
-						<Pencil className="size-4" />
-						Upravit pozn.
-					</Button>
-				</DialogTrigger>
-				<DialogContent className="h-auto sm:max-w-106.25">
-					<DialogHeader>
-						<DialogTitle>Změna poznámky</DialogTitle>
-						<DialogDescription>
-							Zde můžete změnit poznámku ke cviku, odesláním prázdné poznámky se smaže.
-						</DialogDescription>
-					</DialogHeader>
-					<form onSubmit={handleSubmit}>
-						<Input onChange={(e) => setNote(e.target.value)} type="text" value={note} />
-						<DialogFooter className="mt-4">
-							<DialogClose asChild>
-								<Button variant="outline">Zrušit</Button>
-							</DialogClose>
-							<Button type="submit">Uložit změny</Button>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</form>
+			<DialogTrigger asChild>
+				<Button className="w-40" type="button" variant="outline">
+					<Pencil className="size-4" />
+					Upravit pozn.
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="h-auto sm:max-w-106.25">
+				<DialogHeader>
+					<DialogTitle>Změna poznámky</DialogTitle>
+					<DialogDescription>
+						Zde můžete změnit poznámku ke cviku, odesláním prázdné poznámky se smaže.
+					</DialogDescription>
+				</DialogHeader>
+				<form onSubmit={handleSubmit}>
+					<Input onChange={(e) => setNote(e.target.value)} type="text" value={note} />
+					<DialogFooter className="mt-4">
+						<DialogClose asChild>
+							<Button type="button" variant="outline">
+								Zrušit
+							</Button>
+						</DialogClose>
+						<Button type="submit">Uložit změny</Button>
+					</DialogFooter>
+				</form>
+			</DialogContent>
 		</Dialog>
 	);
 }

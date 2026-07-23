@@ -1,8 +1,76 @@
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
-import { mutation, query } from "./_generated/server";
+import { type MutationCtx, mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 import { rateLimiter } from "./rateLimit";
+
+async function assertOwnedFilter(ctx: MutationCtx, filterId: Id<"filters">, userId: string) {
+	const filter = await ctx.db.get(filterId);
+	if (!filter || filter.userId !== userId) {
+		throw new Error("Unauthorized");
+	}
+}
+
+async function assertExerciseAvailable(ctx: MutationCtx, exerciseId: Id<"exercises">, userId: string) {
+	const exercise = await ctx.db.get(exerciseId);
+	if (!exercise || (exercise.userId !== userId && exercise.userId !== "default")) {
+		throw new Error("Unauthorized");
+	}
+}
+
+export const getUserWorkoutSummaries = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("workouts"),
+			name: v.string(),
+			workoutDate: v.string(),
+			filter: v.union(
+				v.object({
+					name: v.string(),
+					color: v.string(),
+				}),
+				v.null()
+			),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const workouts = await ctx.db
+			.query("workouts")
+			.withIndex("by_userId_workoutDate", (q) => q.eq("userId", user._id))
+			.order("desc")
+			.collect();
+
+		const filterIds = [...new Set(workouts.map((workout) => workout.filterId))];
+		const filters = await Promise.all(filterIds.map((filterId) => ctx.db.get(filterId)));
+		const filtersById = new Map(
+			filters
+				.filter((filter): filter is NonNullable<typeof filter> => filter !== null)
+				.map((filter) => [filter._id, filter])
+		);
+
+		return workouts.map((workout) => {
+			const filter = filtersById.get(workout.filterId);
+
+			return {
+				_id: workout._id,
+				name: workout.name,
+				workoutDate: workout.workoutDate,
+				filter: filter
+					? {
+							name: filter.name,
+							color: filter.color,
+						}
+					: null,
+			};
+		});
+	},
+});
 
 export const getUserWorkouts = query({
 	args: {},
@@ -333,6 +401,10 @@ export const createWorkout = mutation({
 
 		// Rate limiting
 		await rateLimiter.limit(ctx, "addWorkout", { key: userId, throws: true });
+		await assertOwnedFilter(ctx, args.filterId, userId);
+		await Promise.all(
+			(args.exercises ?? []).map((exercise) => assertExerciseAvailable(ctx, exercise.exerciseId, userId))
+		);
 
 		// 1. Vytvoření tréninku
 		const workoutId = await ctx.db.insert("workouts", {
@@ -441,6 +513,7 @@ export const editWorkout = mutation({
 		if (workout.userId !== userId) {
 			throw new Error("Přístup zamítnut: uživatel nevlastní tento trénink");
 		}
+		await assertOwnedFilter(ctx, args.filterId, userId);
 
 		await ctx.db.patch(args.workoutId, {
 			name: args.name,
