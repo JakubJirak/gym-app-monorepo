@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { Pencil, Plus } from "lucide-react-native";
 import { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import EditMenuModal from "./modals/edit-menu";
 import AddSetModal from "./modals/edit-menu-modals/add-set";
@@ -83,19 +83,18 @@ export default function Exercise({
 			</View>
 			{sets && sets.length > 0 ? (
 				<>
-					<FlatList
-						data={sets}
-						keyExtractor={(item) => item._id}
-						renderItem={({ item }) => (
+					<View>
+						{sets.map((item) => (
 							<ExerciseSet
 								isEdit={isEdit}
+								key={item._id}
 								order={item.order}
 								reps={item.reps}
 								setId={item._id}
 								weight={item.weight}
 							/>
-						)}
-					/>
+						))}
+					</View>
 					{isEdit && (
 						<TouchableOpacity
 							activeOpacity={0.7}

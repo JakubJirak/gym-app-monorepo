@@ -1,5 +1,5 @@
 import { usePaginatedQuery, useQuery } from "convex/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 import Categories from "@/components/trainings/categories";
 import EmptyList from "@/components/trainings/empty-list";
@@ -20,6 +20,16 @@ export default function Trainings() {
 		selectedFilterId ? { filterId: selectedFilterId as Id<"filters"> } : {},
 		{ initialNumItems: 20 }
 	);
+	const lastResultsRef = useRef<typeof results>([]);
+	const hasLoadedResultsRef = useRef(false);
+
+	if (status !== "LoadingFirstPage") {
+		lastResultsRef.current = results;
+		hasLoadedResultsRef.current = true;
+	}
+
+	const displayedResults =
+		status === "LoadingFirstPage" && hasLoadedResultsRef.current ? lastResultsRef.current : results;
 
 	const categoriesById = useMemo(
 		() => new Map(categories?.map((category) => [category._id, category]) ?? []),
@@ -28,7 +38,7 @@ export default function Trainings() {
 
 	const closeMenu = useCallback(() => setMenuVisible(false), []);
 
-	if (categories === undefined || status === "LoadingFirstPage") {
+	if (categories === undefined || (status === "LoadingFirstPage" && !hasLoadedResultsRef.current)) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -47,7 +57,7 @@ export default function Trainings() {
 			</View>
 			<FlatList
 				className="px-4"
-				data={results}
+				data={displayedResults}
 				ItemSeparatorComponent={() => <View className="h-0.5 w-full bg-secondary" />}
 				initialNumToRender={10}
 				keyExtractor={(item) => item._id}

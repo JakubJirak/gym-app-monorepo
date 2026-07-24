@@ -63,6 +63,9 @@ export default function TrainingById() {
 							</View>
 						</>
 					)}
+					maintainVisibleContentPosition={{
+						minIndexForVisible: 0,
+					}}
 					renderItem={({ item }) =>
 						item.exercise ? (
 							<Exercise

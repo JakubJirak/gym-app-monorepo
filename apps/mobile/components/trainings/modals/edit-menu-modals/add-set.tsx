@@ -22,6 +22,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 	const [weight, setWeight] = useState("");
 	const [reps, setReps] = useState("");
 	const inputRef = useRef<TextInput>(null);
+	const sheetWasVisibleRef = useRef(false);
 	const addSet = useMutation(api.workoutExercises.addSet).withOptimisticUpdate((localStore, args) => {
 		// Get the current workout data from all possible queries
 		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
@@ -59,12 +60,25 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 		}
 	});
 	useEffect(() => {
+		let cancelled = false;
+
 		if (visible) {
-			TrueSheet.present(name);
-		} else {
-			TrueSheet.dismiss(name);
+			sheetWasVisibleRef.current = true;
+			TrueSheet.present(name).catch(() => {
+				if (!cancelled) {
+					sheetWasVisibleRef.current = false;
+					setVisible(false);
+				}
+			});
+		} else if (sheetWasVisibleRef.current) {
+			sheetWasVisibleRef.current = false;
+			TrueSheet.dismiss(name).catch(() => null);
 		}
-	}, [name, visible]);
+
+		return () => {
+			cancelled = true;
+		};
+	}, [name, setVisible, visible]);
 
 	const disabled = weight === "" || reps === "";
 
@@ -82,6 +96,7 @@ export default function AddSetModal({ visible, setVisible, workoutExerciseId, cl
 	};
 
 	const handleDidDismiss = () => {
+		sheetWasVisibleRef.current = false;
 		setWeight("");
 		setReps("");
 		setVisible(false);
