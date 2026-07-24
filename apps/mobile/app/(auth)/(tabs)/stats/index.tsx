@@ -7,11 +7,17 @@ import MuscleGroupStats from "@/components/stats/muscle-group-stats";
 import PowerliftingStats from "@/components/stats/powerlifting-stats";
 import Statistics from "@/components/stats/statistics";
 import { COLORS } from "@/constants/COLORS";
+import { getMonthDateRange, toLocalISODateString } from "@/src/utils/date-utils";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Stats() {
 	const router = useRouter();
-	const trainings = useQuery(api.workouts.getUserWorkouts);
+	const currentMonth = toLocalISODateString(new Date()).slice(0, 7);
+	const monthRange = getMonthDateRange(currentMonth);
+	const overview = useQuery(api.stats.getStatsOverview, {
+		calendarStartDate: monthRange.startDate,
+		calendarEndDate: monthRange.endDate,
+	});
 
 	const handleDatePress = (dateString: string) => {
 		router.push({
@@ -20,18 +26,10 @@ export default function Stats() {
 		});
 	};
 
-	if (trainings === undefined) {
+	if (overview === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
-			</View>
-		);
-	}
-
-	if (trainings === null) {
-		return (
-			<View className="flex-1 items-center justify-center bg-primary">
-				<Text className="text-lg text-white">Žádné tréninky k zobrazení</Text>
 			</View>
 		);
 	}
@@ -48,7 +46,7 @@ export default function Stats() {
 						<ChartColumnIncreasing color={COLORS.accent} size={24} />
 						<Text className="font-bold text-text text-xl">Celkové statistiky</Text>
 					</View>
-					<Statistics trainings={trainings} />
+					<Statistics stats={overview.overall} />
 				</View>
 
 				<Link href="/stats/history">
@@ -70,13 +68,13 @@ export default function Stats() {
 					</View>
 				</Link>
 
-				{trainings.length > 0 && (
+				{overview.overall.workoutCount > 0 && (
 					<View>
 						<View className="my-4 flex-row items-center gap-3">
 							<ChartColumnIncreasing color={COLORS.accent} size={24} />
 							<Text className="font-bold text-text text-xl">Podle svalové partie</Text>
 						</View>
-						<MuscleGroupStats trainings={trainings} />
+						<MuscleGroupStats stats={overview.muscleGroups} />
 					</View>
 				)}
 
@@ -90,7 +88,11 @@ export default function Stats() {
 							</View>
 						</View>
 					</Link>
-					<StatsCalendar onDatePress={handleDatePress} variant="nonselectable" />
+					<StatsCalendar
+						onDatePress={handleDatePress}
+						prefetchedMonth={overview.calendar}
+						variant="nonselectable"
+					/>
 				</View>
 
 				<View>
@@ -103,7 +105,7 @@ export default function Stats() {
 							</View>
 						</View>
 					</Link>
-					<PowerliftingStats />
+					<PowerliftingStats stats={overview.powerlifting} userWeight={overview.userWeight} />
 				</View>
 			</View>
 		</ScrollView>

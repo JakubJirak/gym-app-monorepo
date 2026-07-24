@@ -1,11 +1,11 @@
 import { useQuery } from "convex/react";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import type { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { COLORS } from "@/constants/COLORS";
-import { toLocalISODateString } from "@/src/utils/date-utils";
+import { getMonthDateRange, toLocalISODateString } from "@/src/utils/date-utils";
 import { api } from "../../../../packages/convex/convex/_generated/api";
 
 type Day = {
@@ -43,6 +43,12 @@ type StatsCalendarProps = {
 	variant?: "selectable" | "nonselectable";
 	onDatePress?: (dateString: string) => void;
 	initialDate?: string;
+	prefetchedMonth?: {
+		startDate: string;
+		endDate: string;
+		workoutDates: string[];
+	};
+	onMonthRangeChange?: (range: { startDate: string; endDate: string }) => void;
 };
 
 export default function StatsCalendar({
@@ -50,12 +56,21 @@ export default function StatsCalendar({
 	variant = "selectable",
 	onDatePress,
 	initialDate,
+	prefetchedMonth,
+	onMonthRangeChange,
 }: StatsCalendarProps) {
 	const TODAY = toLocalISODateString(new Date());
 	const [selected, setSelected] = useState(initialDate || TODAY);
-	const trainings = useQuery(api.workouts.getUserWorkouts);
-
-	const trainingDates = trainings?.flatMap((workout) => workout.workoutDate);
+	const [visibleMonth, setVisibleMonth] = useState((initialDate || TODAY).slice(0, 7));
+	const monthRange = getMonthDateRange(visibleMonth);
+	const canUsePrefetchedMonth =
+		prefetchedMonth?.startDate === monthRange.startDate && prefetchedMonth.endDate === monthRange.endDate;
+	const queriedTrainingDates = useQuery(
+		api.workouts.getWorkoutDatesInRange,
+		canUsePrefetchedMonth ? "skip" : monthRange
+	);
+	const trainingDates = canUsePrefetchedMonth ? prefetchedMonth.workoutDates : queriedTrainingDates;
+	const trainingDateSet = useMemo(() => new Set(trainingDates ?? []), [trainingDates]);
 
 	const onDayPress = (day: Day) => {
 		if (variant === "nonselectable") {
@@ -134,7 +149,7 @@ export default function StatsCalendar({
 							}
 							const isSelected = variant === "selectable" && date.dateString === selected;
 							const isMarked = Boolean(markedDates[date.dateString]);
-							const isTraining = trainingDates?.includes(date.dateString);
+							const isTraining = trainingDateSet.has(date.dateString);
 							const isToday = date.dateString === TODAY;
 							let backgroundColor = COLORS.secondary;
 							if (isSelected) {
@@ -192,6 +207,11 @@ export default function StatsCalendar({
 						markedDates={markedDates}
 						markingType={"custom"}
 						onDayPress={onDayPress}
+						onMonthChange={(month) => {
+							const monthKey = `${month.year}-${String(month.month).padStart(2, "0")}`;
+							setVisibleMonth(monthKey);
+							onMonthRangeChange?.(getMonthDateRange(monthKey));
+						}}
 						renderArrow={(direction) =>
 							direction === "left" ? (
 								<ChevronLeft color="white" size={24} />

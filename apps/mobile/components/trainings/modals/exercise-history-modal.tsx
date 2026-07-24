@@ -1,11 +1,12 @@
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { useEffect } from "react";
-import { FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
 import { formatDate } from "@/src/utils/date-utils";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
+import type { Id } from "../../../../../packages/convex/convex/_generated/dataModel";
 
 type ExerciseHistoryModalProps = {
 	visible: boolean;
@@ -22,7 +23,16 @@ export default function ExerciseHistoryModal({
 	exerciseName,
 	currentTrainingId,
 }: ExerciseHistoryModalProps) {
-	const trainings = useQuery(api.workouts.getUserWorkouts);
+	const history = useQuery(
+		api.stats.getExerciseHistoryDetails,
+		visible
+			? {
+					exerciseId: exerciseId as Id<"exercises">,
+					excludeWorkoutId: currentTrainingId as Id<"workouts">,
+					limit: 3,
+				}
+			: "skip"
+	);
 	const name = `${NAMES.sheets.exerciseHistory}-${exerciseId}`;
 
 	const closeModal = () => setVisible(false);
@@ -34,31 +44,6 @@ export default function ExerciseHistoryModal({
 			TrueSheet.dismiss(name);
 		}
 	}, [name, visible]);
-
-	const getLastThreeOccurrences = () => {
-		if (!trainings) {
-			return [];
-		}
-
-		return trainings
-			.filter((training) => training._id !== currentTrainingId)
-			.map((training) => {
-				const exercise = training.exercises.find((e) => e.exercise?._id === exerciseId);
-				if (exercise && exercise.sets.length > 0) {
-					return {
-						id: training._id,
-						date: formatDate(new Date(training.workoutDate), "d. MMMM yyyy"),
-						note: exercise.note,
-						sets: exercise.sets,
-					};
-				}
-				return null;
-			})
-			.filter((item) => item !== null)
-			.slice(0, 3);
-	};
-
-	const history = getLastThreeOccurrences();
 
 	return (
 		<TrueSheet
@@ -75,19 +60,25 @@ export default function ExerciseHistoryModal({
 
 				<FlatList
 					className="flex-1"
-					data={history}
+					data={history?.entries}
 					ItemSeparatorComponent={() => <View className="my-2 h-0.5 bg-secondary" />}
-					keyExtractor={(item) => item.id}
+					keyExtractor={(item) => item.workoutId}
 					ListEmptyComponent={() => (
 						<View className="py-8">
-							<Text className="text-center text-muted">
-								Tento cvik jste ještě nedělali v jiném tréninku
-							</Text>
+							{history === undefined ? (
+								<ActivityIndicator color={COLORS.accent} />
+							) : (
+								<Text className="text-center text-muted">
+									Tento cvik jste ještě nedělali v jiném tréninku
+								</Text>
+							)}
 						</View>
 					)}
 					renderItem={({ item }) => (
 						<View className="my-2">
-							<Text className="mb-2 font-semibold text-text">{item.date}</Text>
+							<Text className="mb-2 font-semibold text-text">
+								{formatDate(new Date(item.date), "d. MMMM yyyy")}
+							</Text>
 							{item.note && (
 								<Text className="mb-2 text-muted text-sm">Poznámka: {item.note}</Text>
 							)}

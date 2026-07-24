@@ -2,58 +2,26 @@ import { ScrollView, View } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 import { COLORS } from "@/constants/COLORS";
 
-type HistorySet = {
-	id: string;
-	name: string;
+type HistoryPoint = {
 	date: string;
-	sets: {
-		_id: string;
-		reps: number;
-		weight: number;
-		order: number;
-	}[];
+	value: number;
+	reps: number;
 };
 
 type HistoryGraphProps = {
-	historySets: HistorySet[];
+	historyPoints: HistoryPoint[];
 };
 
-export default function HistoryGraph({ historySets }: HistoryGraphProps) {
-	const sortedHistorySets = [...historySets]
-		.filter(Boolean)
-		.sort((a, b) => new Date(a?.date ?? "2025-01-01").getTime() - new Date(b?.date ?? "2025-01-01").getTime());
-
-	const chartData = sortedHistorySets
-		.map((set) => {
-			if (!set) {
-				return null;
-			}
-
-			const weights = set.sets.map((s) => Number(s.weight)).filter((w) => !Number.isNaN(w));
-
-			const maxWeight = weights.length > 0 ? Math.max(...weights) : null;
-			if (maxWeight === null) {
-				return null;
-			}
-
-			const maxWeightSets = set.sets.filter((s) => Number(s.weight) === maxWeight);
-
-			const maxReps =
-				maxWeightSets.length > 0
-					? Math.max(...maxWeightSets.map((s) => Number(s.reps)).filter((r) => !Number.isNaN(r)))
-					: null;
-
-			return {
-				value: maxWeight,
-				label: new Date(set.date).toLocaleDateString("cs", {
-					day: "numeric",
-					month: "short",
-				}),
-				dataPointText: `${maxWeight}kg`,
-				reps: maxReps,
-			};
-		})
-		.filter((item): item is NonNullable<typeof item> => item !== null);
+export default function HistoryGraph({ historyPoints }: HistoryGraphProps) {
+	const chartData = historyPoints.map((point) => ({
+		value: point.value,
+		label: new Date(point.date).toLocaleDateString("cs", {
+			day: "numeric",
+			month: "short",
+		}),
+		dataPointText: `${point.value}kg`,
+		reps: point.reps,
+	}));
 
 	if (chartData.length === 0) {
 		return null;

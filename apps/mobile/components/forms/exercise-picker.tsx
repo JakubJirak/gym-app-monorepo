@@ -65,7 +65,7 @@ export function ExercisePicker({
 	const pickerSheetName = sheetName ?? NAMES.sheets.exercisePicker;
 	const addExerciseSheetName = `${pickerSheetName}-${NAMES.sheets.addNewExerciseFromPicker}`;
 	const [query, setQuery] = useState("");
-	const exercises = useQuery(api.exercises.getAllExercises);
+	const exercises = useQuery(api.exercises.getExerciseSummaries);
 
 	const chosenId = standalone ? null : (selectedId ?? internalSelectedId);
 	const chosenExercise = useMemo(() => exercises?.find((e) => e._id === chosenId) ?? null, [exercises, chosenId]);

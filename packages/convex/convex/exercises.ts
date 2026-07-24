@@ -63,6 +63,40 @@ export const getAllExercises = query({
 	},
 });
 
+export const getExerciseSummaries = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("exercises"),
+			name: v.string(),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const [userExercises, defaultExercises] = await Promise.all([
+			ctx.db
+				.query("exercises")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.collect(),
+			ctx.db
+				.query("exercises")
+				.withIndex("by_userId", (q) => q.eq("userId", "default"))
+				.collect(),
+		]);
+
+		return [...userExercises, ...defaultExercises]
+			.map((exercise) => ({
+				_id: exercise._id,
+				name: exercise.name,
+			}))
+			.sort((a, b) => a.name.localeCompare(b.name, "cs"));
+	},
+});
+
 export const addExercise = mutation({
 	args: {
 		name: v.string(),

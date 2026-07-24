@@ -114,6 +114,170 @@ export const getUserWorkoutPage = query({
 	},
 });
 
+export const getWorkoutDatesInRange = query({
+	args: {
+		startDate: v.string(),
+		endDate: v.string(),
+	},
+	returns: v.array(v.string()),
+	handler: async (ctx, { startDate, endDate }) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const workouts = await ctx.db
+			.query("workouts")
+			.withIndex("by_userId_workoutDate", (q) =>
+				q.eq("userId", user._id).gte("workoutDate", startDate).lte("workoutDate", endDate)
+			)
+			.collect();
+
+		return [...new Set(workouts.map((workout) => workout.workoutDate))];
+	},
+});
+
+export const getWorkoutsByDate = query({
+	args: {
+		workoutDate: v.string(),
+	},
+	returns: v.array(
+		v.object({
+			_id: v.id("workouts"),
+			name: v.string(),
+			workoutDate: v.string(),
+			filter: v.union(
+				v.object({
+					_id: v.id("filters"),
+					name: v.string(),
+					color: v.string(),
+				}),
+				v.null()
+			),
+		})
+	),
+	handler: async (ctx, { workoutDate }) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const workouts = await ctx.db
+			.query("workouts")
+			.withIndex("by_userId_workoutDate", (q) => q.eq("userId", user._id).eq("workoutDate", workoutDate))
+			.order("desc")
+			.collect();
+		const filterIds = [...new Set(workouts.map((workout) => workout.filterId))];
+		const filters = await Promise.all(filterIds.map((filterId) => ctx.db.get(filterId)));
+		const filtersById = new Map(
+			filters
+				.filter((filter): filter is NonNullable<typeof filter> => filter !== null)
+				.map((filter) => [filter._id, filter])
+		);
+
+		return workouts.map((workout) => {
+			const filter = filtersById.get(workout.filterId);
+			return {
+				_id: workout._id,
+				name: workout.name,
+				workoutDate: workout.workoutDate,
+				filter: filter
+					? {
+							_id: filter._id,
+							name: filter.name,
+							color: filter.color,
+						}
+					: null,
+			};
+		});
+	},
+});
+
+export const getCalendarData = query({
+	args: {
+		startDate: v.string(),
+		endDate: v.string(),
+		selectedDate: v.string(),
+	},
+	returns: v.object({
+		calendar: v.object({
+			startDate: v.string(),
+			endDate: v.string(),
+			workoutDates: v.array(v.string()),
+		}),
+		workouts: v.array(
+			v.object({
+				_id: v.id("workouts"),
+				name: v.string(),
+				workoutDate: v.string(),
+				filter: v.union(
+					v.object({
+						_id: v.id("filters"),
+						name: v.string(),
+						color: v.string(),
+					}),
+					v.null()
+				),
+			})
+		),
+	}),
+	handler: async (ctx, { startDate, endDate, selectedDate }) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return {
+				calendar: { startDate, endDate, workoutDates: [] },
+				workouts: [],
+			};
+		}
+
+		const monthWorkouts = await ctx.db
+			.query("workouts")
+			.withIndex("by_userId_workoutDate", (q) =>
+				q.eq("userId", user._id).gte("workoutDate", startDate).lte("workoutDate", endDate)
+			)
+			.collect();
+		const selectedWorkouts =
+			selectedDate >= startDate && selectedDate <= endDate
+				? monthWorkouts.filter((workout) => workout.workoutDate === selectedDate)
+				: await ctx.db
+						.query("workouts")
+						.withIndex("by_userId_workoutDate", (q) =>
+							q.eq("userId", user._id).eq("workoutDate", selectedDate)
+						)
+						.collect();
+		const filterIds = [...new Set(selectedWorkouts.map((workout) => workout.filterId))];
+		const filters = await Promise.all(filterIds.map((filterId) => ctx.db.get(filterId)));
+		const filtersById = new Map(
+			filters
+				.filter((filter): filter is NonNullable<typeof filter> => filter !== null)
+				.map((filter) => [filter._id, filter])
+		);
+
+		return {
+			calendar: {
+				startDate,
+				endDate,
+				workoutDates: [...new Set(monthWorkouts.map((workout) => workout.workoutDate))],
+			},
+			workouts: selectedWorkouts.map((workout) => {
+				const filter = filtersById.get(workout.filterId);
+				return {
+					_id: workout._id,
+					name: workout.name,
+					workoutDate: workout.workoutDate,
+					filter: filter
+						? {
+								_id: filter._id,
+								name: filter.name,
+								color: filter.color,
+							}
+						: null,
+				};
+			}),
+		};
+	},
+});
+
 export const getHomeOverview = query({
 	args: {
 		weekStart: v.string(),

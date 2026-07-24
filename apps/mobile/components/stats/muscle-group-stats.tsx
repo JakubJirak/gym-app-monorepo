@@ -1,55 +1,19 @@
-import { useQuery } from "convex/react";
 import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { RadarChart } from "react-native-gifted-charts";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../packages/convex/convex/_generated/api";
+import type { api } from "../../../../packages/convex/convex/_generated/api";
 
 type MuscleGroupStatsProps = {
-	trainings: typeof api.workouts.getUserWorkouts._returnType;
+	stats: typeof api.stats.getStatsOverview._returnType.muscleGroups;
 };
 
-function MuscleGroupStats({ trainings }: MuscleGroupStatsProps) {
-	const allMuscleGroups = useQuery(api.muscleGroups.getAllMuscleGroups);
+function MuscleGroupStats({ stats }: MuscleGroupStatsProps) {
+	const chartData = useMemo(() => stats.map((item) => item.exerciseCount), [stats]);
+	const labels = useMemo(() => stats.map((item) => item.name), [stats]);
+	const countsByName = useMemo(() => new Map(stats.map((item) => [item.name, item.exerciseCount])), [stats]);
 
-	const muscleGroupCount = useMemo(() => {
-		if (!(trainings && allMuscleGroups)) {
-			return {};
-		}
-
-		// Initialize all muscle groups with 0
-		const count: Record<string, number> = {};
-		for (const group of allMuscleGroups) {
-			count[group.name] = 0;
-		}
-
-		// Count exercises per muscle group
-		// biome-ignore lint/complexity/noForEach: for each is simpler to read
-		trainings
-			.flatMap((t) => t.exercises)
-			.forEach((cvik) => {
-				const group: string =
-					cvik.exercise?.muscleGroup && cvik.exercise.muscleGroup !== null
-						? cvik.exercise.muscleGroup
-						: "Ostatní";
-				count[group] = (count[group] || 0) + 1;
-			});
-
-		return Object.fromEntries(
-			Object.entries(count)
-				.filter(([, exerciseCount]) => exerciseCount > 0)
-				.sort(([, a], [, b]) => b - a)
-		);
-	}, [trainings, allMuscleGroups]);
-
-	const chartData = useMemo(() => {
-		const entries = Object.entries(muscleGroupCount);
-		return entries.map(([_, count]) => count);
-	}, [muscleGroupCount]);
-
-	const labels = useMemo(() => Object.keys(muscleGroupCount), [muscleGroupCount]);
-
-	if (!(trainings && allMuscleGroups) || chartData.length === 0) {
+	if (chartData.length === 0) {
 		return null;
 	}
 
@@ -98,7 +62,7 @@ function MuscleGroupStats({ trainings }: MuscleGroupStatsProps) {
 				{labels.map((label) => (
 					<View className="flex-row items-center gap-3" key={label}>
 						<Text className="flex-1 text-base text-text">{label}</Text>
-						<Text className="text-base text-muted">{muscleGroupCount[label]}x</Text>
+						<Text className="text-base text-muted">{countsByName.get(label)}x</Text>
 					</View>
 				))}
 			</View>
