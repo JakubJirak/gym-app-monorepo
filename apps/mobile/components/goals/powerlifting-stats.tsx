@@ -1,19 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useQuery } from "convex/react";
 import { Text, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../packages/convex/convex/_generated/api";
 
 export default function PowerliftingStats({
 	squatPR,
 	benchPR,
 	deadliftPR,
+	userWeight,
 }: {
 	squatPR: number;
 	benchPR: number;
 	deadliftPR: number;
+	userWeight: string | null;
 }) {
-	const userWeight = useQuery(api.userWeights.getUserWeight);
 	const total = squatPR + benchPR + deadliftPR;
 
 	return (
@@ -35,7 +34,7 @@ export default function PowerliftingStats({
 							<Text className="text-base text-muted">Squat</Text>
 							{userWeight && (
 								<Text className="text-white">
-									{(squatPR / Number(userWeight.weight)).toFixed(2)}x BW
+									{(squatPR / Number(userWeight)).toFixed(2)}x BW
 								</Text>
 							)}
 						</View>
@@ -44,7 +43,7 @@ export default function PowerliftingStats({
 							<Text className="text-base text-muted">Bench</Text>
 							{userWeight && (
 								<Text className="text-text">
-									{(benchPR / Number(userWeight.weight)).toFixed(2)}x BW
+									{(benchPR / Number(userWeight)).toFixed(2)}x BW
 								</Text>
 							)}
 						</View>
@@ -53,7 +52,7 @@ export default function PowerliftingStats({
 							<Text className="text-base text-muted">Deadlift</Text>
 							{userWeight && (
 								<Text className="text-text">
-									{(deadliftPR / Number(userWeight.weight)).toFixed(2)}x BW
+									{(deadliftPR / Number(userWeight)).toFixed(2)}x BW
 								</Text>
 							)}
 						</View>
@@ -64,7 +63,7 @@ export default function PowerliftingStats({
 						<Text className="text-lg text-muted">Total</Text>
 						{userWeight && (
 							<Text className="text-text">
-								{(total / Number(userWeight.weight)).toFixed(2)}x BW
+								{(total / Number(userWeight)).toFixed(2)}x BW
 							</Text>
 						)}
 					</View>

@@ -22,7 +22,9 @@ export const MaterialTopTabs = withLayoutContext<
 	MaterialTopTabNavigationEventMap
 >(Navigator);
 
-export const RoutineIdContext = createContext<string | undefined>(undefined);
+type Routine = NonNullable<typeof api.routines.getRoutineById._returnType>;
+
+export const RoutineContext = createContext<Routine | null>(null);
 
 export default function RoutineIdLayout() {
 	const { id } = useLocalSearchParams();
@@ -52,10 +54,14 @@ export default function RoutineIdLayout() {
 	return (
 		<>
 			<Stack.Screen options={{ headerShown: false }} />
-			<RoutineIdContext.Provider value={routineId}>
+			<RoutineContext.Provider value={routine}>
 				<View className="flex-1 bg-primary">
 					<View className="px-4">
-						<RoutineHeader routineId={routineId as string} text={routine.name} />
+						<RoutineHeader
+							defaultFilterId={routine.filterId}
+							routineId={routine._id}
+							text={routine.name}
+						/>
 					</View>
 
 					<MaterialTopTabs
@@ -90,7 +96,7 @@ export default function RoutineIdLayout() {
 						<MaterialTopTabs.Screen name="stats" options={{ title: "Stats" }} />
 					</MaterialTopTabs>
 				</View>
-			</RoutineIdContext.Provider>
+			</RoutineContext.Provider>
 		</>
 	);
 }

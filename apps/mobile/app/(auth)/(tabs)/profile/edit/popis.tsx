@@ -1,15 +1,21 @@
 import { useMutation, useQuery } from "convex/react";
 import { router } from "expo-router";
 import { Pencil } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Popis() {
 	const userDescription = useQuery(api.description.getUserDescription);
-	const [description, setDescription] = useState(userDescription ? userDescription.description : "");
-	const editDescription = useMutation(api.description.editUserDescription);
+	const [description, setDescription] = useState("");
+	const setUserDescription = useMutation(api.profile.setUserDescription);
+
+	useEffect(() => {
+		if (userDescription) {
+			setDescription(userDescription.description);
+		}
+	}, [userDescription]);
 
 	const handleEdit = async () => {
 		const trimmed = description.trim();
@@ -17,15 +23,9 @@ export default function Popis() {
 			return;
 		}
 
-		if (userDescription) {
-			Keyboard.dismiss();
-			await editDescription({
-				descriptionId: userDescription._id,
-				description: trimmed,
-			});
-			router.push("/(auth)/(tabs)/profile");
-			setDescription("");
-		}
+		Keyboard.dismiss();
+		await setUserDescription({ description: trimmed });
+		router.push("/(auth)/(tabs)/profile");
 	};
 
 	return (
@@ -35,7 +35,6 @@ export default function Popis() {
 				<TextInput
 					autoFocus
 					className="w-full rounded-2xl bg-secondary p-4 text-lg text-text caret-text"
-					defaultValue={userDescription ? userDescription.description : ""}
 					maxLength={20}
 					onChangeText={setDescription}
 					onSubmitEditing={handleEdit}

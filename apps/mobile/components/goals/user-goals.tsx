@@ -1,22 +1,17 @@
-import { useQuery } from "convex/react";
 import { Target } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../packages/convex/convex/_generated/api";
+import type { api } from "../../../../packages/convex/convex/_generated/api";
 import Goal from "./goal";
 
 export default function UserGoals({
-	squatPR,
-	benchPR,
-	deadliftPR,
+	goals,
+	stats,
 }: {
-	squatPR: number;
-	benchPR: number;
-	deadliftPR: number;
+	goals: NonNullable<typeof api.profile.getProfileOverview._returnType>["goals"];
+	stats: typeof api.powerlifting.getPowerliftingStats._returnType;
 }) {
-	const userGoals = useQuery(api.userGoals.getUserGoals);
-
-	if (!userGoals) {
+	if (!goals) {
 		return null;
 	}
 
@@ -27,9 +22,9 @@ export default function UserGoals({
 				<Text className="font-bold text-text text-xl">Vaše PR cíle</Text>
 			</View>
 			<View className="gap-6 rounded-xl bg-secondary p-5">
-				<Goal goal={Number(userGoals.squat)} name="Squat" pr={squatPR} />
-				<Goal goal={Number(userGoals.bench)} name="Bench" pr={benchPR} />
-				<Goal goal={Number(userGoals.deadlift)} name="Deadlift" pr={deadliftPR} />
+				<Goal goal={Number(goals.squat)} name="Squat" pr={stats.squatPR} />
+				<Goal goal={Number(goals.bench)} name="Bench" pr={stats.benchPR} />
+				<Goal goal={Number(goals.deadlift)} name="Deadlift" pr={stats.deadliftPR} />
 			</View>
 		</View>
 	);

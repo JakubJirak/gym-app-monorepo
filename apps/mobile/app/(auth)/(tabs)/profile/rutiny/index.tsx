@@ -1,16 +1,21 @@
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Plus } from "lucide-react-native";
+import { useState } from "react";
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import AddRoutine from "@/components/routine/add-routine";
 import Routine from "@/components/routine/routine";
+import RoutineActions, { type ActionRoutine } from "@/components/routine/routine-actions";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Rutiny() {
-	const rutiny = useQuery(api.routines.getUserRoutines);
+	const rutiny = useQuery(api.routines.getMobileRoutineSummaries);
+	const [selectedRoutine, setSelectedRoutine] = useState<ActionRoutine | null>(null);
+	const [menuVisible, setMenuVisible] = useState(false);
+	const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
 	const openAddRutinaModal = () => {
 		TrueSheet.present(NAMES.sheets.addRoutine);
@@ -44,10 +49,14 @@ export default function Rutiny() {
 				renderItem={({ item }) => (
 					<Routine
 						color={item.filter?.color}
-						filterId={item.filterId}
 						filterName={item.filter?.name}
 						id={item._id}
 						name={item.name}
+						onLongPress={(position) => {
+							setSelectedRoutine(item);
+							setMenuPosition(position);
+							setMenuVisible(true);
+						}}
 					/>
 				)}
 			/>
@@ -60,6 +69,12 @@ export default function Rutiny() {
 			</TouchableOpacity>
 
 			<AddRoutine />
+			<RoutineActions
+				menuPosition={menuPosition}
+				menuVisible={menuVisible}
+				onClose={() => setMenuVisible(false)}
+				routine={selectedRoutine}
+			/>
 		</View>
 	);
 }

@@ -1,16 +1,22 @@
 import { useMutation, useQuery } from "convex/react";
 import { router } from "expo-router";
 import { Pencil } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Vaha() {
 	const userWeight = useQuery(api.userWeights.getUserWeight);
-	const [weight, setWeight] = useState(userWeight ? String(userWeight.weight) : "");
-	const editWeight = useMutation(api.userWeights.updateUserWeight);
+	const [weight, setWeight] = useState("");
+	const setUserWeight = useMutation(api.profile.setUserWeight);
 	const [errMsg, setErrMsg] = useState("");
+
+	useEffect(() => {
+		if (userWeight) {
+			setWeight(userWeight.weight);
+		}
+	}, [userWeight]);
 
 	const handleEdit = async () => {
 		const trimmed = weight.toString().trim();
@@ -31,14 +37,9 @@ export default function Vaha() {
 			return;
 		}
 
-		if (userWeight) {
-			Keyboard.dismiss();
-			await editWeight({
-				weightId: userWeight._id,
-				changeWeight: trimmed,
-			});
-			router.push("/(auth)/(tabs)/profile");
-		}
+		Keyboard.dismiss();
+		await setUserWeight({ weight: trimmed });
+		router.push("/(auth)/(tabs)/profile");
 	};
 
 	return (
@@ -48,7 +49,6 @@ export default function Vaha() {
 				<TextInput
 					autoFocus
 					className="w-full rounded-2xl bg-secondary p-4 text-lg text-text caret-text"
-					defaultValue={userWeight ? String(userWeight.weight) : ""}
 					keyboardType="numeric"
 					maxLength={5}
 					onChangeText={(text) => setWeight(text)}

@@ -1,28 +1,14 @@
-import { useQuery } from "convex/react";
-import { useLocalSearchParams } from "expo-router";
 import { NotebookPen } from "lucide-react-native";
-import { useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { useContext, useState } from "react";
+import { FlatList, Text, View } from "react-native";
 import RoutineExercise from "@/components/routine/routine-exercise";
 import RoutineFooter from "@/components/routine/routine-footer";
 import { COLORS } from "@/constants/COLORS";
-import { api } from "../../../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../../../packages/convex/convex/_generated/dataModel";
+import { RoutineContext } from "./_layout";
 
 export default function TrainingById() {
-	const { id } = useLocalSearchParams();
 	const [isEdit, setIsEdit] = useState(false);
-	const routine = useQuery(api.routines.getRoutineById, id ? { routineId: id as Id<"routines"> } : "skip");
-
-	if (routine === undefined) {
-		return (
-			<View className="flex-1 bg-primary px-5 pt-2">
-				<View className="flex-1 items-center justify-center">
-					<ActivityIndicator color={COLORS.accent} size="large" />
-				</View>
-			</View>
-		);
-	}
+	const routine = useContext(RoutineContext);
 
 	if (!routine) {
 		return null;

@@ -1,36 +1,34 @@
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Plus } from "lucide-react-native";
+import { useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import AddFilterModal from "@/components/filters/add-filter";
+import EditFilterModal from "@/components/filters/edit-filter";
 import Filter from "@/components/filters/filter";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Filtry() {
-	const filtry = useQuery(api.filters.getAllFilters);
-	const workouts = useQuery(api.workouts.getUserWorkouts);
+	const filtry = useQuery(api.filters.getFiltersWithUsage);
+	const [selectedFilter, setSelectedFilter] = useState<
+		(typeof api.filters.getFiltersWithUsage._returnType)[number] | null
+	>(null);
 
-	if (filtry === undefined || workouts === undefined) {
+	const openEditFilter = (filter: (typeof api.filters.getFiltersWithUsage._returnType)[number]) => {
+		setSelectedFilter(filter);
+		requestAnimationFrame(() => TrueSheet.present(NAMES.sheets.editFilter));
+	};
+
+	if (filtry === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
 			</View>
 		);
 	}
-
-	if (filtry === null || workouts === null) {
-		return null;
-	}
-
-	const filterUsageCount = workouts.reduce<Record<string, number>>((acc, workout) => {
-		if (workout.filter?._id) {
-			acc[workout.filter._id] = (acc[workout.filter._id] || 0) + 1;
-		}
-		return acc;
-	}, {});
 
 	return (
 		<View className="flex-1 bg-primary">
@@ -47,9 +45,9 @@ export default function Filtry() {
 				renderItem={({ item }) => (
 					<Filter
 						color={item.color}
-						id={item._id}
 						name={item.name}
-						usageCount={filterUsageCount[item._id] || 0}
+						onPress={() => openEditFilter(item)}
+						usageCount={item.usageCount}
 					/>
 				)}
 				showsVerticalScrollIndicator={false}
@@ -62,6 +60,14 @@ export default function Filtry() {
 				<Plus color="white" size={32} />
 			</TouchableOpacity>
 			<AddFilterModal />
+			{selectedFilter ? (
+				<EditFilterModal
+					defaultColor={selectedFilter.color}
+					defaultName={selectedFilter.name}
+					filterId={selectedFilter._id}
+					usageCount={selectedFilter.usageCount}
+				/>
+			) : null}
 		</View>
 	);
 }

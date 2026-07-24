@@ -210,3 +210,44 @@ export const setUserGoals = mutation({
 		});
 	},
 });
+
+export const getMobileProfileOverview = query({
+	args: {},
+	returns: v.union(
+		v.object({
+			name: v.string(),
+			description: v.union(v.string(), v.null()),
+			weight: v.union(v.string(), v.null()),
+			workoutCount: v.number(),
+		}),
+		v.null()
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return null;
+		}
+
+		const [description, weight, workouts] = await Promise.all([
+			ctx.db
+				.query("userDescription")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.first(),
+			ctx.db
+				.query("userWeights")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.first(),
+			ctx.db
+				.query("workouts")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.collect(),
+		]);
+
+		return {
+			name: user.name,
+			description: description?.description ?? null,
+			weight: weight?.weight ?? null,
+			workoutCount: workouts.length,
+		};
+	},
+});

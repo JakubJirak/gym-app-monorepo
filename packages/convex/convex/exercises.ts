@@ -246,3 +246,99 @@ export const getExerciseGroups = query({
 			.sort((a, b) => a.name.localeCompare(b.name, "cs"));
 	},
 });
+
+export const getExerciseCatalogWithUsage = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("muscleGroups"),
+			name: v.string(),
+			exercises: v.array(
+				v.object({
+					_id: v.id("exercises"),
+					name: v.string(),
+					editable: v.boolean(),
+					usageCount: v.number(),
+				})
+			),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const [userExercises, defaultExercises, muscleGroups, workouts] = await Promise.all([
+			ctx.db
+				.query("exercises")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.collect(),
+			ctx.db
+				.query("exercises")
+				.withIndex("by_userId", (q) => q.eq("userId", "default"))
+				.collect(),
+			ctx.db.query("muscleGroups").collect(),
+			ctx.db
+				.query("workouts")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.collect(),
+		]);
+		const workoutExercises = (
+			await Promise.all(
+				workouts.map((workout) =>
+					ctx.db
+						.query("workoutExercises")
+						.withIndex("by_workoutId", (q) => q.eq("workoutId", workout._id))
+						.collect()
+				)
+			)
+		).flat();
+		const usageByExerciseId = new Map<string, number>();
+
+		for (const workoutExercise of workoutExercises) {
+			usageByExerciseId.set(
+				workoutExercise.exerciseId,
+				(usageByExerciseId.get(workoutExercise.exerciseId) ?? 0) + 1
+			);
+		}
+
+		const groupsById = new Map(
+			muscleGroups.map((muscleGroup) => [
+				muscleGroup._id,
+				{
+					_id: muscleGroup._id,
+					name: muscleGroup.name,
+					exercises: [] as Array<{
+						_id: (typeof userExercises)[number]["_id"];
+						name: string;
+						editable: boolean;
+						usageCount: number;
+					}>,
+				},
+			])
+		);
+
+		for (const exercise of [...userExercises, ...defaultExercises]) {
+			const group = groupsById.get(exercise.muscleGroupId);
+			if (!group) {
+				continue;
+			}
+
+			group.exercises.push({
+				_id: exercise._id,
+				name: exercise.name,
+				editable: exercise.userId === user._id,
+				usageCount: usageByExerciseId.get(exercise._id) ?? 0,
+			});
+		}
+
+		return [...groupsById.values()]
+			.filter((group) => group.exercises.length > 0)
+			.map((group) => ({
+				...group,
+				exercises: group.exercises.sort((a, b) => a.name.localeCompare(b.name, "cs")),
+			}))
+			.sort((a, b) => b.exercises.length - a.exercises.length || a.name.localeCompare(b.name, "cs"));
+	},
+});

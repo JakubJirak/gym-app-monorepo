@@ -133,6 +133,53 @@ export const getRoutineDetail = query({
 	},
 });
 
+export const getMobileRoutineSummaries = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("routines"),
+			name: v.string(),
+			filterId: v.id("filters"),
+			filter: v.union(
+				v.object({
+					name: v.string(),
+					color: v.string(),
+				}),
+				v.null()
+			),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const routines = await ctx.db
+			.query("routines")
+			.withIndex("by_userId", (q) => q.eq("userId", user._id))
+			.collect();
+		const filterIds = [...new Set(routines.map((routine) => routine.filterId))];
+		const filters = await Promise.all(filterIds.map((filterId) => ctx.db.get(filterId)));
+		const filtersById = new Map(
+			filters
+				.filter((filter): filter is NonNullable<typeof filter> => filter !== null)
+				.map((filter) => [filter._id, filter])
+		);
+
+		return routines.map((routine) => {
+			const filter = filtersById.get(routine.filterId);
+
+			return {
+				_id: routine._id,
+				name: routine.name,
+				filterId: routine.filterId,
+				filter: filter ? { name: filter.name, color: filter.color } : null,
+			};
+		});
+	},
+});
+
 export const getUserRoutines = query({
 	args: {},
 	handler: async (ctx) => {

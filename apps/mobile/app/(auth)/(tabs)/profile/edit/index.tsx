@@ -3,15 +3,12 @@ import { Link } from "expo-router";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import ComponentHeader from "@/components/component-header";
 import { COLORS } from "@/constants/COLORS";
-import { authClient } from "@/src/lib/auth-client";
 import { api } from "../../../../../../../packages/convex/convex/_generated/api";
 
 export default function Edit() {
-	const { data: session } = authClient.useSession();
-	const userWeight = useQuery(api.userWeights.getUserWeight);
-	const desc = useQuery(api.description.getUserDescription);
+	const profile = useQuery(api.profile.getProfileOverview);
 
-	if (userWeight === undefined || desc === undefined) {
+	if (profile === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -19,7 +16,7 @@ export default function Edit() {
 		);
 	}
 
-	if (!session) {
+	if (!profile) {
 		return null;
 	}
 
@@ -43,37 +40,30 @@ export default function Edit() {
 
 						<View className="gap-1">
 							<Text className="text-center font-bold text-3xl text-text">
-								{session.user.name}
+								{profile.account.name}
 							</Text>
-							<Text className="text-center text-lg text-muted">{desc?.description}</Text>
+							<Text className="text-center text-lg text-muted">
+								{profile.description?.value}
+							</Text>
 						</View>
 					</View>
 				</View>
 
 				<View className="gap-4">
-					{userWeight ? (
-						<Link href="/(auth)/(tabs)/profile/edit/vaha" style={{ width: "100%" }}>
-							<View className="my-3 w-full gap-2">
-								<Text className="font-semibold text-lg text-text tracking-wide">
-									Váha
+					<Link href="/(auth)/(tabs)/profile/edit/vaha" style={{ width: "100%" }}>
+						<View className="my-3 w-full gap-2">
+							<Text className="font-semibold text-lg text-text tracking-wide">Váha</Text>
+							<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
+								<Text
+									className={
+										profile.weight ? "text-lg text-text" : "text-lg text-muted"
+									}
+								>
+									{profile.weight ? `${profile.weight.value}kg` : "Nastavte váhu"}
 								</Text>
-								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
-									<Text className="text-lg text-text">{userWeight.weight}kg</Text>
-								</View>
 							</View>
-						</Link>
-					) : (
-						<Link href="/(auth)/(tabs)/profile/edit/vahaset" style={{ width: "100%" }}>
-							<View className="my-3 w-full gap-2">
-								<Text className="font-semibold text-lg text-text tracking-wide">
-									Váha
-								</Text>
-								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
-									<Text className="text-lg text-muted">Nastavte váhu</Text>
-								</View>
-							</View>
-						</Link>
-					)}
+						</View>
+					</Link>
 
 					{/* <Link href="/(auth)/(tabs)/profile/edit/jmeno" style={{ width: "100%" }}>
 						<View className="my-3 w-full gap-2">
@@ -84,29 +74,22 @@ export default function Edit() {
 						</View>
 					</Link> */}
 
-					{desc ? (
-						<Link href="/(auth)/(tabs)/profile/edit/popis" style={{ width: "100%" }}>
-							<View className="my-3 w-full gap-2">
-								<Text className="font-semibold text-lg text-text tracking-wide">
-									Popis
+					<Link href="/(auth)/(tabs)/profile/edit/popis" style={{ width: "100%" }}>
+						<View className="my-3 w-full gap-2">
+							<Text className="font-semibold text-lg text-text tracking-wide">Popis</Text>
+							<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
+								<Text
+									className={
+										profile.description
+											? "text-lg text-text"
+											: "text-lg text-muted"
+									}
+								>
+									{profile.description?.value ?? "Nenastaveno"}
 								</Text>
-								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
-									<Text className="text-lg text-text">{desc?.description}</Text>
-								</View>
 							</View>
-						</Link>
-					) : (
-						<Link href="/(auth)/(tabs)/profile/edit/popisset" style={{ width: "100%" }}>
-							<View className="my-3 w-full gap-2">
-								<Text className="font-semibold text-lg text-text tracking-wide">
-									Popis
-								</Text>
-								<View className="h-15 rounded-2xl bg-secondary p-4 caret-text">
-									<Text className="text-lg text-muted">Nenastaveno</Text>
-								</View>
-							</View>
-						</Link>
-					)}
+						</View>
+					</Link>
 				</View>
 			</ScrollView>
 		</View>

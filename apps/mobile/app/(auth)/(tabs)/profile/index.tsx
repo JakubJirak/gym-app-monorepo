@@ -6,17 +6,13 @@ import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "rea
 import Links from "@/components/profile/links";
 import ProfileHeader from "@/components/profile/profile-header";
 import { COLORS } from "@/constants/COLORS";
-import { authClient } from "@/src/lib/auth-client";
 import { api } from "../../../../../../packages/convex/convex/_generated/api";
 
 export default function Profile() {
-	const { data: session } = authClient.useSession();
-	const userWeight = useQuery(api.userWeights.getUserWeight);
-	const workouts = useQuery(api.workouts.getUserWorkouts);
-	const desc = useQuery(api.description.getUserDescription);
+	const overview = useQuery(api.profile.getMobileProfileOverview);
 	const router = useRouter();
 
-	if (userWeight === undefined || workouts === undefined || desc === undefined) {
+	if (overview === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -24,19 +20,21 @@ export default function Profile() {
 		);
 	}
 
-	if (!session) {
+	if (!overview) {
 		return null;
 	}
 
 	return (
 		<View className="flex-1 bg-primary px-4">
-			<ProfileHeader text={session.user.name} />
+			<ProfileHeader text={overview.name} />
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View className="mt-2 mb-6 flex-row items-center gap-6">
 					<View className="h-22.5 w-22.5 rounded-full bg-gray-700" />
 					<View className="gap-1">
-						<Text className="font-semibold text-3xl text-text">{session.user.name}</Text>
-						{desc && <Text className="text-muted text-xl">{desc.description}</Text>}
+						<Text className="font-semibold text-3xl text-text">{overview.name}</Text>
+						{overview.description && (
+							<Text className="text-muted text-xl">{overview.description}</Text>
+						)}
 					</View>
 				</View>
 
@@ -49,21 +47,13 @@ export default function Profile() {
 							<Ionicons color={COLORS.muted} name="calendar-clear-outline" size={20} />
 							<Text className="text-lg text-muted">Tréninky</Text>
 						</View>
-						<Text className="text-lg text-text tracking-wider">
-							{workouts ? workouts.length : 0}
-						</Text>
+						<Text className="text-lg text-text tracking-wider">{overview.workoutCount}</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
 						activeOpacity={0.7}
 						className="w-[47%] items-center gap-2 rounded-xl bg-secondary p-3"
-						onPress={() => {
-							if (userWeight) {
-								router.push("/profile/edit/vaha");
-							} else {
-								router.push("/profile/edit/vahaset");
-							}
-						}}
+						onPress={() => router.push("/profile/edit/vaha")}
 					>
 						<View className="flex-row items-center gap-2">
 							<Weight color={COLORS.muted} size={20} />
@@ -71,10 +61,12 @@ export default function Profile() {
 						</View>
 						<Text
 							className={
-								userWeight ? "text-lg text-text tracking-wider" : "text-base text-muted"
+								overview.weight
+									? "text-lg text-text tracking-wider"
+									: "text-base text-muted"
 							}
 						>
-							{userWeight ? `${userWeight.weight} kg` : "Nenastaveno"}
+							{overview.weight ? `${overview.weight} kg` : "Nenastaveno"}
 						</Text>
 					</TouchableOpacity>
 				</View>

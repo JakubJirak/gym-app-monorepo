@@ -1,18 +1,22 @@
 import { Ionicons } from "@expo/vector-icons";
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
-import { useQuery } from "convex/react";
 import { useRouter } from "expo-router";
 import { Pencil } from "lucide-react-native";
 import { Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
-import { api } from "../../../../packages/convex/convex/_generated/api";
-import type { Id } from "../../../../packages/convex/convex/_generated/dataModel";
 import EditRoutineModal from "./modals/edit-routine-modal";
 
-export default function RoutineHeader({ text, routineId }: { text: string; routineId: string }) {
+export default function RoutineHeader({
+	text,
+	routineId,
+	defaultFilterId,
+}: {
+	text: string;
+	routineId: string;
+	defaultFilterId: string;
+}) {
 	const router = useRouter();
-	const routine = useQuery(api.routines.getRoutineById, { routineId: routineId as Id<"routines"> });
 
 	return (
 		<View className="mt-2 flex-row items-center pr-2 pb-4">
@@ -24,8 +28,8 @@ export default function RoutineHeader({ text, routineId }: { text: string; routi
 				<Pencil color="white" size={22} />
 			</TouchableOpacity>
 			<EditRoutineModal
-				defaultFilterId={routine?.filter?._id}
-				defaultName={routine?.name}
+				defaultFilterId={defaultFilterId}
+				defaultName={text}
 				routineId={routineId}
 				sheetName={NAMES.sheets.editRoutine}
 			/>

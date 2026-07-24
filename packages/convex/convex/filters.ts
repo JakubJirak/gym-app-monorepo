@@ -8,7 +8,6 @@ export const getAllFilters = query({
 	handler: async (ctx) => {
 		let userId: string;
 		try {
-
 			const user = await authComponent.getAuthUser(ctx);
 			if (!user) {
 				return [];
@@ -34,7 +33,6 @@ export const addFilter = mutation({
 		color: v.string(),
 	},
 	handler: async (ctx, { name, color }) => {
-	
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
@@ -60,7 +58,6 @@ export const editFilter = mutation({
 		color: v.string(),
 	},
 	handler: async (ctx, { filterId, name, color }) => {
-
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
@@ -92,7 +89,6 @@ export const deleteFilter = mutation({
 		filterId: v.id("filters"),
 	},
 	handler: async (ctx, { filterId }) => {
-
 		const user = await authComponent.getAuthUser(ctx);
 		if (!user) {
 			throw new Error("Unauthorized");
@@ -141,6 +137,49 @@ export const getFilterSummaries = query({
 				_id: filter._id,
 				name: filter.name,
 				color: filter.color,
+			}))
+			.sort((a, b) => a.name.localeCompare(b.name, "cs"));
+	},
+});
+
+export const getFiltersWithUsage = query({
+	args: {},
+	returns: v.array(
+		v.object({
+			_id: v.id("filters"),
+			name: v.string(),
+			color: v.string(),
+			usageCount: v.number(),
+		})
+	),
+	handler: async (ctx) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return [];
+		}
+
+		const [filters, workouts] = await Promise.all([
+			ctx.db
+				.query("filters")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.collect(),
+			ctx.db
+				.query("workouts")
+				.withIndex("by_userId", (q) => q.eq("userId", user._id))
+				.collect(),
+		]);
+		const usageByFilterId = new Map<string, number>();
+
+		for (const workout of workouts) {
+			usageByFilterId.set(workout.filterId, (usageByFilterId.get(workout.filterId) ?? 0) + 1);
+		}
+
+		return filters
+			.map((filter) => ({
+				_id: filter._id,
+				name: filter.name,
+				color: filter.color,
+				usageCount: usageByFilterId.get(filter._id) ?? 0,
 			}))
 			.sort((a, b) => a.name.localeCompare(b.name, "cs"));
 	},
