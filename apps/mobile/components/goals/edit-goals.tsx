@@ -1,7 +1,7 @@
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
@@ -22,6 +22,7 @@ export default function EditGoals({ squatDef, benchDef, deadliftDef, goalId, she
 	const [squat, setSquat] = useState(squatDef);
 	const [bench, setBench] = useState(benchDef);
 	const [deadlift, setDeadlift] = useState(deadliftDef);
+	const inputRef = useRef<TextInput>(null);
 
 	const squatNum = Number.parseFloat(squat.replace(",", "."));
 	const benchNum = Number.parseFloat(bench.replace(",", "."));
@@ -52,6 +53,7 @@ export default function EditGoals({ squatDef, benchDef, deadliftDef, goalId, she
 			closeSheet();
 		}
 	};
+	const handlePresent = () => inputRef.current?.focus();
 
 	return (
 		<TrueSheet
@@ -73,6 +75,7 @@ export default function EditGoals({ squatDef, benchDef, deadliftDef, goalId, she
 				</TouchableOpacity>
 			}
 			name={sheetId}
+			onDidPresent={handlePresent}
 		>
 			<View className="px-4 pt-8 pb-4">
 				<View>
@@ -85,7 +88,6 @@ export default function EditGoals({ squatDef, benchDef, deadliftDef, goalId, she
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Squat (kg)</Text>
 							<TextInput
-								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								keyboardType="numeric"
@@ -98,6 +100,7 @@ export default function EditGoals({ squatDef, benchDef, deadliftDef, goalId, she
 								}}
 								placeholder="0"
 								placeholderTextColor={COLORS.muted}
+								ref={inputRef}
 								returnKeyType="done"
 								value={squat}
 							/>

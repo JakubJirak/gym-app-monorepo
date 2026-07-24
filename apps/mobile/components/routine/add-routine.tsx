@@ -2,7 +2,7 @@ import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import FilterDropdown from "@/components/forms/filters-dropdown";
 import { COLORS } from "@/constants/COLORS";
@@ -18,6 +18,7 @@ export default function AddRoutine({ sheetName }: EditTrainingProps) {
 	const sheetId = sheetName ?? NAMES.sheets.addRoutine;
 	const [filterId, setFilterId] = useState<string | undefined>(undefined);
 	const [name, setName] = useState("");
+	const inputRef = useRef<TextInput>(null);
 
 	const closeSheet = () => {
 		TrueSheet.dismiss(sheetId);
@@ -41,6 +42,7 @@ export default function AddRoutine({ sheetName }: EditTrainingProps) {
 		}
 		closeSheet();
 	};
+	const handlePresent = () => inputRef.current?.focus();
 
 	return (
 		<TrueSheet
@@ -62,6 +64,7 @@ export default function AddRoutine({ sheetName }: EditTrainingProps) {
 				</TouchableOpacity>
 			}
 			name={sheetId}
+			onDidPresent={handlePresent}
 		>
 			<View className="px-4 pt-8 pb-4">
 				<View>
@@ -74,7 +77,6 @@ export default function AddRoutine({ sheetName }: EditTrainingProps) {
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
 							<TextInput
-								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								maxLength={20}
@@ -84,6 +86,7 @@ export default function AddRoutine({ sheetName }: EditTrainingProps) {
 										handleAddRoutine();
 									}
 								}}
+								ref={inputRef}
 								returnKeyType="done"
 								value={name}
 							/>

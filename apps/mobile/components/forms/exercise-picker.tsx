@@ -1,7 +1,7 @@
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useQuery } from "convex/react";
 import { Check, ChevronDown, Plus } from "lucide-react-native";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, type ListRenderItem, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
@@ -65,6 +65,7 @@ export function ExercisePicker({
 	const pickerSheetName = sheetName ?? NAMES.sheets.exercisePicker;
 	const addExerciseSheetName = `${pickerSheetName}-${NAMES.sheets.addNewExerciseFromPicker}`;
 	const [query, setQuery] = useState("");
+	const inputRef = useRef<TextInput>(null);
 	const exercises = useQuery(api.exercises.getExerciseSummaries);
 
 	const chosenId = standalone ? null : (selectedId ?? internalSelectedId);
@@ -108,6 +109,7 @@ export function ExercisePicker({
 		setIsPresented(false);
 		setModalVisible(false);
 	};
+	const handlePresent = () => inputRef.current?.focus();
 
 	const renderItem: ListRenderItem<Exercise> = ({ item }) => {
 		const selected = item._id === chosenId;
@@ -127,12 +129,12 @@ export function ExercisePicker({
 			<View className="mb-3 flex-row items-center justify-between">
 				<View className="flex-1">
 					<TextInput
-						autoFocus
 						className="rounded-xl bg-secondary px-4 py-3 text-base text-text"
 						clearButtonMode="while-editing"
 						onChangeText={setQuery}
 						placeholder="Hledej cvik..."
 						placeholderTextColorClassName="accent-muted"
+						ref={inputRef}
 						value={query}
 					/>
 				</View>
@@ -175,6 +177,7 @@ export function ExercisePicker({
 				dimmedDetentIndex={0.1}
 				name={pickerSheetName}
 				onDidDismiss={handleDidDismiss}
+				onDidPresent={handlePresent}
 				scrollable
 			>
 				{sheetContent}
@@ -207,6 +210,7 @@ export function ExercisePicker({
 				dimmedDetentIndex={0.1}
 				name={pickerSheetName}
 				onDidDismiss={handleDidDismiss}
+				onDidPresent={handlePresent}
 				scrollable
 			>
 				{sheetContent}

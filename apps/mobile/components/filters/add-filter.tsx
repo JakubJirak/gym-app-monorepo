@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import ColorSquarePicker from "@/components/forms/color-picker";
 import { COLORS } from "@/constants/COLORS";
@@ -19,6 +19,7 @@ export default function AddFilterModal({ sheetName }: AddFilterProps) {
 	const [name, setName] = useState("");
 	const [visible, setVisible] = useState(false);
 	const [color, setColor] = useState("#000000");
+	const inputRef = useRef<TextInput>(null);
 	const addFilter = useMutation(api.filters.addFilter).withOptimisticUpdate((localStore, args) => {
 		const current = localStore.getQuery(api.filters.getAllFilters, {});
 		if (current) {
@@ -44,6 +45,7 @@ export default function AddFilterModal({ sheetName }: AddFilterProps) {
 		setColor("#000000");
 		closeSheet();
 	};
+	const handlePresent = () => inputRef.current?.focus();
 
 	return (
 		<TrueSheet
@@ -68,6 +70,7 @@ export default function AddFilterModal({ sheetName }: AddFilterProps) {
 			}
 			footerStyle={{ paddingHorizontal: 16 }}
 			name={sheetId}
+			onDidPresent={handlePresent}
 		>
 			<View className="px-4 pt-8 pb-4">
 				<View className="justify-between">
@@ -80,7 +83,6 @@ export default function AddFilterModal({ sheetName }: AddFilterProps) {
 						<View>
 							<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
 							<TextInput
-								autoFocus
 								className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 								cursorColorClassName="accent-text"
 								maxLength={15}
@@ -90,6 +92,7 @@ export default function AddFilterModal({ sheetName }: AddFilterProps) {
 										handleAddExercise();
 									}
 								}}
+								ref={inputRef}
 								returnKeyType="done"
 								value={name}
 							/>

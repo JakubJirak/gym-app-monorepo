@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
@@ -20,6 +20,7 @@ export default function EditExerciseModal({ exerciseId, exerciseName, usageCount
 	const sheetId = sheetName ?? NAMES.sheets.editExercise;
 	const closeSheet = () => TrueSheet.dismiss(sheetId);
 	const [name, setName] = useState(exerciseName || "");
+	const inputRef = useRef<TextInput>(null);
 	const editExercise = useMutation(api.exercises.editExercise).withOptimisticUpdate((localStore, args) => {
 		const current = localStore.getQuery(api.exercises.getAllExercises, {});
 		if (current) {
@@ -59,6 +60,7 @@ export default function EditExerciseModal({ exerciseId, exerciseName, usageCount
 		});
 		closeSheet();
 	};
+	const handlePresent = () => inputRef.current?.focus();
 
 	return (
 		<TrueSheet
@@ -106,6 +108,7 @@ export default function EditExerciseModal({ exerciseId, exerciseName, usageCount
 				)
 			}
 			name={sheetId}
+			onDidPresent={handlePresent}
 		>
 			<View className="px-4 pt-8 pb-4">
 				<View>
@@ -117,7 +120,6 @@ export default function EditExerciseModal({ exerciseId, exerciseName, usageCount
 					<View>
 						<Text className="mb-2 font-semibold text-lg text-text">Název</Text>
 						<TextInput
-							autoFocus
 							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 							cursorColorClassName="accent-text"
 							maxLength={20}
@@ -127,6 +129,7 @@ export default function EditExerciseModal({ exerciseId, exerciseName, usageCount
 									handleEditExercise();
 								}
 							}}
+							ref={inputRef}
 							returnKeyType="done"
 							value={name}
 						/>

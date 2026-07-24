@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation } from "convex/react";
 import { Pencil } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
@@ -22,6 +22,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 	const closeSheet = () => setVisible(false);
 	const [weight, setWeight] = useState(String(defaultWeight));
 	const [reps, setReps] = useState(String(defaultReps));
+	const inputRef = useRef<TextInput>(null);
 	const editSet = useMutation(api.workoutExercises.editSet).withOptimisticUpdate((localStore, args) => {
 		const queries = localStore.getAllQueries(api.workouts.getWorkoutById);
 		for (const query of queries) {
@@ -91,6 +92,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 		setReps(String(defaultReps));
 		setVisible(false);
 	};
+	const handlePresent = () => inputRef.current?.focus();
 
 	return (
 		<TrueSheet
@@ -121,6 +123,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 			}
 			name={name}
 			onDidDismiss={handleDidDismiss}
+			onDidPresent={handlePresent}
 		>
 			<View className="px-4 pt-8 pb-4">
 				<View className="mt-2 mb-4 flex-row items-center gap-3 self-center">
@@ -132,7 +135,6 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 					<View className="flex-1">
 						<Text className="mb-2 font-semibold text-lg text-text">Váha</Text>
 						<TextInput
-							autoFocus
 							className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 							cursorColorClassName="accent-text"
 							keyboardType="numeric"
@@ -143,6 +145,7 @@ export default function EditSetModal({ visible, setVisible, setId, defaultReps, 
 									handleAddSet();
 								}
 							}}
+							ref={inputRef}
 							returnKeyType="done"
 							value={weight}
 						/>

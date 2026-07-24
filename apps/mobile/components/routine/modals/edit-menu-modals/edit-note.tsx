@@ -1,7 +1,7 @@
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import { useMutation, useQuery } from "convex/react";
 import { NotebookPen } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { COLORS } from "@/constants/COLORS";
 import { NAMES } from "@/constants/NAMES";
@@ -24,6 +24,7 @@ export default function EditNoteModal({ visible, setVisible, routineExerciseId, 
 		routineExerciseId: routineExerciseId as Id<"routinesExercises">,
 	});
 	const [note, setNote] = useState<string | undefined>(routineExercise?.note);
+	const inputRef = useRef<TextInput>(null);
 	const editNote = useMutation(api.routineExercises.editNote).withOptimisticUpdate((localStore, args) => {
 		const queries = localStore.getAllQueries(api.routines.getRoutineById);
 		for (const query of queries) {
@@ -58,6 +59,7 @@ export default function EditNoteModal({ visible, setVisible, routineExerciseId, 
 		closeSheet();
 		closeParent();
 	};
+	const handlePresent = () => inputRef.current?.focus();
 
 	return (
 		<TrueSheet
@@ -80,6 +82,7 @@ export default function EditNoteModal({ visible, setVisible, routineExerciseId, 
 			}
 			name={name}
 			onDidDismiss={closeSheet}
+			onDidPresent={handlePresent}
 		>
 			<View className="px-4 pt-8 pb-4">
 				<View className="mt-2 mb-4 flex-row items-center gap-2 self-center">
@@ -90,7 +93,6 @@ export default function EditNoteModal({ visible, setVisible, routineExerciseId, 
 				<View>
 					<Text className="mb-2 font-semibold text-lg text-text">Poznámka</Text>
 					<TextInput
-						autoFocus
 						className="h-13 rounded-xl bg-secondary px-3 py-3 text-lg text-text"
 						cursorColorClassName="accent-text"
 						defaultValue={routineExercise?.note || ""}
@@ -101,6 +103,7 @@ export default function EditNoteModal({ visible, setVisible, routineExerciseId, 
 								handleEditNote();
 							}
 						}}
+						ref={inputRef}
 						returnKeyType="done"
 						value={note}
 					/>
