@@ -11,6 +11,7 @@ export default defineSchema({
 	})
 		.index("by_userId", ["userId"])
 		.index("by_userId_workoutDate", ["userId", "workoutDate"])
+		.index("by_userId_filterId_workoutDate", ["userId", "filterId", "workoutDate"])
 		.index("by_filterId", ["filterId"]),
 
 	workoutExercises: defineTable({

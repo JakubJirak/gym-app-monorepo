@@ -4,7 +4,7 @@ import type { api } from "../../../../packages/convex/convex/_generated/api";
 type CategoriesProps = {
 	selectedFilterId: string | undefined;
 	setSelectedFilterId: (id: string | undefined) => void;
-	categories: typeof api.filters.getAllFilters._returnType;
+	categories: typeof api.filters.getFilterSummaries._returnType;
 };
 
 export default function Categories({ selectedFilterId, setSelectedFilterId, categories }: CategoriesProps) {

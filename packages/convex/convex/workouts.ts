@@ -1,3 +1,4 @@
+import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import { type MutationCtx, mutation, query } from "./_generated/server";
@@ -69,6 +70,47 @@ export const getUserWorkoutSummaries = query({
 					: null,
 			};
 		});
+	},
+});
+
+export const getUserWorkoutPage = query({
+	args: {
+		paginationOpts: paginationOptsValidator,
+		filterId: v.optional(v.id("filters")),
+	},
+	handler: async (ctx, { paginationOpts, filterId }) => {
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return {
+				page: [],
+				isDone: true,
+				continueCursor: "",
+			};
+		}
+
+		const workoutsPage = filterId
+			? await ctx.db
+					.query("workouts")
+					.withIndex("by_userId_filterId_workoutDate", (q) =>
+						q.eq("userId", user._id).eq("filterId", filterId)
+					)
+					.order("desc")
+					.paginate(paginationOpts)
+			: await ctx.db
+					.query("workouts")
+					.withIndex("by_userId_workoutDate", (q) => q.eq("userId", user._id))
+					.order("desc")
+					.paginate(paginationOpts);
+
+		return {
+			...workoutsPage,
+			page: workoutsPage.page.map((workout) => ({
+				_id: workout._id,
+				name: workout.name,
+				workoutDate: workout.workoutDate,
+				filterId: workout.filterId,
+			})),
+		};
 	},
 });
 
