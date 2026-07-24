@@ -72,6 +72,118 @@ export const getUserWorkoutSummaries = query({
 	},
 });
 
+export const getHomeOverview = query({
+	args: {
+		weekStart: v.string(),
+		weekEnd: v.string(),
+	},
+	returns: v.object({
+		lastWorkout: v.union(
+			v.object({
+				_id: v.id("workouts"),
+				workoutDate: v.string(),
+			}),
+			v.null()
+		),
+		currentWeek: v.object({
+			workouts: v.array(
+				v.object({
+					_id: v.id("workouts"),
+					workoutDate: v.string(),
+				})
+			),
+			workoutCount: v.number(),
+			setCount: v.number(),
+			repCount: v.number(),
+			volumeKg: v.number(),
+		}),
+	}),
+	handler: async (ctx, { weekStart, weekEnd }) => {
+		const emptyOverview = {
+			lastWorkout: null,
+			currentWeek: {
+				workouts: [],
+				workoutCount: 0,
+				setCount: 0,
+				repCount: 0,
+				volumeKg: 0,
+			},
+		};
+
+		const user = await authComponent.getAuthUser(ctx);
+		if (!user) {
+			return emptyOverview;
+		}
+
+		const [latestWorkouts, currentWeekWorkouts] = await Promise.all([
+			ctx.db
+				.query("workouts")
+				.withIndex("by_userId_workoutDate", (q) => q.eq("userId", user._id))
+				.order("desc")
+				.take(1),
+			ctx.db
+				.query("workouts")
+				.withIndex("by_userId_workoutDate", (q) =>
+					q.eq("userId", user._id).gte("workoutDate", weekStart).lte("workoutDate", weekEnd)
+				)
+				.collect(),
+		]);
+
+		const workoutExercises = (
+			await Promise.all(
+				currentWeekWorkouts.map((workout) =>
+					ctx.db
+						.query("workoutExercises")
+						.withIndex("by_workoutId", (q) => q.eq("workoutId", workout._id))
+						.collect()
+				)
+			)
+		).flat();
+
+		const setsByWorkoutExercise = await Promise.all(
+			workoutExercises.map((workoutExercise) =>
+				ctx.db
+					.query("sets")
+					.withIndex("by_workoutExerciseId", (q) => q.eq("workoutExerciseId", workoutExercise._id))
+					.collect()
+			)
+		);
+
+		let setCount = 0;
+		let repCount = 0;
+		let volumeKg = 0;
+
+		for (const sets of setsByWorkoutExercise) {
+			setCount += sets.length;
+			for (const set of sets) {
+				repCount += set.reps;
+				volumeKg += set.weight * set.reps;
+			}
+		}
+
+		const latestWorkout = latestWorkouts[0];
+
+		return {
+			lastWorkout: latestWorkout
+				? {
+						_id: latestWorkout._id,
+						workoutDate: latestWorkout.workoutDate,
+					}
+				: null,
+			currentWeek: {
+				workouts: currentWeekWorkouts.map((workout) => ({
+					_id: workout._id,
+					workoutDate: workout.workoutDate,
+				})),
+				workoutCount: currentWeekWorkouts.length,
+				setCount,
+				repCount,
+				volumeKg,
+			},
+		};
+	},
+});
+
 export const getUserWorkouts = query({
 	args: {},
 	async handler(ctx) {

@@ -16,7 +16,7 @@ export default function TrainingRoutineModal() {
 		name: string;
 		color?: string;
 	} | null>(null);
-	const routines = useQuery(api.routines.getUserRoutines);
+	const routines = useQuery(api.routines.getUserRoutineSummaries);
 	const closeSheet = () => {
 		TrueSheet.dismiss(NAMES.sheets.trainingRoutine);
 	};

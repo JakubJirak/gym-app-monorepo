@@ -31,7 +31,7 @@ export default function RoutineFooter({ id, exercises, isEdit, setIsEdit }: Rout
 	};
 
 	return (
-		<View className="h-18 flex-row items-center border-[#1a1a1a] border-t bg-darker pr-2 pb-8">
+		<View className="h-18 flex-row items-center border-secondary border-t bg-darker pr-2 pb-8">
 			{/* <TouchableOpacity className="flex w-1/4 items-center pt-2">
 				<Ionicons color="white" name="share-social-outline" size={24} />
 			</TouchableOpacity> */}

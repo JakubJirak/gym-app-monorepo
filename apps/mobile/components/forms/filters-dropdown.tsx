@@ -20,7 +20,7 @@ type Props = {
 };
 
 export default function FilterDropdown({ value, onChange }: Props) {
-	const options = useQuery(api.filters.getAllFilters) || [];
+	const options = useQuery(api.filters.getFilterSummaries) || [];
 
 	const selected = useMemo(() => options.find((o: Option) => o._id === value), [options, value]);
 

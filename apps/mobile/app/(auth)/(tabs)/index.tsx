@@ -7,13 +7,25 @@ import Tip from "@/components/home/tip";
 import WeeklyStats from "@/components/home/weekly-stats";
 import WelcomeMessage from "@/components/home/welcome-message";
 import { COLORS } from "@/constants/COLORS";
+import { toLocalISODateString } from "@/src/utils/date-utils";
 import { api } from "../../../../../packages/convex/convex/_generated/api";
 
 export default function Index() {
-	const workouts = useQuery(api.workouts.getUserWorkouts);
+	const today = new Date();
+	const currentDay = today.getDay();
+	const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
+	const monday = new Date(today);
+	monday.setDate(today.getDate() + mondayOffset);
+	const sunday = new Date(monday);
+	sunday.setDate(monday.getDate() + 6);
+
+	const homeOverview = useQuery(api.workouts.getHomeOverview, {
+		weekStart: toLocalISODateString(monday),
+		weekEnd: toLocalISODateString(sunday),
+	});
 	const tips = useQuery(api.tips.getTips);
 
-	if (workouts === undefined || tips === undefined) {
+	if (homeOverview === undefined || tips === undefined) {
 		return (
 			<View className="flex-1 items-center justify-center bg-primary">
 				<ActivityIndicator color={COLORS.accent} size="large" />
@@ -21,18 +33,17 @@ export default function Index() {
 		);
 	}
 
-	if (!(workouts && tips)) {
-		return null;
-	}
-
 	return (
 		<ScrollView className="flex flex-1 bg-primary px-4 pt-4" showsVerticalScrollIndicator={false}>
 			<View className="flex-1 gap-10 pb-8">
 				<WelcomeMessage />
 				<Tip tips={tips} />
-				<WeeklyStats trainings={workouts} />
-				{workouts.length > 0 ? (
-					<LastTraining workoutDate={workouts[0].workoutDate} workoutId={workouts[0]._id} />
+				<WeeklyStats currentWeek={homeOverview.currentWeek} />
+				{homeOverview.lastWorkout ? (
+					<LastTraining
+						workoutDate={homeOverview.lastWorkout.workoutDate}
+						workoutId={homeOverview.lastWorkout._id}
+					/>
 				) : (
 					<EmptyTrainings />
 				)}
